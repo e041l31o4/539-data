@@ -10,13 +10,7 @@ const $=s=>document.querySelector(s);let draws=[],page=0;const PAGE_SIZE=12;cons
  let nh=0,ns=0,th=0,ts=0;for(let i=1;i<trans.length;i++){const prev=trans[i-1].numbers,cur=trans[i].numbers;if(prev.includes(n-1)||prev.includes(n+1)){ns++;if(cur.includes(n))nh++}if(prev.includes(n)){ts++;if(cur.includes(n))th++}}raw.neighbor[n]=(nh+.5)/(ns+1);raw.transition[n]=(th+.5)/(ts+1);
  }return Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,minmax(v)]));
 }
-const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function balancedPick(sorted){
- const picked=[],zone=[0,0,0];let odd=0,low=0;
- for(const n of sorted){const z=n<=13?0:n<=26?1:2;if(zone[z]>=2||(n%2?odd>=3:5-odd>=3)||(n<=19?low>=3:5-low>=3))continue;picked.push(n);zone[z]++;if(n%2)odd++;if(n<=19)low++;if(picked.length===5)return picked}
- for(const n of sorted)if(!picked.includes(n)){picked.push(n);if(picked.length===5)break}
- return picked;
-}
-function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
+const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
  const sample=draws.slice(-1000),split=Math.max(100,Math.floor(sample.length*.7)),train=sample.slice(0,split),test=sample.slice(split);
  const pickers={
@@ -33,10 +27,25 @@ function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{
  const rate=s=>s.n?s.hit24/s.n:0;
  const best=names.slice().sort((a,b)=>rate(stats[b])-rate(stats[a])||(stats[b].hits/stats[b].n-stats[a].hits/stats[a].n))[0];
  let testN=0,test24=0;for(let i=0;i<test.length;i++){const hist=sample.slice(0,split+i),hit=pickers[best](hist).filter(n=>n===0?false:test[i].numbers.includes(n)).length;testN++;if(hit>=2&&hit<=4)test24++}
- const main=balancedPick(pickers[best](draws).sort((a,b)=>Math.abs(a-20)-Math.abs(b-20)||a-b)).sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
+ const main=pickers[best](draws).slice().sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
  $("#mainPicks").innerHTML=balls(main);$("#altPicks").innerHTML=balls(alt);
+ const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
+ const reasonFor=n=>{
+  const prev=last.numbers,near=prev.filter(x=>Math.abs(x-n)===1);
+  const tailCount=prev.filter(x=>x%10===n%10).length;
+  if(best==="前後號±1")return near.length?"前一期 "+near.map(x=>String(x).padStart(2,"0")).join("、")+" 的前後號":"前後號候選排序入選";
+  if(best==="近期熱號")return "近30期出現 "+f30[n]+" 次";
+  if(best==="遺漏值")return "目前遺漏 "+g[n]+" 期";
+  if(best==="隔期重複")return "前一期開出號碼延續觀察";
+  if(best==="尾數延伸")return tailCount?"前一期有 "+tailCount+" 個相同尾數":"尾數候選排序入選";
+  if(best==="算術變化")return "符合前期號碼衍生的算術候選";
+  return "綜合模型排序入選";
+ };
+ let reasonBox=$("#pickReasons");
+ if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
+ reasonBox.innerHTML='<div class="panel-head"><b>本期五碼入選原因</b><span class="muted">依 '+best+' 策略｜截至 '+last.date+'</span></div><div class="table-wrap"><table><thead><tr><th>號碼</th><th>策略依據</th><th>近30期</th><th>近100期</th><th>目前遺漏</th></tr></thead><tbody>'+main.map(n=>'<tr><td><b>'+String(n).padStart(2,"0")+'</b></td><td>'+reasonFor(n)+'</td><td>'+f30[n]+' 次</td><td>'+f100[n]+' 次</td><td>'+g[n]+' 期</td></tr>').join("")+'</tbody></table></div><small class="muted">頻率與遺漏值是歷史描述，不代表下一期開出機率較高；同一策略下的候選排序只用於模型比較。</small>';
  const rateText=testN?(test24/testN*100).toFixed(1)+"%":"樣本不足";
- $("#recommendBasis").textContent="優選："+best+"｜獨立驗證 "+rateText;
+ $("#recommendBasis").textContent="訓練區段優選："+best+"｜保留驗證區段 "+rateText;
  $("#sampleCount").textContent=fmt(draws.length)+" 期歷史資料";
  const pill=document.querySelector(".recommend-card .pill");if(pill)pill.textContent="回測優選 TOP 5";
  const tf=tailFreq(draws.slice(-100)),sizes=[3,4,4,4,4,4,4,4,4,4];let tr=tf.map((v,i)=>({tail:i,score:v/sizes[i]})).sort((a,b)=>b.score-a.score).slice(0,3);
