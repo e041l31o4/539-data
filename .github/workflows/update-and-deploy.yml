@@ -10,6 +10,9 @@ on:
         description: "重新抓取官方 API 可提供的歷史資料"
         type: boolean
         default: false
+concurrency:
+  group: 539-pages-deploy
+  cancel-in-progress: false
 jobs:
   update:
     runs-on: ubuntu-latest
