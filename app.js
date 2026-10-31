@@ -154,10 +154,19 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  let reasonBox=$("#pickReasons");if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
  reasonBox.innerHTML='<div class="panel-head"><b>1～39 號碼完整推薦排名</b><span class="muted">點選任一號碼查看完整分析</span></div><div class="number-rank-grid">'+allRanks.map((x,i)=>'<button type="button" class="number-rank '+(main.includes(x.n)?"is-top":"")+'" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+x.score.toFixed(3)+'</small></button>').join("")+'</div><div class="number-detail-modal" id="numberDetailModal" hidden><div class="number-detail-card"><button type="button" class="detail-close" aria-label="關閉">×</button><div id="numberDetailContent"></div></div></div><p class="number-rank-note">前五名為目前模型綜合排序；其他34碼仍可點選查看分數、連動樣本、期距表現及落後原因。分數不等於開獎機率。</p>';
  const detailModal=$("#numberDetailModal"),detailContent=$("#numberDetailContent");
- $("#mainPicks").querySelectorAll("[data-number]").forEach(btn=>btn.addEventListener("click",()=>{detailContent.innerHTML=detailsHtml(Number(btn.dataset.number));detailModal.hidden=false}));
- reasonBox.querySelectorAll("[data-number]").forEach(btn=>btn.addEventListener("click",()=>{detailContent.innerHTML=detailsHtml(Number(btn.dataset.number));detailModal.hidden=false}));
- reasonBox.querySelector(".detail-close").addEventListener("click",()=>{detailModal.hidden=true});
- detailModal.addEventListener("click",e=>{if(e.target===detailModal)detailModal.hidden=true});
+ // 使用單一事件委派，避免重新渲染後號碼按鈕失去點擊事件。
+ $("#recommend").onclick=e=>{
+  const close=e.target.closest(".detail-close");
+  if(close){detailModal.hidden=true;return}
+  if(e.target===detailModal){detailModal.hidden=true;return}
+  const btn=e.target.closest("[data-number]");
+  if(!btn||!$("#recommend").contains(btn))return;
+  const number=Number(btn.dataset.number);
+  if(!Number.isInteger(number)||number<1||number>39)return;
+  detailModal.hidden=false;
+  detailContent.innerHTML='<p class="muted">正在整理 '+String(number).padStart(2,"0")+' 號碼分析…</p>';
+  setTimeout(()=>{detailContent.innerHTML=detailsHtml(number)},20);
+ };
 
  $("#recommendBasis").textContent="自適應融合｜近"+adaptive.samples+"期逐期回饋";
  $("#sampleCount").textContent=fmt(draws.length)+" 期歷史資料";
