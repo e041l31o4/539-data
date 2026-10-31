@@ -99,3 +99,13 @@ footer{margin-top:72px;padding-block:22px;background:#fff;border-top:1px solid #
 
 /* Rank labels for recommended and backup numbers */
 .backup-pick{display:inline-flex;flex-direction:column;align-items:center;gap:4px;margin-right:9px}.backup-pick small,.pick-ball-button .rank-no{font-size:10px;color:#8b7778;font-weight:600}.pick-ball-button{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
+
+/* Fixed-model out-of-sample scorecard */
+#backtest .bt-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 14px}
+#backtest .bt-metric{background:#fff;border:1px solid #ebe6e2;border-radius:11px;padding:15px 14px;min-width:0}
+#backtest .bt-metric span{display:block;color:#777;font-size:11px;margin-bottom:9px}
+#backtest .bt-metric b{display:block;color:#9f3039;font-size:23px;line-height:1.2;font-weight:700}
+#backtest .bt-metric small{display:block;color:#91898a;font-size:10px;line-height:1.6;margin-top:7px}
+#backtest .bt-note{grid-column:1/-1;color:#777;font-size:11px;line-height:1.8;padding:11px 14px;background:#f8f6f4;border-radius:9px}
+@media(max-width:900px){#backtest .bt-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){#backtest .bt-metric{padding:12px 10px}#backtest .bt-metric b{font-size:19px}}
