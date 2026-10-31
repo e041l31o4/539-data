@@ -49,7 +49,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   "隔期重複":a=>a.at(-1).numbers.slice(),
   "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
-  "貝葉斯融合模型":advancedPick,"綜合模型":a=>recommendations(a)?.main||[]
+  "平滑多視窗模型":advancedPick,"綜合模型":a=>recommendations(a)?.main||[]
  };
  const names=Object.keys(pickers),stats=Object.fromEntries(names.map(n=>[n,{n:0,hit24:0,hits:0}]));
  for(let i=100;i<train.length;i++){const hist=train.slice(0,i),actual=train[i].numbers;for(const name of names){const hit=pickers[name](hist).filter(n=>actual.includes(n)).length,s=stats[name];s.n++;s.hits+=hit;if(hit>=2&&hit<=4)s.hit24++}}
@@ -68,7 +68,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   if(best==="隔期重複")return "前一期開出號碼延續觀察";
   if(best==="尾數延伸")return tailCount?"前一期有 "+tailCount+" 個相同尾數":"尾數候選排序入選";
   if(best==="算術變化")return "符合前期號碼衍生的算術候選";
-  if(best==="貝葉斯融合模型"){const d=advancedRanking(draws).find(x=>x.n===n);return "30/90/180/365期平滑頻率 Z="+d.frequencyZ.toFixed(2)+"；鄰號後 "+d.hits+"/"+d.opportunities+" 次開出（平滑率 "+(d.conditional*100).toFixed(1)+"%）";}
+  if(best==="平滑多視窗模型"){const d=advancedRanking(draws).find(x=>x.n===n);return "30/90/180/365期平滑頻率 Z="+d.frequencyZ.toFixed(2)+"；鄰號後 "+d.hits+"/"+d.opportunities+" 次開出（平滑率 "+(d.conditional*100).toFixed(1)+"%）";}
   return "綜合模型排序入選";
  };
  let reasonBox=$("#pickReasons");
@@ -83,8 +83,8 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
 }function renderSequence(){/* 已簡化：詳細條件關聯不再佔用首頁版面 */}
 function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),max=Math.max(...f.slice(1),1),g=gaps(draws);$("#frequencyGrid").innerHTML=Array.from({length:39},(_,i)=>{let n=i+1,v=f[n];return'<div class="freq-item '+(v>=max*.8?"hot":"")+'"><b>'+String(n).padStart(2,"0")+'</b><span>'+v+" 次</span></div>"}).join("");let t=tailFreq(a),tm=Math.max(...t,1);$("#tailChart").innerHTML=t.map((v,i)=>'<div class="tail-col"><b>'+v+'</b><div class="tail-bar" style="height:'+Math.max(3,v/tm*88)+'px"></div><small>'+i+" 尾</small></div>").join("");let top=Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]).slice(0,16);$("#gapList").innerHTML=top.map(n=>'<div class="gap-item"><b>'+String(n).padStart(2,"0")+'</b><small>'+g[n]+" 期</small></div>").join("")}function renderBacktest(){
  const requested=Number($("#backtestSelect").value),start=Math.max(100,draws.length-requested),total=draws.length-start;
- if(total<20){$("#btSamples").textContent="資料不足";$("#btAverage").textContent="—";$("#btOne").textContent="—";return}
- const split=start+Math.floor(total*.7),names=["近期熱號","遺漏值","前後號±1","隔期重複","尾數延伸","算術變化","貝葉斯融合模型","綜合模型"];
+ if(total<100){$("#btSamples").textContent="資料不足";$("#btAverage").textContent="—";$("#btOne").textContent="—";return}
+ const names=["近期熱號","遺漏值","前後號±1","隔期重複","尾數延伸","算術變化","平滑多視窗模型","綜合模型"];
  const pickers={
   "近期熱號":a=>{const f=freq(a.slice(-30));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>f[y]-f[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "遺漏值":a=>{const g=gaps(a);return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
@@ -92,25 +92,51 @@ function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),
   "隔期重複":a=>a.at(-1).numbers.slice(),
   "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
-  "貝葉斯融合模型":advancedPick,
+  "平滑多視窗模型":advancedPick,
   "綜合模型":a=>recommendations(a)?.main||[]
  };
  const blank=()=>({n:0,hits:0,atLeast1:0,dist:Array(6).fill(0),details:[]});
- const stats=Object.fromEntries(names.map(name=>[name,{train:blank(),test:blank()}]));
- for(let i=start;i<draws.length;i++){
-  const hist=draws.slice(0,i),actual=draws[i].numbers,part=i<split?"train":"test";
-  names.forEach(name=>{const picked=pickers[name](hist),hit=picked.filter(n=>actual.includes(n)).length,s=stats[name][part];s.n++;s.hits+=hit;s.dist[hit]++;if(hit>0)s.atLeast1++;if(part==="test")s.details.push({draw:draws[i],picked,hit})});
+ const stats=Object.fromEntries(names.map(name=>[name,blank()]));
+ const adaptive=blank(),folds=5,firstTest=start+Math.floor(total*.5);
+ let selectedNames=[];
+ for(let fold=0;fold<folds;fold++){
+  const foldStart=firstTest+Math.floor((total-(firstTest-start))*fold/folds);
+  const foldEnd=firstTest+Math.floor((total-(firstTest-start))*(fold+1)/folds);
+  if(foldEnd<=foldStart)continue;
+  const trainEnd=foldStart,trainStats=Object.fromEntries(names.map(name=>[name,{n:0,hit24:0,hits:0}]));
+  for(let i=start+100;i<trainEnd;i++){
+   const hist=draws.slice(0,i),actual=draws[i].numbers;
+   for(const name of names){const h=pickers[name](hist).filter(n=>actual.includes(n)).length,s=trainStats[name];s.n++;s.hits+=h;if(h>=2&&h<=4)s.hit24++}
+  }
+  const rate=s=>s.n?s.hit24/s.n:0;
+  const best=names.slice().sort((x,y)=>rate(trainStats[y])-rate(trainStats[x])||(trainStats[y].hits/Math.max(1,trainStats[y].n)-trainStats[x].hits/Math.max(1,trainStats[x].n)))[0];
+  selectedNames.push(best);
+  for(let i=foldStart;i<foldEnd;i++){
+   const hist=draws.slice(0,i),actual=draws[i].numbers;
+   for(const name of names){
+    const picked=pickers[name](hist),hit=picked.filter(n=>actual.includes(n)).length,s=stats[name];
+    s.n++;s.hits+=hit;s.dist[hit]++;if(hit>0)s.atLeast1++;
+   }
+   const picked=pickers[best](hist),hit=picked.filter(n=>actual.includes(n)).length;
+   adaptive.n++;adaptive.hits+=hit;adaptive.dist[hit]++;if(hit>0)adaptive.atLeast1++;
+   adaptive.details.push({draw:draws[i],picked,hit,method:best,fold:fold+1});
+  }
  }
  const score=s=>s.n?(s.dist[2]+s.dist[3]+s.dist[4])/s.n:0;
- const best=names.slice().sort((x,y)=>score(stats[y].train)-score(stats[x].train)||(stats[y].train.hits/Math.max(1,stats[y].train.n)-stats[x].train.hits/Math.max(1,stats[x].train.n)))[0];
- const result=stats[best].test,random24=0.11397,fmtPct=x=>(x*100).toFixed(1)+"%";
- $("#btSamples").textContent=fmt(result.n);$("#btAverage").textContent=result.n?(result.hits/result.n).toFixed(3):"—";$("#btOne").textContent=result.n?fmtPct(result.atLeast1/result.n):"—";
+ const fmtPct=x=>(x*100).toFixed(1)+"%";
+ const random24=0.11397169291906134;
+ const ci=wilson(adaptive.dist[2]+adaptive.dist[3]+adaptive.dist[4],adaptive.n);
+ $("#btSamples").textContent=fmt(adaptive.n);$("#btAverage").textContent=adaptive.n?(adaptive.hits/adaptive.n).toFixed(3):"—";$("#btOne").textContent=adaptive.n?fmtPct(adaptive.atLeast1/adaptive.n):"—";
  const panel=$("#backtestRows").closest(".panel");let box=$("#backtestCompare");if(!box){box=document.createElement("div");box.id="backtestCompare";panel.insertAdjacentElement("beforebegin",box)}
- box.className="panel";box.innerHTML='<div class="panel-head"><b>2～4 顆命中驗證</b><span class="muted">先用前 70% 挑方法，再用後 30% 驗證</span></div>'+
- '<div class="backtest-summary"><div><small>訓練期選出的方法</small><strong>'+best+'</strong></div><div><small>驗證期命中 2～4 顆</small><strong>'+fmt(result.dist[2]+result.dist[3]+result.dist[4])+' 期／'+fmtPct(score(result))+'</strong></div><div><small>隨機理論值</small><strong>11.397%</strong></div><div><small>驗證命中率 95% 區間</small><strong>'+fmtPct(wilson(result.dist[2]+result.dist[3]+result.dist[4],result.n)[0])+'～'+fmtPct(wilson(result.dist[2]+result.dist[3]+result.dist[4],result.n)[1])+'</strong></div><div><small>相對隨機基準單尾檢定</small><strong>p='+binomialUpperTail(result.dist[2]+result.dist[3]+result.dist[4],result.n,.11397169291906134).toFixed(4)+'</strong></div></div>'+
- '<div class="table-wrap"><table><thead><tr><th>方法</th><th>命中2顆</th><th>命中3顆</th><th>命中4顆</th><th>2～4顆合計</th><th>平均命中</th></tr></thead><tbody>'+
- names.map(name=>{const s=stats[name].test;return '<tr'+(name===best?' class="hit"':'')+'><td><b>'+name+'</b></td><td>'+s.dist[2]+' 期</td><td>'+s.dist[3]+' 期</td><td>'+s.dist[4]+' 期</td><td><b>'+fmt(s.dist[2]+s.dist[3]+s.dist[4])+' 期（'+fmtPct(score(s))+'）</b></td><td>'+(s.n?(s.hits/s.n).toFixed(3):"—")+'</td></tr>'}).join('')+
- '</tbody></table></div><small>驗證流程：前 70% 歷史資料只負責挑選方法；後 30% 完全保留作測試，避免拿測試答案回頭調參。公平隨機選 5 號，命中 2～4 顆的精確超幾何理論比例為 11.397%。95% 區間與單尾二項檢定用來呈現不確定性；p 值未達 0.05，不代表已證明模型優於隨機。</small>';
- const recentRows=result.details.slice(-8).reverse();$("#backtestRows").innerHTML=recentRows.map(x=>'<tr><td>'+x.draw.period+'</td><td><div class="table-balls">'+balls(x.picked)+'</div></td><td><div class="table-balls">'+balls(x.draw.numbers)+'</div></td><td class="hit">'+x.hit+' 顆</td></tr>').join('')||'<tr><td colspan="4">尚無驗證資料</td></tr>';
-}
-function renderHistory(){const q=$("#searchInput").value.trim().toLowerCase(),filtered=draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).filter(d=>!q||d.period.toLowerCase().includes(q)||d.date.includes(q)),pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));page=Math.min(page,pages-1);const rows=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);$("#historyRows").innerHTML=rows.map(d=>'<tr><td>'+d.period+'</td><td>'+d.date+'</td><td><div class="table-balls">'+d.numbers.map(n=>'<span class="ball">'+String(n).padStart(2,"0")+"</span>").join("")+"</div></td></tr>").join("")||'<tr><td colspan="3">查無資料</td></tr>';$("#historyCount").textContent="第 "+(page+1)+" / "+pages+" 頁 · 共 "+fmt(filtered.length)+" 筆";$("#prevPage").disabled=page===0;$("#nextPage").disabled=page>=pages-1}function render(){renderOverview();renderRecommend();renderSequence();renderStats();renderBacktest();renderHistory()}async function load(){try{page=0;const r=await fetch("./data/daily539.json?v=20261031-4",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const j=await r.json();window.datasetUpdated=j.updatedAt;draws=(j.draws||[]).filter(d=>Array.isArray(d.numbers)&&d.numbers.length===5).sort((a,b)=>a.date.localeCompare(b.date)||a.period.localeCompare(b.period));render()}catch(e){$("#dataStatus").textContent="尚無資料";$("#mainPicks").innerHTML='<span class="empty">尚未匯入官方歷史資料，請執行 GitHub Actions 的資料更新工作。</span>';$("#historyRows").innerHTML='<tr><td colspan="3">資料集尚未建立。</td></tr>';console.error(e)}}$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",renderBacktest);$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",renderRecommend);$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
+ box.className="panel";
+ const methodCounts=selectedNames.reduce((o,n)=>(o[n]=(o[n]||0)+1,o),{});
+ const methodText=Object.entries(methodCounts).map(([n,c])=>n+"（"+c+"/5 段）").join("、");
+ box.innerHTML='<div class="panel-head"><b>五段逐期樣本外驗證</b><span class="muted">每段只用過去資料選方法，再測下一段</span></div>'+
+ '<div class="backtest-summary"><div><small>樣本外驗證期數</small><strong>'+fmt(adaptive.n)+'</strong></div><div><small>自適應策略命中 2～4 顆</small><strong>'+fmt(adaptive.dist[2]+adaptive.dist[3]+adaptive.dist[4])+' 期／'+fmtPct(score(adaptive))+'</strong></div><div><small>隨機理論基準</small><strong>11.397%</strong></div><div><small>自適應命中率 95% 區間</small><strong>'+fmtPct(ci[0])+'～'+fmtPct(ci[1])+'</strong></div><div><small>各段訓練期選出的策略</small><strong>'+methodText+'</strong></div></div>'+
+ '<div class="table-wrap"><table><thead><tr><th>策略</th><th>樣本外命中2顆</th><th>命中3顆</th><th>命中4顆</th><th>2～4顆合計</th><th>平均命中</th></tr></thead><tbody>'+
+ names.map(name=>{const s=stats[name];return '<tr><td><b>'+name+'</b></td><td>'+s.dist[2]+' 期</td><td>'+s.dist[3]+' 期</td><td>'+s.dist[4]+' 期</td><td><b>'+fmt(s.dist[2]+s.dist[3]+s.dist[4])+' 期（'+fmtPct(score(s))+'）</b></td><td>'+(s.n?(s.hits/s.n).toFixed(3):"—")+'</td></tr>'}).join('')+
+ '<tr class="hit"><td><b>逐段自適應策略</b></td><td>'+adaptive.dist[2]+' 期</td><td>'+adaptive.dist[3]+' 期</td><td>'+adaptive.dist[4]+' 期</td><td><b>'+fmt(adaptive.dist[2]+adaptive.dist[3]+adaptive.dist[4])+' 期（'+fmtPct(score(adaptive))+'）</b></td><td>'+(adaptive.n?(adaptive.hits/adaptive.n).toFixed(3):"—")+'</td></tr>'+
+ '</tbody></table></div><small>驗證方式：將所選歷史區間前半段作初始訓練資料，後半段切成五個連續區段。每段開始時，只使用該段以前的歷史資料重新選策略，再逐期預測；表內各策略亦以相同樣本外期數比較。隨機選5號命中2～4顆的理論比例為11.397%。信賴區間呈現抽樣不確定性；各期結果與策略選擇仍可能存在依賴，不能將回測視為未來保證。</small>';
+ const recentRows=adaptive.details.slice(-8).reverse();
+ $("#backtestRows").innerHTML=recentRows.map(x=>'<tr><td>'+x.draw.period+'<small class="muted">第'+x.fold+'段｜'+x.method+'</small></td><td><div class="table-balls">'+balls(x.picked)+'</div></td><td><div class="table-balls">'+balls(x.draw.numbers)+'</div></td><td class="hit">'+x.hit+' 顆</td></tr>').join('')||'<tr><td colspan="4">尚無驗證資料</td></tr>';
+}function renderHistory(){const q=$("#searchInput").value.trim().toLowerCase(),filtered=draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).filter(d=>!q||d.period.toLowerCase().includes(q)||d.date.includes(q)),pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));page=Math.min(page,pages-1);const rows=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);$("#historyRows").innerHTML=rows.map(d=>'<tr><td>'+d.period+'</td><td>'+d.date+'</td><td><div class="table-balls">'+d.numbers.map(n=>'<span class="ball">'+String(n).padStart(2,"0")+"</span>").join("")+"</div></td></tr>").join("")||'<tr><td colspan="3">查無資料</td></tr>';$("#historyCount").textContent="第 "+(page+1)+" / "+pages+" 頁 · 共 "+fmt(filtered.length)+" 筆";$("#prevPage").disabled=page===0;$("#nextPage").disabled=page>=pages-1}function render(){renderOverview();renderRecommend();renderSequence();renderStats();renderBacktest();renderHistory()}async function load(){try{page=0;const r=await fetch("./data/daily539.json?v=20261031-4",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const j=await r.json();window.datasetUpdated=j.updatedAt;draws=(j.draws||[]).filter(d=>Array.isArray(d.numbers)&&d.numbers.length===5).sort((a,b)=>a.date.localeCompare(b.date)||a.period.localeCompare(b.period));render()}catch(e){$("#dataStatus").textContent="尚無資料";$("#mainPicks").innerHTML='<span class="empty">尚未匯入官方歷史資料，請執行 GitHub Actions 的資料更新工作。</span>';$("#historyRows").innerHTML='<tr><td colspan="3">資料集尚未建立。</td></tr>';console.error(e)}}$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",renderBacktest);$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",renderRecommend);$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
