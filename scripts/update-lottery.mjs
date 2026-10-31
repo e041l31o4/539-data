@@ -1,0 +1,13 @@
+import fs from "node:fs";
+import path from "node:path";
+const API="https://api.taiwanlottery.com/TLCAPIWeB/Lottery/Daily539Result";
+const OUT=path.resolve("data/daily539.json");
+const full=process.argv.includes("--full");
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const twNow=new Date(Date.now()+8*3600*1000);
+const monthNow=twNow.toISOString().slice(0,7);
+function months(from,to){let [y,m]=from.split("-").map(Number),[ey,em]=to.split("-").map(Number),a=[];while(y<ey||(y===ey&&m<=em)){a.push(y+"-"+String(m).padStart(2,"0"));if(++m>12){m=1;y++}}return a}
+function parse(r){const period=String(r.period??r.Period??"").trim(),date=String(r.lotteryDate??r.LotteryDate??"").slice(0,10),raw=r.drawNumberSize??r.drawNumberAppear??r.DrawNumberSize??[],numbers=[...new Set(raw.map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=39))].sort((a,b)=>a-b);return period&&/^\d{4}-\d{2}-\d{2}$/.test(date)&&numbers.length===5?{period,date,numbers}:null}
+async function fetchMonth(month){let out=[];for(let page=1;page<=8;page++){const url=API+"?period&month="+month+"&pageNum="+page+"&pageSize=50";let response=await fetch(url,{headers:{Accept:"application/json","User-Agent":"539DATA/1.0"}});if(!response.ok)throw Error("HTTP "+response.status+" "+month);let json=await response.json();if(json.rtCode!==0&&json.rtCode!=="0000")throw Error("API "+json.rtCode+" "+(json.rtMsg||""));const list=json?.content?.daily539Res||[];list.forEach(r=>{const d=parse(r);if(d)out.push(d)});const total=Number(json?.content?.totalSize||list.length);if(out.length>=total||list.length<50)break;await sleep(700)}return out}
+async function main(){let old={draws:[]};if(fs.existsSync(OUT)){try{old=JSON.parse(fs.readFileSync(OUT,"utf8"))}catch{}}const prev=new Date(Date.UTC(twNow.getUTCFullYear(),twNow.getUTCMonth()-1,1)).toISOString().slice(0,7);const list=full||!old.draws?.length?months(process.env.START_MONTH||"2007-01",monthNow):[prev,monthNow];const map=new Map((old.draws||[]).map(d=>[d.period,d]));let got=0,errors=[];for(const m of list){try{const rows=await fetchMonth(m);rows.forEach(d=>map.set(d.period,d));got+=rows.length;console.log(m,rows.length)}catch(e){errors.push(String(e));console.error(e.message)}await sleep(800)}if(!got){console.error("沒有取得新資料，保留舊檔。");process.exit(1)}const draws=[...map.values()].sort((a,b)=>a.period.localeCompare(b.period));fs.mkdirSync(path.dirname(OUT),{recursive:true});const result={source:API,updatedAt:new Date().toISOString(),count:draws.length,firstDate:draws[0]?.date,lastDate:draws.at(-1)?.date,errors,draws};const tmp=OUT+".tmp";fs.writeFileSync(tmp,JSON.stringify(result));fs.renameSync(tmp,OUT);console.log("完成",draws.length,"期；本次取得",got,"筆；錯誤",errors.length)}
+main().catch(e=>{console.error(e);process.exit(1)});
