@@ -138,7 +138,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
 function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),max=Math.max(...f.slice(1),1),g=gaps(draws);$("#frequencyGrid").innerHTML=Array.from({length:39},(_,i)=>{let n=i+1,v=f[n];return'<div class="freq-item '+(v>=max*.8?"hot":"")+'"><b>'+String(n).padStart(2,"0")+'</b><span>'+v+" 次</span></div>"}).join("");let t=tailFreq(a),tm=Math.max(...t,1);$("#tailChart").innerHTML=t.map((v,i)=>'<div class="tail-col"><b>'+v+'</b><div class="tail-bar" style="height:'+Math.max(3,v/tm*88)+'px"></div><small>'+i+" 尾</small></div>").join("");let top=Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]).slice(0,16);$("#gapList").innerHTML=top.map(n=>'<div class="gap-item"><b>'+String(n).padStart(2,"0")+'</b><small>'+g[n]+" 期</small></div>").join("")}function renderBacktest(){
  const requested=Number($("#backtestSelect").value),start=Math.max(100,draws.length-requested),total=draws.length-start;
  if(total<100){$("#btSamples").textContent="資料不足";$("#btAverage").textContent="—";$("#btOne").textContent="—";return}
- const names=["近期熱號","遺漏值","前後號±1","隔期重複","尾數延伸","算術變化","平滑多視窗模型","綜合模型"];
+ const names=["近期熱號","遺漏值","前後號±1","隔期重複","尾數延伸","算術變化","平滑多視窗模型","多因子連動融合","綜合模型"];
  const pickers={
   "近期熱號":a=>{const f=freq(a.slice(-30));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>f[y]-f[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "遺漏值":a=>{const g=gaps(a);return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
@@ -147,6 +147,7 @@ function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),
   "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "平滑多視窗模型":advancedPick,
+  "多因子連動融合":multiFactorPick,
   "綜合模型":a=>recommendations(a)?.main||[]
  };
  const blank=()=>({n:0,hits:0,atLeast1:0,dist:Array(6).fill(0),details:[]});
