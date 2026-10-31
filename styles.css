@@ -96,3 +96,6 @@ footer{margin-top:72px;padding-block:22px;background:#fff;border-top:1px solid #
 #backtest .table-balls{display:flex;gap:5px}
 #backtest .table-balls .ball{width:27px;height:27px;font-size:9px}
 @media(max-width:760px){#backtest .backtest-summary{grid-template-columns:1fr 1fr}#backtestCompare{padding:15px 12px}#backtestCompare .panel-head{align-items:flex-start;flex-direction:column}.validation-note{padding:0 14px}}
+
+/* Rank labels for recommended and backup numbers */
+.backup-pick{display:inline-flex;flex-direction:column;align-items:center;gap:4px;margin-right:9px}.backup-pick small,.pick-ball-button .rank-no{font-size:10px;color:#8b7778;font-weight:600}.pick-ball-button{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
