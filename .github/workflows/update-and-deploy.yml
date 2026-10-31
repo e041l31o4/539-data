@@ -1,7 +1,7 @@
 name: Update 539 history and deploy
 on:
   schedule:
-    - cron: "45 13 * * *"
+    - cron: "15 14 * * *"
   workflow_dispatch:
     inputs:
       full:
