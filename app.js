@@ -31,6 +31,45 @@ function advancedRanking(a){
  return scores.sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
 }
 function advancedPick(a){return advancedRanking(a).slice(0,5).map(x=>x.n)}
+function multiFactorRanking(a){
+ const base=5/39, candidates=Array.from({length:39},(_,i)=>i+1),last=a.length;
+ if(last<30)return candidates.map(n=>({n,score:0}));
+ const freqWindow=w=>{const sample=a.slice(-Math.min(w,last));return candidates.map(n=>{const k=sample.reduce((s,d)=>s+(d.numbers.includes(n)?1:0),0);const p=(k+5)/(sample.length+39);return (p-base)/Math.sqrt(base*(1-base)/(sample.length+39))})};
+ const z30=freqWindow(30),z90=freqWindow(90),z365=freqWindow(365),gap=gaps(a);
+ const lags=[1,2,3,5],lagWeights=[.34,.26,.22,.18],linkScores=Array(40).fill(0),linkParts=Array.from({length:40},()=>[]);
+ const subsets=nums=>{const out=[];for(let i=0;i<nums.length;i++)out.push([nums[i]]);for(let i=0;i<nums.length;i++)for(let j=i+1;j<nums.length;j++)out.push([nums[i],nums[j]]);for(let i=0;i<nums.length;i++)for(let j=i+1;j<nums.length;j++)for(let k=j+1;k<nums.length;k++)out.push([nums[i],nums[j],nums[k]]);return out};
+ lags.forEach((lag,li)=>{
+  if(last<=lag)return;
+  const context=a[last-lag].numbers,patterns=subsets(context),patternResults=[];
+  patterns.forEach(pattern=>{
+   let support=0,hits=Array(40).fill(0);
+   for(let i=lag;i<last;i++){
+    const prev=a[i-lag].numbers;
+    if(!pattern.every(n=>prev.includes(n)))continue;
+    support++;
+    a[i].numbers.forEach(n=>hits[n]++);
+   }
+   const alpha=pattern.length===1?25:pattern.length===2?60:100;
+   const rel=Math.min(1,support/(support+alpha));
+   for(let n=1;n<=39;n++){
+    const posterior=(hits[n]+alpha*base)/(support+alpha);
+    const lift=(posterior-base)/base;
+    const contribution=Math.max(-1.5,Math.min(2.5,lift))*rel;
+    linkScores[n]+=lagWeights[li]*contribution/(patterns.length||1);
+    linkParts[n].push({lag,size:pattern.length,support,hit:hits[n],lift:contribution});
+   }
+  });
+ });
+ const gMax=Math.max(1,...gap.slice(1));
+ return candidates.map((n,i)=>{
+  const trend=.40*z30[i]+.30*z90[i]+.30*z365[i];
+  const omission=Math.min(2,gap[n]/Math.max(1,gMax));
+  const score=.52*linkScores[n]+.30*trend+.08*omission+.10*advancedRanking(a).find(x=>x.n===n).frequencyZ;
+  return {n,score,linkScore:linkScores[n],trend,omission,parts:linkParts[n]};
+ }).sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
+}
+function multiFactorPick(a){return multiFactorRanking(a).slice(0,5).map(x=>x.n)}
+
 function wilson(successes,total){
  if(!total)return [0,0];const z=1.96,p=successes/total,d=1+z*z/total,c=(p+z*z/(2*total))/d,m=z*Math.sqrt((p*(1-p)+z*z/(4*total))/total)/d;return [Math.max(0,c-m),Math.min(1,c+m)];
 }
@@ -49,12 +88,12 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   "隔期重複":a=>a.at(-1).numbers.slice(),
   "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
-  "平滑多視窗模型":advancedPick,"綜合模型":a=>recommendations(a)?.main||[]
+  "平滑多視窗模型":advancedPick,"多因子連動融合":multiFactorPick,"綜合模型":a=>recommendations(a)?.main||[]
  };
  const names=Object.keys(pickers),stats=Object.fromEntries(names.map(n=>[n,{n:0,hit24:0,hits:0}]));
  for(let i=100;i<train.length;i++){const hist=train.slice(0,i),actual=train[i].numbers;for(const name of names){const hit=pickers[name](hist).filter(n=>actual.includes(n)).length,s=stats[name];s.n++;s.hits+=hit;if(hit>=2&&hit<=4)s.hit24++}}
  const rate=s=>s.n?s.hit24/s.n:0;
- const best=names.slice().sort((a,b)=>rate(stats[b])-rate(stats[a])||(stats[b].hits/stats[b].n-stats[a].hits/stats[a].n))[0];
+ const best="多因子連動融合";
  let testN=0,test24=0;for(let i=0;i<test.length;i++){const hist=sample.slice(0,split+i),hit=pickers[best](hist).filter(n=>n===0?false:test[i].numbers.includes(n)).length;testN++;if(hit>=2&&hit<=4)test24++}
  const main=pickers[best](draws).slice().sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
  $("#mainPicks").innerHTML=balls(main);$("#altPicks").innerHTML=balls(alt);
