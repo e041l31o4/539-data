@@ -10,27 +10,34 @@ const $=s=>document.querySelector(s);let draws=[],page=0;const PAGE_SIZE=12;cons
  let nh=0,ns=0,th=0,ts=0;for(let i=1;i<trans.length;i++){const prev=trans[i-1].numbers,cur=trans[i].numbers;if(prev.includes(n-1)||prev.includes(n+1)){ns++;if(cur.includes(n))nh++}if(prev.includes(n)){ts++;if(cur.includes(n))th++}}raw.neighbor[n]=(nh+.5)/(ns+1);raw.transition[n]=(th+.5)/(ts+1);
  }return Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,minmax(v)]));
 }
-function advancedPick(a){
- const base=5/39,windows=[30,90,180,365],scores=[];
- const limit=a.length;
+function advancedRanking(a){
+ const base=5/39,windows=[30,90,180,365],weights=[.34,.29,.22,.15],scores=[],limit=a.length;
  for(let n=1;n<=39;n++){
   let z=0,parts=[];
   windows.forEach((w,i)=>{
    const sample=a.slice(-Math.min(w,limit)),count=sample.reduce((s,d)=>s+(d.numbers.includes(n)?1:0),0);
    const post=(count+5)/(sample.length+39),se=Math.sqrt(base*(1-base)/(sample.length+39));
-   const v=se?(post-base)/se:0;z+=v*[.34,.29,.22,.15][i];parts.push({w,count,rate:post});
+   const v=se?(post-base)/se:0;z+=v*weights[i];parts.push({w,count,total:sample.length,rate:post,z:v});
   });
   let opportunities=0,hits=0;
   for(let i=0;i<limit-1;i++){
-   const prev=a[i].numbers;
-   if(prev.some(x=>Math.abs(x-n)===1)){opportunities++;if(a[i+1].numbers.includes(n))hits++}
+   if(a[i].numbers.some(x=>Math.abs(x-n)===1)){opportunities++;if(a[i+1].numbers.includes(n))hits++}
   }
   const conditional=(hits+5)/(opportunities+39),cse=Math.sqrt(base*(1-base)/(opportunities+39));
-  const cz=cse?(conditional-base)/cse:0;
-  const score=z*.82+Math.max(-2,Math.min(2,cz))*.18;
-  scores.push({n,score,parts,opportunities,hits,conditional});
+  const cz=cse?(conditional-base)/cse:0,clamped=Math.max(-2,Math.min(2,cz));
+  const score=z*.82+clamped*.18;
+  scores.push({n,score,frequencyZ:z,conditionalZ:cz,parts,opportunities,hits,conditional});
  }
- return scores.sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n).slice(0,5).map(x=>x.n);
+ return scores.sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
+}
+function advancedPick(a){return advancedRanking(a).slice(0,5).map(x=>x.n)}
+function wilson(successes,total){
+ if(!total)return [0,0];const z=1.96,p=successes/total,d=1+z*z/total,c=(p+z*z/(2*total))/d,m=z*Math.sqrt((p*(1-p)+z*z/(4*total))/total)/d;return [Math.max(0,c-m),Math.min(1,c+m)];
+}
+function binomialUpperTail(k,n,p){
+ let term=Math.pow(1-p,n),sum=0;
+ for(let i=0;i<=n;i++){if(i>=k)sum+=term;if(i<n)term*=((n-i)/(i+1))*(p/(1-p))}
+ return Math.min(1,sum);
 }
 const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
@@ -61,7 +68,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   if(best==="隔期重複")return "前一期開出號碼延續觀察";
   if(best==="尾數延伸")return tailCount?"前一期有 "+tailCount+" 個相同尾數":"尾數候選排序入選";
   if(best==="算術變化")return "符合前期號碼衍生的算術候選";
-  if(best==="貝葉斯融合模型")return "多視窗頻率＋前期鄰號條件機率的收縮估計";
+  if(best==="貝葉斯融合模型"){const d=advancedRanking(draws).find(x=>x.n===n);return "30/90/180/365期平滑頻率 Z="+d.frequencyZ.toFixed(2)+"；鄰號後 "+d.hits+"/"+d.opportunities+" 次開出（平滑率 "+(d.conditional*100).toFixed(1)+"%）";}
   return "綜合模型排序入選";
  };
  let reasonBox=$("#pickReasons");
@@ -85,6 +92,7 @@ function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),
   "隔期重複":a=>a.at(-1).numbers.slice(),
   "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "貝葉斯融合模型":advancedPick,
   "綜合模型":a=>recommendations(a)?.main||[]
  };
  const blank=()=>({n:0,hits:0,atLeast1:0,dist:Array(6).fill(0),details:[]});
@@ -99,10 +107,10 @@ function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),
  $("#btSamples").textContent=fmt(result.n);$("#btAverage").textContent=result.n?(result.hits/result.n).toFixed(3):"—";$("#btOne").textContent=result.n?fmtPct(result.atLeast1/result.n):"—";
  const panel=$("#backtestRows").closest(".panel");let box=$("#backtestCompare");if(!box){box=document.createElement("div");box.id="backtestCompare";panel.insertAdjacentElement("beforebegin",box)}
  box.className="panel";box.innerHTML='<div class="panel-head"><b>2～4 顆命中驗證</b><span class="muted">先用前 70% 挑方法，再用後 30% 驗證</span></div>'+
- '<div class="backtest-summary"><div><small>訓練期選出的方法</small><strong>'+best+'</strong></div><div><small>驗證期命中 2～4 顆</small><strong>'+fmt(result.dist[2]+result.dist[3]+result.dist[4])+' 期／'+fmtPct(score(result))+'</strong></div><div><small>隨機選 5 號理論值</small><strong>11.4%</strong></div></div>'+
+ '<div class="backtest-summary"><div><small>訓練期選出的方法</small><strong>'+best+'</strong></div><div><small>驗證期命中 2～4 顆</small><strong>'+fmt(result.dist[2]+result.dist[3]+result.dist[4])+' 期／'+fmtPct(score(result))+'</strong></div><div><small>隨機理論值</small><strong>11.397%</strong></div><div><small>驗證命中率 95% 區間</small><strong>'+fmtPct(wilson(result.dist[2]+result.dist[3]+result.dist[4],result.n)[0])+'～'+fmtPct(wilson(result.dist[2]+result.dist[3]+result.dist[4],result.n)[1])+'</strong></div><div><small>相對隨機基準單尾檢定</small><strong>p='+binomialUpperTail(result.dist[2]+result.dist[3]+result.dist[4],result.n,.11397169291906134).toFixed(4)+'</strong></div></div>'+
  '<div class="table-wrap"><table><thead><tr><th>方法</th><th>命中2顆</th><th>命中3顆</th><th>命中4顆</th><th>2～4顆合計</th><th>平均命中</th></tr></thead><tbody>'+
  names.map(name=>{const s=stats[name].test;return '<tr'+(name===best?' class="hit"':'')+'><td><b>'+name+'</b></td><td>'+s.dist[2]+' 期</td><td>'+s.dist[3]+' 期</td><td>'+s.dist[4]+' 期</td><td><b>'+fmt(s.dist[2]+s.dist[3]+s.dist[4])+' 期（'+fmtPct(score(s))+'）</b></td><td>'+(s.n?(s.hits/s.n).toFixed(3):"—")+'</td></tr>'}).join('')+
- '</tbody></table></div><small>驗證流程：前 70% 歷史資料只負責挑選方法；後 30% 完全保留作測試，避免拿測試答案回頭調參。公平隨機選 5 號，命中 2～4 顆的理論比例約 11.4%。若模型未高於此值，就不宣稱有優勢。</small>';
+ '</tbody></table></div><small>驗證流程：前 70% 歷史資料只負責挑選方法；後 30% 完全保留作測試，避免拿測試答案回頭調參。公平隨機選 5 號，命中 2～4 顆的精確超幾何理論比例為 11.397%。95% 區間與單尾二項檢定用來呈現不確定性；p 值未達 0.05，不代表已證明模型優於隨機。</small>';
  const recentRows=result.details.slice(-8).reverse();$("#backtestRows").innerHTML=recentRows.map(x=>'<tr><td>'+x.draw.period+'</td><td><div class="table-balls">'+balls(x.picked)+'</div></td><td><div class="table-balls">'+balls(x.draw.numbers)+'</div></td><td class="hit">'+x.hit+' 顆</td></tr>').join('')||'<tr><td colspan="4">尚無驗證資料</td></tr>';
 }
 function renderHistory(){const q=$("#searchInput").value.trim().toLowerCase(),filtered=draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).filter(d=>!q||d.period.toLowerCase().includes(q)||d.date.includes(q)),pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));page=Math.min(page,pages-1);const rows=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);$("#historyRows").innerHTML=rows.map(d=>'<tr><td>'+d.period+'</td><td>'+d.date+'</td><td><div class="table-balls">'+d.numbers.map(n=>'<span class="ball">'+String(n).padStart(2,"0")+"</span>").join("")+"</div></td></tr>").join("")||'<tr><td colspan="3">查無資料</td></tr>';$("#historyCount").textContent="第 "+(page+1)+" / "+pages+" 頁 · 共 "+fmt(filtered.length)+" 筆";$("#prevPage").disabled=page===0;$("#nextPage").disabled=page>=pages-1}function render(){renderOverview();renderRecommend();renderSequence();renderStats();renderBacktest();renderHistory()}async function load(){try{page=0;const r=await fetch("./data/daily539.json?v=20261031-4",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const j=await r.json();window.datasetUpdated=j.updatedAt;draws=(j.draws||[]).filter(d=>Array.isArray(d.numbers)&&d.numbers.length===5).sort((a,b)=>a.date.localeCompare(b.date)||a.period.localeCompare(b.period));render()}catch(e){$("#dataStatus").textContent="尚無資料";$("#mainPicks").innerHTML='<span class="empty">尚未匯入官方歷史資料，請執行 GitHub Actions 的資料更新工作。</span>';$("#historyRows").innerHTML='<tr><td colspan="3">資料集尚未建立。</td></tr>';console.error(e)}}$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",renderBacktest);$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",renderRecommend);$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
