@@ -95,7 +95,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  const rate=s=>s.n?s.hit24/s.n:0;
  const best="多因子連動融合";
  let testN=0,test24=0;for(let i=0;i<test.length;i++){const hist=sample.slice(0,split+i),hit=pickers[best](hist).filter(n=>n===0?false:test[i].numbers.includes(n)).length;testN++;if(hit>=2&&hit<=4)test24++}
- const main=pickers[best](draws).slice().sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
+ const currentRanking=multiFactorRanking(draws),main=currentRanking.slice(0,5).map(x=>x.n).sort((a,b)=>a-b),alt=currentRanking.slice(5,10).map(x=>x.n).sort((a,b)=>a-b);
  $("#mainPicks").innerHTML=main.map(n=>'<button type="button" class="pick-ball-button" data-number="'+n+'"><span class="ball">'+String(n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=balls(alt);
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
  const universe=Array.from({length:39},(_,i)=>i+1);
@@ -112,7 +112,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   if(best==="平滑多視窗模型"){const d=advancedRanking(draws).find(x=>x.n===n),rank=1+advancedRanking(draws).filter(x=>x.score>d.score).length;return {value:d.score.toFixed(3),unit:"融合分數（非機率）",rank,rule:"頻率偏離Z分數×0.82＋鄰號條件偏離Z分數×0.18"};}
   const r=ranking(draws),d=r.find(x=>x.n===n);return {value:d.score.toFixed(3),unit:"綜合加權分數（非機率）",rank:1+r.filter(x=>x.score>d.score).length,rule:"前後號25%、隔期15%、近期頻率15%、總頻率10%、遺漏10%、冷熱5%、尾數10%、結構10%"};
  };
- const allRanks=multiFactorRanking(draws), rankMap=new Map(allRanks.map((x,i)=>[x.n,{...x,rank:i+1}]));
+ const allRanks=currentRanking, rankMap=new Map(allRanks.map((x,i)=>[x.n,{...x,rank:i+1}]));
  const detailsHtml=n=>{
   const d=rankMap.get(n),adv=advancedRanking(draws).find(x=>x.n===n),near=prev.filter(x=>Math.abs(x-n)===1);
   const lagSummary=[1,2,3,5].map(lag=>{const sample=draws.slice(0,-lag),hits=sample.reduce((acc,draw,i)=>acc+(draw.numbers.includes(n)&&draws[i+lag]?.numbers.includes(n)?1:0),0),opportunities=sample.filter(v=>v.numbers.includes(n)).length;return "隔"+lag+"期重複 "+hits+"/"+opportunities}).join("｜");
