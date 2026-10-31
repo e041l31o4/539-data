@@ -59,21 +59,26 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  const main=pickers[best](draws).slice().sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
  $("#mainPicks").innerHTML=balls(main);$("#altPicks").innerHTML=balls(alt);
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
- const reasonFor=n=>{
-  const prev=last.numbers,near=prev.filter(x=>Math.abs(x-n)===1);
-  const tailCount=prev.filter(x=>x%10===n%10).length;
-  if(best==="前後號±1")return near.length?"前一期 "+near.map(x=>String(x).padStart(2,"0")).join("、")+" 的前後號":"前後號候選排序入選";
-  if(best==="近期熱號")return "近30期出現 "+f30[n]+" 次";
-  if(best==="遺漏值")return "目前遺漏 "+g[n]+" 期";
-  if(best==="隔期重複")return "前一期開出號碼延續觀察";
-  if(best==="尾數延伸")return tailCount?"前一期有 "+tailCount+" 個相同尾數":"尾數候選排序入選";
-  if(best==="算術變化")return "符合前期號碼衍生的算術候選";
-  if(best==="平滑多視窗模型"){const d=advancedRanking(draws).find(x=>x.n===n);return "30/90/180/365期平滑頻率 Z="+d.frequencyZ.toFixed(2)+"；鄰號後 "+d.hits+"/"+d.opportunities+" 次開出（平滑率 "+(d.conditional*100).toFixed(1)+"%）";}
-  return "綜合模型排序入選";
+ const universe=Array.from({length:39},(_,i)=>i+1);
+ const prev=last.numbers;
+ const metricFor=n=>{
+  const near=prev.filter(x=>Math.abs(x-n)===1),tailCount=prev.filter(x=>x%10===n%10).length;
+  const arithmetic=prev.flatMap(x=>[x-1,x+1,40-x,((x*2-1)%39)+1,((x*3-1)%39)+1,((x+18)%39)+1]).filter(x=>x>=1&&x<=39);
+  if(best==="近期熱號")return {value:f30[n],unit:"近30期出現次數",rank:1+universe.filter(x=>f30[x]>f30[n]).length,rule:"按近30期次數由高至低排序"};
+  if(best==="遺漏值")return {value:g[n],unit:"連續未開期數",rank:1+universe.filter(x=>g[x]>g[n]).length,rule:"按目前遺漏期數由高至低排序"};
+  if(best==="前後號±1")return {value:near.length,unit:"與前期號碼相差±1的連結數",rank:1+universe.filter(x=>prev.filter(p=>Math.abs(p-x)===1).length>near.length).length,rule:"先選前期五碼的±1候選，再以距20較近者破同分"};
+  if(best==="隔期重複")return {value:prev.includes(n)?1:0,unit:"是否為前一期重複號",rank:prev.includes(n)?1:6,rule:"直接沿用前一期五碼；不代表重複機率提高"};
+  if(best==="尾數延伸")return {value:tailCount,unit:"前期相同尾數個數",rank:1+universe.filter(x=>prev.filter(p=>p%10===x%10).length>tailCount).length,rule:"按前一期相同尾數連結數排序"};
+  if(best==="算術變化")return {value:arithmetic.filter(x=>x===n).length,unit:"符合前期衍生算式的次數",rank:1+universe.filter(x=>arithmetic.filter(v=>v===x).length>arithmetic.filter(v=>v===n).length).length,rule:"前期號碼套用±1、40−x、2x、3x及+19等候選規則"};
+  if(best==="平滑多視窗模型"){const d=advancedRanking(draws).find(x=>x.n===n),rank=1+advancedRanking(draws).filter(x=>x.score>d.score).length;return {value:d.score.toFixed(3),unit:"融合分數（非機率）",rank,rule:"頻率偏離Z分數×0.82＋鄰號條件偏離Z分數×0.18"};}
+  const r=ranking(draws),d=r.find(x=>x.n===n);return {value:d.score.toFixed(3),unit:"綜合加權分數（非機率）",rank:1+r.filter(x=>x.score>d.score).length,rule:"前後號25%、隔期15%、近期頻率15%、總頻率10%、遺漏10%、冷熱5%、尾數10%、結構10%"};
  };
+ const reasonFor=n=>{const e=metricFor(n);return e.rule+"；"+e.unit+"："+e.value;};
  let reasonBox=$("#pickReasons");
  if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
- reasonBox.innerHTML='<div class="panel-head"><b>本期五碼入選原因</b><span class="muted">依 '+best+' 策略｜截至 '+last.date+'</span></div><div class="table-wrap"><table><thead><tr><th>號碼</th><th>策略依據</th><th>近30期</th><th>近100期</th><th>目前遺漏</th></tr></thead><tbody>'+main.map(n=>'<tr><td><b>'+String(n).padStart(2,"0")+'</b></td><td>'+reasonFor(n)+'</td><td>'+f30[n]+' 次</td><td>'+f100[n]+' 次</td><td>'+g[n]+' 期</td></tr>').join("")+'</tbody></table></div><small class="muted">頻率與遺漏值是歷史描述，不代表下一期開出機率較高；同一策略下的候選排序只用於模型比較。</small>';
+ const ordered=names.slice().sort((a,b)=>rate(stats[b])-rate(stats[a])||(stats[b].hits/Math.max(1,stats[b].n)-stats[a].hits/Math.max(1,stats[a].n)));
+ const winner=stats[best],runner=stats[ordered[1]],winnerRate=rate(winner),runnerRate=rate(runner);
+ reasonBox.innerHTML='<div class="panel-head"><b>本期五碼入選原因</b><span class="muted">依 '+best+' 策略｜資料截至 '+last.date+'</span></div><div class="backtest-summary"><div><small>為何選這套策略</small><strong>訓練期 2～4 顆命中率 '+(winnerRate*100).toFixed(2)+'%</strong></div><div><small>訓練期平均命中</small><strong>'+(winner.hits/Math.max(1,winner.n)).toFixed(3)+' 顆／期</strong></div><div><small>訓練樣本</small><strong>'+fmt(winner.n)+' 期</strong></div><div><small>與第二名差距</small><strong>'+((winnerRate-runnerRate)*100).toFixed(2)+' 個百分點</strong></div></div><p class="muted">策略選擇公式：各策略逐期回看訓練資料，統計命中2、3、4顆的期數 ÷ 訓練期數；先取比率最高者，同率再比較平均命中顆數。這是歷史樣本的策略篩選規則，不是下一期中獎機率。</p><div class="table-wrap"><table><thead><tr><th>號碼</th><th>全39碼排序</th><th>入選計算依據</th><th>近30期</th><th>近100期</th><th>目前遺漏</th></tr></thead><tbody>'+main.map(n=>{const e=metricFor(n);return '<tr><td><b>'+String(n).padStart(2,"0")+'</b></td><td>第 '+e.rank+' 名</td><td>'+reasonFor(n)+'</td><td>'+f30[n]+' 次</td><td>'+f100[n]+' 次</td><td>'+g[n]+' 期</td></tr>'}).join("")+'</tbody></table></div><small class="muted">重要限制：以上是模型如何選出這五碼的可追溯計算過程，不代表它們比其他五碼更容易開出。公平獨立開獎下，所有五碼組合的下一期機率相同；±1、尾數、算術等規則只是候選生成方式，沒有被證明具有預測因果。</small>';
  const rateText=testN?(test24/testN*100).toFixed(1)+"%":"樣本不足";
  $("#recommendBasis").textContent="訓練區段優選："+best+"｜保留驗證區段 "+rateText;
  $("#sampleCount").textContent=fmt(draws.length)+" 期歷史資料";
