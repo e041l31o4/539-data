@@ -10,6 +10,28 @@ const $=s=>document.querySelector(s);let draws=[],page=0;const PAGE_SIZE=12;cons
  let nh=0,ns=0,th=0,ts=0;for(let i=1;i<trans.length;i++){const prev=trans[i-1].numbers,cur=trans[i].numbers;if(prev.includes(n-1)||prev.includes(n+1)){ns++;if(cur.includes(n))nh++}if(prev.includes(n)){ts++;if(cur.includes(n))th++}}raw.neighbor[n]=(nh+.5)/(ns+1);raw.transition[n]=(th+.5)/(ts+1);
  }return Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,minmax(v)]));
 }
+function advancedPick(a){
+ const base=5/39,windows=[30,90,180,365],scores=[];
+ const limit=a.length;
+ for(let n=1;n<=39;n++){
+  let z=0,parts=[];
+  windows.forEach((w,i)=>{
+   const sample=a.slice(-Math.min(w,limit)),count=sample.reduce((s,d)=>s+(d.numbers.includes(n)?1:0),0);
+   const post=(count+5)/(sample.length+39),se=Math.sqrt(base*(1-base)/(sample.length+39));
+   const v=se?(post-base)/se:0;z+=v*[.34,.29,.22,.15][i];parts.push({w,count,rate:post});
+  });
+  let opportunities=0,hits=0;
+  for(let i=0;i<limit-1;i++){
+   const prev=a[i].numbers;
+   if(prev.some(x=>Math.abs(x-n)===1)){opportunities++;if(a[i+1].numbers.includes(n))hits++}
+  }
+  const conditional=(hits+5)/(opportunities+39),cse=Math.sqrt(base*(1-base)/(opportunities+39));
+  const cz=cse?(conditional-base)/cse:0;
+  const score=z*.82+Math.max(-2,Math.min(2,cz))*.18;
+  scores.push({n,score,parts,opportunities,hits,conditional});
+ }
+ return scores.sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n).slice(0,5).map(x=>x.n);
+}
 const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
  const sample=draws.slice(-1000),split=Math.max(100,Math.floor(sample.length*.7)),train=sample.slice(0,split),test=sample.slice(split);
@@ -20,7 +42,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   "隔期重複":a=>a.at(-1).numbers.slice(),
   "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
-  "綜合模型":a=>recommendations(a)?.main||[]
+  "貝葉斯融合模型":advancedPick,"綜合模型":a=>recommendations(a)?.main||[]
  };
  const names=Object.keys(pickers),stats=Object.fromEntries(names.map(n=>[n,{n:0,hit24:0,hits:0}]));
  for(let i=100;i<train.length;i++){const hist=train.slice(0,i),actual=train[i].numbers;for(const name of names){const hit=pickers[name](hist).filter(n=>actual.includes(n)).length,s=stats[name];s.n++;s.hits+=hit;if(hit>=2&&hit<=4)s.hit24++}}
@@ -39,6 +61,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   if(best==="隔期重複")return "前一期開出號碼延續觀察";
   if(best==="尾數延伸")return tailCount?"前一期有 "+tailCount+" 個相同尾數":"尾數候選排序入選";
   if(best==="算術變化")return "符合前期號碼衍生的算術候選";
+  if(best==="貝葉斯融合模型")return "多視窗頻率＋前期鄰號條件機率的收縮估計";
   return "綜合模型排序入選";
  };
  let reasonBox=$("#pickReasons");
