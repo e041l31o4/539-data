@@ -77,3 +77,22 @@ footer{margin-top:72px;padding-block:22px;background:#fff;border-top:1px solid #
  .model-grid{grid-template-columns:1fr 1fr}.number-detail-card{padding:19px 15px}
  footer{padding:20px 15px}
 }
+
+/* Model validation panel */
+#backtest .backtest-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+#backtest .backtest-summary>div{background:#fff;border:1px solid #ebe6e2;border-radius:11px;padding:16px 18px}
+#backtest .backtest-summary small{display:block;color:#898184;font-size:10px;margin-bottom:8px}
+#backtest .backtest-summary strong{font-size:22px;color:#a72b35}
+#backtestCompare{padding:20px 20px 16px;overflow:hidden}
+#backtestCompare .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#backtestCompare .backtest-summary{margin:14px 0}
+#backtestCompare .table-wrap{padding:0;overflow-x:auto}
+#backtestCompare table{min-width:680px}
+#backtestCompare tbody tr.hit{background:#fbefee}
+#backtestCompare>small{display:block;color:#898184;line-height:1.9;font-size:10px;margin-top:14px}
+.validation-note{max-width:1180px;margin:12px auto 0;padding:0 24px;color:#938b8d;font-size:10px;line-height:1.9}
+#backtest .table-wrap{overflow-x:auto}
+#backtest .table-wrap table{min-width:570px}
+#backtest .table-balls{display:flex;gap:5px}
+#backtest .table-balls .ball{width:27px;height:27px;font-size:9px}
+@media(max-width:760px){#backtest .backtest-summary{grid-template-columns:1fr 1fr}#backtestCompare{padding:15px 12px}#backtestCompare .panel-head{align-items:flex-start;flex-direction:column}.validation-note{padding:0 14px}}
