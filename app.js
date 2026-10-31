@@ -10,16 +10,22 @@ const $=s=>document.querySelector(s);let draws=[],page=0;const PAGE_SIZE=12;cons
  let nh=0,ns=0,th=0,ts=0;for(let i=1;i<trans.length;i++){const prev=trans[i-1].numbers,cur=trans[i].numbers;if(prev.includes(n-1)||prev.includes(n+1)){ns++;if(cur.includes(n))nh++}if(prev.includes(n)){ts++;if(cur.includes(n))th++}}raw.neighbor[n]=(nh+.5)/(ns+1);raw.transition[n]=(th+.5)/(ts+1);
  }return Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,minmax(v)]));
 }
-const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
+const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function balancedPick(sorted){
+ const picked=[],zone=[0,0,0];let odd=0,low=0;
+ for(const n of sorted){const z=n<=13?0:n<=26?1:2;if(zone[z]>=2||(n%2?odd>=3:5-odd>=3)||(n<=19?low>=3:5-low>=3))continue;picked.push(n);zone[z]++;if(n%2)odd++;if(n<=19)low++;if(picked.length===5)return picked}
+ for(const n of sorted)if(!picked.includes(n)){picked.push(n);if(picked.length===5)break}
+ return picked;
+}
+function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
  const sample=draws.slice(-1000),split=Math.max(100,Math.floor(sample.length*.7)),train=sample.slice(0,split),test=sample.slice(split);
  const pickers={
-  "近期熱號":a=>{const f=freq(a.slice(-30));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>f[y]-f[x]||x-y).slice(0,5)},
-  "遺漏值":a=>{const g=gaps(a);return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]||x-y).slice(0,5)},
-  "前後號±1":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||x-y).slice(0,5)},
+  "近期熱號":a=>{const f=freq(a.slice(-30));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>f[y]-f[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "遺漏值":a=>{const g=gaps(a);return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "前後號±1":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "隔期重複":a=>a.at(-1).numbers.slice(),
-  "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||x-y).slice(0,5)},
-  "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||x-y).slice(0,5)},
+  "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "綜合模型":a=>recommendations(a)?.main||[]
  };
  const names=Object.keys(pickers),stats=Object.fromEntries(names.map(n=>[n,{n:0,hit24:0,hits:0}]));
@@ -27,7 +33,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  const rate=s=>s.n?s.hit24/s.n:0;
  const best=names.slice().sort((a,b)=>rate(stats[b])-rate(stats[a])||(stats[b].hits/stats[b].n-stats[a].hits/stats[a].n))[0];
  let testN=0,test24=0;for(let i=0;i<test.length;i++){const hist=sample.slice(0,split+i),hit=pickers[best](hist).filter(n=>n===0?false:test[i].numbers.includes(n)).length;testN++;if(hit>=2&&hit<=4)test24++}
- const main=pickers[best](draws).sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
+ const main=balancedPick(pickers[best](draws).sort((a,b)=>Math.abs(a-20)-Math.abs(b-20)||a-b)).sort((a,b)=>a-b),used=new Set(main),alt=ranking(draws).map(x=>x.n).filter(n=>!used.has(n)).slice(0,5).sort((a,b)=>a-b);
  $("#mainPicks").innerHTML=balls(main);$("#altPicks").innerHTML=balls(alt);
  const rateText=testN?(test24/testN*100).toFixed(1)+"%":"樣本不足";
  $("#recommendBasis").textContent="優選："+best+"｜獨立驗證 "+rateText;
@@ -41,12 +47,12 @@ function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),
  if(total<20){$("#btSamples").textContent="資料不足";$("#btAverage").textContent="—";$("#btOne").textContent="—";return}
  const split=start+Math.floor(total*.7),names=["近期熱號","遺漏值","前後號±1","隔期重複","尾數延伸","算術變化","綜合模型"];
  const pickers={
-  "近期熱號":a=>{const f=freq(a.slice(-30));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>f[y]-f[x]||x-y).slice(0,5)},
-  "遺漏值":a=>{const g=gaps(a);return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]||x-y).slice(0,5)},
-  "前後號±1":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||x-y).slice(0,5)},
+  "近期熱號":a=>{const f=freq(a.slice(-30));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>f[y]-f[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "遺漏值":a=>{const g=gaps(a);return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>g[y]-g[x]||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "前後號±1":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "隔期重複":a=>a.at(-1).numbers.slice(),
-  "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||x-y).slice(0,5)},
-  "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||x-y).slice(0,5)},
+  "尾數延伸":a=>{const tails=new Set(a.at(-1).numbers.map(n=>n%10));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(tails.has(y%10)?1:0)-(tails.has(x%10)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
+  "算術變化":a=>{const s=new Set(a.at(-1).numbers.flatMap(n=>[n-1,n+1,40-n,((n*2-1)%39)+1,((n*3-1)%39)+1,((n+19-1)%39)+1]).filter(n=>n>=1&&n<=39));return Array.from({length:39},(_,i)=>i+1).sort((x,y)=>(s.has(y)?1:0)-(s.has(x)?1:0)||Math.abs(x-20)-Math.abs(y-20)||x-y).slice(0,5)},
   "綜合模型":a=>recommendations(a)?.main||[]
  };
  const blank=()=>({n:0,hits:0,atLeast1:0,dist:Array(6).fill(0),details:[]});
