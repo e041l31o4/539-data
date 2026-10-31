@@ -69,6 +69,51 @@ function multiFactorRanking(a){
  }).sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
 }
 function multiFactorPick(a){return multiFactorRanking(a).slice(0,5).map(x=>x.n)}
+function adaptiveStrategyScores(a){
+ const f=freq(a.slice(-30)),g=gaps(a),last=a.at(-1)?.numbers||[],tails=new Set(last.map(n=>n%10));
+ const neighbor=new Set(last.flatMap(n=>[n-1,n+1]).filter(n=>n>=1&&n<=39));
+ const all=Array.from({length:39},(_,i)=>i+1);
+ const sort=(score)=>all.slice().sort((x,y)=>score(y)-score(x)||Math.abs(x-20)-Math.abs(y-20)||x-y);
+ return {
+  hot:sort(n=>f[n]),
+  gap:sort(n=>g[n]),
+  neighbor:sort(n=>neighbor.has(n)?1:0),
+  tail:sort(n=>tails.has(n%10)?1:0)
+ };
+}
+function adaptiveModel(a){
+ const names=["hot","gap","neighbor","tail"],windowSize=Math.min(100,Math.max(0,a.length-150));
+ const outcomes=Object.fromEntries(names.map(k=>[k,[]]));
+ // 逐期只使用當時已知資料，避免把未來開獎洩漏進歷史預測。
+ for(let i=Math.max(150,a.length-windowSize);i<a.length;i++){
+  const hist=a.slice(0,i),actual=new Set(a[i].numbers),rankings=adaptiveStrategyScores(hist);
+  for(const name of names)outcomes[name].push(rankings[name].slice(0,5).filter(n=>actual.has(n)).length);
+ }
+ const windows=[30,60,100],windowWeights=[.5,.3,.2],baseline=5/39;
+ const raw={};
+ for(const name of names){
+  let observed=0,totalWeight=0;
+  windows.forEach((w,j)=>{
+   const vals=outcomes[name].slice(-w),weight=windowWeights[j];
+   if(vals.length){observed+=weight*(vals.reduce((x,y)=>x+y,0)/vals.length);totalWeight+=weight}
+  });
+  const avg=totalWeight?observed/totalWeight:5*baseline;
+  // 小樣本向隨機基準收縮，避免短期命中造成權重劇烈跳動。
+  const n=outcomes[name].length,shrunk=(avg*n+5*baseline*40)/(n+40);
+  raw[name]=Math.max(.85,Math.min(1.15,shrunk/(5*baseline)));
+ }
+ const total=Object.values(raw).reduce((x,y)=>x+y,0);
+ const weights=Object.fromEntries(names.map(k=>[k,raw[k]/total]));
+ const current=adaptiveStrategyScores(a),base=multiFactorRanking(a);
+ const baseMap=new Map(base.map((x,i)=>[x.n,(39-i)/38]));
+ const scores=Array.from({length:39},(_,i)=>{
+  const n=i+1;
+  const strategyScore=names.reduce((sum,k)=>sum+weights[k]*(39-current[k].indexOf(n))/38,0);
+  return {n,score:.65*baseMap.get(n)+.35*strategyScore};
+ }).sort((x,y)=>y.score-x.score||x.n-y.n);
+ return {ranking:scores,weights,samples:outcomes.hot.length,performance:Object.fromEntries(names.map(k=>[k,outcomes[k].length?outcomes[k].reduce((x,y)=>x+y,0)/outcomes[k].length:0]))};
+}
+
 
 function wilson(successes,total){
  if(!total)return [0,0];const z=1.96,p=successes/total,d=1+z*z/total,c=(p+z*z/(2*total))/d,m=z*Math.sqrt((p*(1-p)+z*z/(4*total))/total)/d;return [Math.max(0,c-m),Math.min(1,c+m)];
@@ -81,7 +126,7 @@ function binomialUpperTail(k,n,p){
 const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
  const best="多因子連動融合";
- const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
+ const adaptive=adaptiveModel(draws),currentRanking=adaptive.ranking,mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
  $("#mainPicks").innerHTML=mainRows.map((x,i)=>'<button type="button" class="pick-ball-button" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><span class="ball">'+String(x.n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=altRows.map((x,i)=>'<span class="backup-pick"><small>#'+(i+6)+'</small><span class="ball">'+String(x.n).padStart(2,"0")+'</span></span>').join("");
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
  const universe=Array.from({length:39},(_,i)=>i+1);
@@ -114,9 +159,11 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  reasonBox.querySelector(".detail-close").addEventListener("click",()=>{detailModal.hidden=true});
  detailModal.addEventListener("click",e=>{if(e.target===detailModal)detailModal.hidden=true});
 
- $("#recommendBasis").textContent="目前使用模型："+best;
+ $("#recommendBasis").textContent="自適應融合｜近"+adaptive.samples+"期逐期回饋";
  $("#sampleCount").textContent=fmt(draws.length)+" 期歷史資料";
- const pill=document.querySelector(".recommend-card .pill");if(pill)pill.textContent="多因子 TOP 5";
+ const pill=document.querySelector(".recommend-card .pill");if(pill)pill.textContent="自適應融合 TOP 5";
+ let feedback=$("#adaptiveFeedback");if(!feedback){feedback=document.createElement("div");feedback.id="adaptiveFeedback";feedback.className="notice";$("#recommend").appendChild(feedback)}
+ feedback.innerHTML="<b>策略自動回饋</b><span>依近30／60／100期逐期樣本外命中調整熱號、遺漏、前後號與尾數策略權重；目前樣本 "+adaptive.samples+" 期。策略權重限制在均衡範圍，避免短期波動過度影響。這是歷史表現調權，不代表提高實際中獎機率。</span>";
  const tf=tailFreq(draws.slice(-100)),sizes=[3,4,4,4,4,4,4,4,4,4];let tr=tf.map((v,i)=>({tail:i,score:v/sizes[i]})).sort((a,b)=>b.score-a.score).slice(0,3);
  $("#tailRanks").innerHTML=tr.map(x=>'<div class="tail-item"><b>'+x.tail+" 尾</b><small>"+x.score.toFixed(1)+" 次/號</small></div>").join("")
 }function renderSequence(){/* 已簡化：詳細條件關聯不再佔用首頁版面 */}
