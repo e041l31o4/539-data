@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       full:
-        description: "重新抓取 2007 年至今全部歷史資料"
+        description: "重新抓取官方 API 可提供的歷史資料"
         type: boolean
         default: false
 jobs:
