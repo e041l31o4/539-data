@@ -95,8 +95,8 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  const rate=s=>s.n?s.hit24/s.n:0;
  const best="多因子連動融合";
  let testN=0,test24=0;for(let i=0;i<test.length;i++){const hist=sample.slice(0,split+i),hit=pickers[best](hist).filter(n=>n===0?false:test[i].numbers.includes(n)).length;testN++;if(hit>=2&&hit<=4)test24++}
- const currentRanking=multiFactorRanking(draws),main=currentRanking.slice(0,5).map(x=>x.n).sort((a,b)=>a-b),alt=currentRanking.slice(5,10).map(x=>x.n).sort((a,b)=>a-b);
- $("#mainPicks").innerHTML=main.map(n=>'<button type="button" class="pick-ball-button" data-number="'+n+'"><span class="ball">'+String(n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=balls(alt);
+ const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
+ $("#mainPicks").innerHTML=mainRows.map((x,i)=>'<button type="button" class="pick-ball-button" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><span class="ball">'+String(x.n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=altRows.map((x,i)=>'<span class="backup-pick"><small>#'+(i+6)+'</small><span class="ball">'+String(x.n).padStart(2,"0")+'</span></span>').join("");
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
  const universe=Array.from({length:39},(_,i)=>i+1);
  const prev=last.numbers;
