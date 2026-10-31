@@ -8,7 +8,7 @@
 
 ## 資料更新
 
-GitHub Actions 每日台灣時間 21:45 嘗試更新最近兩個月資料，也可手動執行完整歷史匯入。資料來源以台灣彩券官方公布為準。
+GitHub Actions 每日台灣時間 22:15 嘗試更新最近兩個月資料，也可手動執行完整歷史匯入。資料來源以台灣彩券官方公布為準。
 
 ## 機率提醒
 
@@ -19,8 +19,8 @@ GitHub Actions 每日台灣時間 21:45 嘗試更新最近兩個月資料，也�
 1. 到 Repository 的 **Settings → Pages**。
 2. 在 **Build and deployment → Source** 選擇 **GitHub Actions**。
 3. 到 **Actions → Update 539 history and deploy → Run workflow**。
-4. 第一次請勾選 `full`，從 2007 年起匯入歷史資料；完成後會自動部署網站。
-5. 後續每天台灣時間 21:45 自動更新近兩個月資料並重新部署。
+4. 第一次請勾選 `full`，嘗試匯入官方 API 可提供的歷史資料（若需補齊更早年度，再接官方年度檔案）；完成後會自動部署網站。
+5. 後續每天台灣時間 22:15 自動更新近兩個月資料並重新部署。
 
 網站部署成功後，可在 **Settings → Pages** 查看 GitHub Pages 網址。
 
