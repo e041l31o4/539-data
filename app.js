@@ -153,19 +153,16 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  };
  let reasonBox=$("#pickReasons");if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
  reasonBox.innerHTML='<div class="panel-head"><b>1～39 號碼完整推薦排名</b><span class="muted">點選任一號碼查看完整分析</span></div><div class="number-rank-grid">'+allRanks.map((x,i)=>'<button type="button" class="number-rank '+(main.includes(x.n)?"is-top":"")+'" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+x.score.toFixed(3)+'</small></button>').join("")+'</div><div class="number-detail-modal" id="numberDetailModal" hidden><div class="number-detail-card"><button type="button" class="detail-close" aria-label="關閉">×</button><div id="numberDetailContent"></div></div></div><p class="number-rank-note">前五名為目前模型綜合排序；其他34碼仍可點選查看分數、連動樣本、期距表現及落後原因。分數不等於開獎機率。</p>';
- const detailModal=$("#numberDetailModal"),detailContent=$("#numberDetailContent");
- // 使用單一事件委派，避免重新渲染後號碼按鈕失去點擊事件。
- $("#recommend").onclick=e=>{
-  const close=e.target.closest(".detail-close");
-  if(close){detailModal.hidden=true;return}
-  if(e.target===detailModal){detailModal.hidden=true;return}
-  const btn=e.target.closest("[data-number]");
-  if(!btn||!$("#recommend").contains(btn))return;
-  const number=Number(btn.dataset.number);
-  if(!Number.isInteger(number)||number<1||number>39)return;
-  detailModal.hidden=false;
-  detailContent.innerHTML='<p class="muted">正在整理 '+String(number).padStart(2,"0")+' 號碼分析…</p>';
-  setTimeout(()=>{detailContent.innerHTML=detailsHtml(number)},20);
+ // 將分析函式掛到 window，讓全頁事件委派能穩定呼叫，不受區塊重繪影響。
+ window.show539NumberDetail=(number)=>{
+  const modal=document.querySelector("#numberDetailModal"),content=document.querySelector("#numberDetailContent");
+  if(!modal||!content){console.error("539分析視窗不存在");return}
+  modal.hidden=false;
+  content.innerHTML='<p class="muted">正在整理 '+String(number).padStart(2,"0")+' 號碼分析…</p>';
+  try{content.innerHTML=detailsHtml(number)}catch(err){
+   console.error("539號碼分析錯誤",err);
+   content.innerHTML='<div class="number-detail-block"><b>分析載入失敗</b><p>'+String(err?.message||err)+'</p><p>請重新整理後再試；錯誤已記錄，並非號碼沒有分析資料。</p></div>';
+  }
  };
 
  $("#recommendBasis").textContent="自適應融合｜近"+adaptive.samples+"期逐期回饋";
@@ -220,4 +217,14 @@ function renderStats(){const a=recent(draws,$("#periodSelect").value),f=freq(a),
  }
  const recentRows=adaptive.details.slice(-8).reverse();
  $("#backtestRows").innerHTML=recentRows.map(x=>'<tr><td>'+x.draw.period+'<small class="muted">第'+x.fold+'段｜'+x.method+'</small></td><td><div class="table-balls">'+balls(x.picked)+'</div></td><td><div class="table-balls">'+balls(x.draw.numbers)+'</div></td><td class="hit">'+x.hit+' 顆</td></tr>').join('')||'<tr><td colspan="4">尚無驗證資料</td></tr>';
-}function renderHistory(){const q=$("#searchInput").value.trim().toLowerCase(),filtered=draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).filter(d=>!q||d.period.toLowerCase().includes(q)||d.date.includes(q)),pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));page=Math.min(page,pages-1);const rows=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);$("#historyRows").innerHTML=rows.map(d=>'<tr><td>'+d.period+'</td><td>'+d.date+'</td><td><div class="table-balls">'+d.numbers.map(n=>'<span class="ball">'+String(n).padStart(2,"0")+"</span>").join("")+"</div></td></tr>").join("")||'<tr><td colspan="3">查無資料</td></tr>';$("#historyCount").textContent="第 "+(page+1)+" / "+pages+" 頁 · 共 "+fmt(filtered.length)+" 筆";$("#prevPage").disabled=page===0;$("#nextPage").disabled=page>=pages-1}function render(){renderOverview();renderRecommend();renderSequence();renderStats();renderHistory()}async function load(){try{page=0;const r=await fetch("./data/daily539.json?v=20261031-4",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const j=await r.json();window.datasetUpdated=j.updatedAt;draws=(j.draws||[]).filter(d=>Array.isArray(d.numbers)&&d.numbers.length===5).sort((a,b)=>a.date.localeCompare(b.date)||a.period.localeCompare(b.period));render()}catch(e){$("#dataStatus").textContent="尚無資料";$("#mainPicks").innerHTML='<span class="empty">尚未匯入官方歷史資料，請執行 GitHub Actions 的資料更新工作。</span>';$("#historyRows").innerHTML='<tr><td colspan="3">資料集尚未建立。</td></tr>';console.error(e)}}$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",()=>{$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算所選區間…</td></tr>';setTimeout(renderBacktest,30)});$("#loadBacktestBtn").addEventListener("click",()=>{$("#loadBacktestBtn").disabled=true;$("#loadBacktestBtn").textContent="計算中…";$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算驗證紀錄，請稍候…</td></tr>';setTimeout(()=>{renderBacktest();$("#loadBacktestBtn").disabled=false;$("#loadBacktestBtn").textContent="重新載入驗證紀錄"},30)});$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",renderRecommend);$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
+}function renderHistory(){const q=$("#searchInput").value.trim().toLowerCase(),filtered=draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).filter(d=>!q||d.period.toLowerCase().includes(q)||d.date.includes(q)),pages=Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));page=Math.min(page,pages-1);const rows=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);$("#historyRows").innerHTML=rows.map(d=>'<tr><td>'+d.period+'</td><td>'+d.date+'</td><td><div class="table-balls">'+d.numbers.map(n=>'<span class="ball">'+String(n).padStart(2,"0")+"</span>").join("")+"</div></td></tr>").join("")||'<tr><td colspan="3">查無資料</td></tr>';$("#historyCount").textContent="第 "+(page+1)+" / "+pages+" 頁 · 共 "+fmt(filtered.length)+" 筆";$("#prevPage").disabled=page===0;$("#nextPage").disabled=page>=pages-1}function render(){renderOverview();renderRecommend();renderSequence();renderStats();renderHistory()}async function load(){try{page=0;const r=await fetch("./data/daily539.json?v=20261031-4",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const j=await r.json();window.datasetUpdated=j.updatedAt;draws=(j.draws||[]).filter(d=>Array.isArray(d.numbers)&&d.numbers.length===5).sort((a,b)=>a.date.localeCompare(b.date)||a.period.localeCompare(b.period));render()}catch(e){$("#dataStatus").textContent="尚無資料";$("#mainPicks").innerHTML='<span class="empty">尚未匯入官方歷史資料，請執行 GitHub Actions 的資料更新工作。</span>';$("#historyRows").innerHTML='<tr><td colspan="3">資料集尚未建立。</td></tr>';console.error(e)}}// 全頁統一接收號碼點擊與關閉事件，支援推薦號碼及1～39完整排名。
+document.addEventListener("click",e=>{
+ const target=e.target instanceof Element?e.target:null;if(!target)return;
+ const close=target.closest(".detail-close");
+ if(close){const modal=close.closest(".number-detail-modal");if(modal)modal.hidden=true;return}
+ const modal=target.closest(".number-detail-modal");
+ if(modal&&target===modal){modal.hidden=true;return}
+ const btn=target.closest("#recommend [data-number]");
+ if(btn){const number=Number(btn.dataset.number);if(Number.isInteger(number)&&number>=1&&number<=39&&typeof window.show539NumberDetail==="function")window.show539NumberDetail(number)}
+});
+$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",()=>{$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算所選區間…</td></tr>';setTimeout(renderBacktest,30)});$("#loadBacktestBtn").addEventListener("click",()=>{$("#loadBacktestBtn").disabled=true;$("#loadBacktestBtn").textContent="計算中…";$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算驗證紀錄，請稍候…</td></tr>';setTimeout(()=>{renderBacktest();$("#loadBacktestBtn").disabled=false;$("#loadBacktestBtn").textContent="重新載入驗證紀錄"},30)});$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",renderRecommend);$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
