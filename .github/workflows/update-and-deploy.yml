@@ -1,5 +1,7 @@
 name: Update 539 history and deploy
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: "15 14 * * *"
   workflow_dispatch:
