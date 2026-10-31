@@ -60,11 +60,11 @@ function multiFactorRanking(a){
    }
   });
  });
- const gMax=Math.max(1,...gap.slice(1));
+ const gMax=Math.max(1,...gap.slice(1)),advanced=advancedRanking(a);
  return candidates.map((n,i)=>{
   const trend=.40*z30[i]+.30*z90[i]+.30*z365[i];
   const omission=Math.min(2,gap[n]/Math.max(1,gMax));
-  const score=.52*linkScores[n]+.30*trend+.08*omission+.10*advancedRanking(a).find(x=>x.n===n).frequencyZ;
+  const score=.52*linkScores[n]+.30*trend+.08*omission+.10*advanced.find(x=>x.n===n).frequencyZ;
   return {n,score,linkScore:linkScores[n],trend,omission,parts:linkParts[n]};
  }).sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
 }
