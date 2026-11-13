@@ -54,8 +54,17 @@ function subsets(nums) {
   return out;
 }
 const LAGS = [1, 2, 3, 5], LAG_WEIGHTS = [.34, .26, .22, .18];
-function newCurrentState() { return { maps: LAGS.map(() => new Map()) }; }
+function newCurrentState() { return { maps: LAGS.map(() => new Map()), opportunities: Array(40).fill(0), conditionalHits: Array(40).fill(0) }; }
 function addTransition(state, t) {
+  if (t >= 1) {
+    const prev = draws[t - 1].numbers, next = draws[t].numbers;
+    for (let n = 1; n <= 39; n++) {
+      if (prev.some(x => Math.abs(x - n) === 1)) {
+        state.opportunities[n]++;
+        if (next.includes(n)) state.conditionalHits[n]++;
+      }
+    }
+  }
   LAGS.forEach((lag, li) => {
     if (t < lag) return;
     const prev = draws[t - lag].numbers, next = draws[t].numbers, map = state.maps[li];
@@ -87,13 +96,7 @@ function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, lim
   const z365 = candidates.map(n => fz(n,[365],[1]));
   const adv = candidates.map(n => {
     const frequencyZ = fz(n,[30,90,180,365],[.34,.29,.22,.15]);
-    let opportunities = 0, hits = 0;
-    for (let t = 0; t < len - 1; t++) {
-      if (draws[t].numbers.some(x => Math.abs(x - n) === 1)) {
-        opportunities++;
-        if (draws[t + 1].numbers.includes(n)) hits++;
-      }
-    }
+    const opportunities = state.opportunities[n], hits = state.conditionalHits[n];
     const conditional = (hits + 5) / (opportunities + 39);
     const cse = Math.sqrt(BASE * (1 - BASE) / (opportunities + 39));
     const conditionalZ = cse ? (conditional - BASE) / cse : 0;
