@@ -121,8 +121,8 @@ const models = [
   { id: "gapOnly", label: "單純遺漏", weights: [0, 0, 0, 0], gapWeight: 1 }
 ];
 
-function blank() { return { periods: 0, totalHits: 0, distribution: [0,0,0,0,0,0], ge1: 0, ge2: 0, ge3: 0 }; }
-function add(m, hit) { m.periods++; m.totalHits += hit; m.distribution[hit]++; if (hit >= 1) m.ge1++; if (hit >= 2) m.ge2++; if (hit >= 3) m.ge3++; }
+function blank() { return { periods: 0, totalHits: 0, distribution: [0,0,0,0,0,0], ge1: 0, ge2: 0, ge3: 0, overlapTotal: 0, overlapCount: 0 }; }
+function add(m, hit, overlap = null) { m.periods++; m.totalHits += hit; m.distribution[hit]++; if (hit >= 1) m.ge1++; if (hit >= 2) m.ge2++; if (hit >= 3) m.ge3++; if (overlap !== null) { m.overlapTotal += overlap; m.overlapCount++; } }
 function summary(m) {
   return {
     periods: m.periods,
@@ -130,31 +130,38 @@ function summary(m) {
     atLeast1Pct: Number((100 * m.ge1 / m.periods).toFixed(2)),
     atLeast2Pct: Number((100 * m.ge2 / m.periods).toFixed(2)),
     atLeast3Pct: Number((100 * m.ge3 / m.periods).toFixed(2)),
-    hitDistribution: m.distribution
+    hitDistribution: m.distribution,
+    averageOverlapPreviousPick: m.overlapCount ? Number((m.overlapTotal / m.overlapCount).toFixed(3)) : null
   };
 }
 
 const result = {};
 const currentTotal = blank(), currentSegments = [blank(), blank(), blank()];
+let previousCurrentPicks = null;
 const currentState = newCurrentState();
 for (let t = 0; t < START; t++) addTransition(currentState, t);
 for (let i = START; i < draws.length; i++) {
   const picks = currentModelRank(i, currentState), actual = new Set(draws[i].numbers);
   const hits = picks.filter(n => actual.has(n)).length;
-  add(currentTotal, hits);
+  const overlap = previousCurrentPicks ? picks.filter(n => previousCurrentPicks.includes(n)).length : null;
+  add(currentTotal, hits, overlap);
   const segment = Math.min(2, Math.floor((i - START) / Math.ceil(TEST_SIZE / 3)));
-  add(currentSegments[segment], hits);
+  add(currentSegments[segment], hits, overlap);
+  previousCurrentPicks = picks;
   addTransition(currentState, i);
 }
 for (const model of models) {
   const total = blank(), segments = [blank(), blank(), blank()];
+  let previousPicks = null;
   for (let i = START; i < draws.length; i++) {
     const picks = rank(i, model.weights, model.gapWeight || 0);
     const actual = new Set(draws[i].numbers);
     const hits = picks.filter(n => actual.has(n)).length;
-    add(total, hits);
+    const overlap = previousPicks ? picks.filter(n => previousPicks.includes(n)).length : null;
+    add(total, hits, overlap);
     const segment = Math.min(2, Math.floor((i - START) / Math.ceil(TEST_SIZE / 3)));
-    add(segments[segment], hits);
+    add(segments[segment], hits, overlap);
+    previousPicks = picks;
   }
   result[model.id] = { label: model.label, overall: summary(total), segments: segments.map(summary) };
 }
