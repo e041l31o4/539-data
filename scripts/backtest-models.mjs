@@ -46,6 +46,70 @@ function rank(drawIndex, weights, gapWeight = 0) {
     .slice(0, 5).map(x => x.n);
 }
 
+function subsets(nums) {
+  const out = [];
+  for (let i = 0; i < nums.length; i++) out.push([nums[i]]);
+  for (let i = 0; i < nums.length; i++) for (let j = i + 1; j < nums.length; j++) out.push([nums[i], nums[j]]);
+  for (let i = 0; i < nums.length; i++) for (let j = i + 1; j < nums.length; j++) for (let k = j + 1; k < nums.length; k++) out.push([nums[i], nums[j], nums[k]]);
+  return out;
+}
+const LAGS = [1, 2, 3, 5], LAG_WEIGHTS = [.34, .26, .22, .18];
+function newCurrentState() { return { maps: LAGS.map(() => new Map()) }; }
+function addTransition(state, t) {
+  LAGS.forEach((lag, li) => {
+    if (t < lag) return;
+    const prev = draws[t - lag].numbers, next = draws[t].numbers, map = state.maps[li];
+    for (const pattern of subsets(prev)) {
+      const key = pattern.join(",");
+      let stat = map.get(key);
+      if (!stat) { stat = { support: 0, hits: Array(40).fill(0), size: pattern.length }; map.set(key, stat); }
+      stat.support++;
+      for (const n of next) stat.hits[n]++;
+    }
+  });
+}
+function currentModelRank(i, state) {
+  const len = i, candidates = Array.from({ length: 39 }, (_, j) => j + 1);
+  const fz = (n, windows, weights) => {
+    let z = 0;
+    windows.forEach((w, wi) => {
+      const from = Math.max(0, len - w), size = len - from;
+      let count = 0;
+      for (let t = from; t < len; t++) if (draws[t].numbers.includes(n)) count++;
+      const p = (count + 5) / (size + 39);
+      const se = Math.sqrt(BASE * (1 - BASE) / (size + 39));
+      z += weights[wi] * (p - BASE) / se;
+    });
+    return z;
+  };
+  const z30 = candidates.map(n => fz(n,[30],[1]));
+  const z90 = candidates.map(n => fz(n,[90],[1]));
+  const z365 = candidates.map(n => fz(n,[365],[1]));
+  const adv = candidates.map(n => fz(n,[30,90,180,365],[.34,.29,.22,.15]));
+  const last = Array(40).fill(-1);
+  for (let t=len-1;t>=0;t--) for(const n of draws[t].numbers) if(last[n]<0) last[n]=len-1-t;
+  const maxGap=Math.max(1,...last.slice(1)), link=Array(40).fill(0);
+  LAGS.forEach((lag,li)=>{
+    if(len<=lag)return;
+    const patterns=subsets(draws[len-lag].numbers),map=state.maps[li];
+    for(const pattern of patterns){
+      const stat=map.get(pattern.join(",")); if(!stat)continue;
+      const alpha=stat.size===1?25:stat.size===2?60:100;
+      const reliability=Math.min(1,stat.support/(stat.support+alpha));
+      for(let n=1;n<=39;n++){
+        const posterior=(stat.hits[n]+alpha*BASE)/(stat.support+alpha);
+        const lift=(posterior-BASE)/BASE;
+        const contribution=Math.max(-1.5,Math.min(2.5,lift))*reliability;
+        link[n]+=LAG_WEIGHTS[li]*contribution/patterns.length;
+      }
+    }
+  });
+  return candidates.map((n,j)=>{
+    const trend=.40*z30[j]+.30*z90[j]+.30*z365[j];
+    const omission=Math.min(2,(last[n]<0?len:last[n])/maxGap);
+    return {n,score:.52*link[n]+.30*trend+.08*omission+.10*adv[j]};
+  }).sort((a,b)=>b.score-a.score||Math.abs(a.n-20)-Math.abs(b.n-20)||a.n-b.n).slice(0,5).map(x=>x.n);
+}
 const models = [
   { id: "recent30", label: "近30期頻率", weights: [1, 0, 0, 0] },
   { id: "recent90", label: "近90期頻率", weights: [0, 1, 0, 0] },
@@ -71,6 +135,17 @@ function summary(m) {
 }
 
 const result = {};
+const currentTotal = blank(), currentSegments = [blank(), blank(), blank()];
+const currentState = newCurrentState();
+for (let t = 0; t < START; t++) addTransition(currentState, t);
+for (let i = START; i < draws.length; i++) {
+  const picks = currentModelRank(i, currentState), actual = new Set(draws[i].numbers);
+  const hits = picks.filter(n => actual.has(n)).length;
+  add(currentTotal, hits);
+  const segment = Math.min(2, Math.floor((i - START) / Math.ceil(TEST_SIZE / 3)));
+  add(currentSegments[segment], hits);
+  addTransition(currentState, i);
+}
 for (const model of models) {
   const total = blank(), segments = [blank(), blank(), blank()];
   for (let i = START; i < draws.length; i++) {
@@ -84,7 +159,7 @@ for (const model of models) {
   result[model.id] = { label: model.label, overall: summary(total), segments: segments.map(summary) };
 }
 
-const report = {
+result.currentMultifactor = { label: "現行正式多因子模型（原公式逐期重播）", overall: summary(currentTotal), segments: currentSegments.map(summary) };\n\nconst report = {
   version: "rolling-539-lab-v1",
   dataThrough: draws.at(-1).date,
   dataPeriod: draws.at(-1).period,
