@@ -84,7 +84,7 @@ function addTransition(state, t) {
     }
   });
 }
-function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, limit = 5) {
+function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, limit = 5, factors = { link: .52, trend: .30, omission: .08, adv: .10 }) {
   const len = i, candidates = Array.from({ length: 39 }, (_, j) => j + 1);
   const fz = (n, windows, weights) => {
     let z = 0;
@@ -121,7 +121,7 @@ function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, lim
   const scored = candidates.map((n,j)=>{
     const trend=.40*z30[j]+.30*z90[j]+.30*z365[j];
     const omission=Math.min(2,(last[n]<0?len:last[n])/maxGap);
-    return {n,score:.52*link[n]+.30*trend+.08*omission+.10*adv[j]};
+    return {n,score:factors.link*link[n]+factors.trend*trend+factors.omission*omission+factors.adv*adv[j]};
   });
   const mean = scored.reduce((sum,x)=>sum+x.score,0)/scored.length;
   const sd = Math.sqrt(scored.reduce((sum,x)=>sum+(x.score-mean)**2,0)/scored.length) || 1;
@@ -159,6 +159,13 @@ const penaltyStats = new Map(penalties.map(p => [p, {
   total: blank(), segments: [blank(), blank(), blank()], previous: null
 }]));
 const hybrid = { total: blank(), segments: [blank(), blank(), blank()], previous: null };
+const factorModels = [
+  { id: "ablateLink", label: "移除歷史關聯因子", factors: { link: 0, trend: .30, omission: .08, adv: .10 } },
+  { id: "ablateTrend", label: "移除短中長期趨勢", factors: { link: .52, trend: 0, omission: .08, adv: .10 } },
+  { id: "ablateOmission", label: "移除遺漏因子", factors: { link: .52, trend: .30, omission: 0, adv: .10 } },
+  { id: "ablateAdvanced", label: "移除進階頻率因子", factors: { link: .52, trend: .30, omission: .08, adv: 0 } }
+];
+const factorStats = new Map(factorModels.map(m => [m.id, { total: blank(), segments: [blank(), blank(), blank()] }]));
 const currentState = newCurrentState();
 for (let t = 0; t < START; t++) addTransition(currentState, t);
 for (let i = START; i < draws.length; i++) {
@@ -172,6 +179,13 @@ for (let i = START; i < draws.length; i++) {
   add(hybrid.total, hybridHits, hybridOverlap);
   add(hybrid.segments[segment], hybridHits, hybridOverlap);
   hybrid.previous = hybridPicks;
+  for (const model of factorModels) {
+    const picks = currentModelRank(i, currentState, [], 0, 5, model.factors);
+    const hits = picks.filter(n => actual.has(n)).length;
+    const state = factorStats.get(model.id);
+    add(state.total, hits);
+    add(state.segments[segment], hits);
+  }
   for (const penalty of penalties) {
     const state = penaltyStats.get(penalty);
     const picks = currentModelRank(i, currentState, state.previous || [], penalty);
@@ -184,6 +198,10 @@ for (let i = START; i < draws.length; i++) {
   addTransition(currentState, i);
 }
 result.hybridTop3Plus2 = { label: "保留正式前三碼＋換號觀察兩碼（0.5 SD）", overall: summary(hybrid.total), segments: hybrid.segments.map(summary) };
+for (const model of factorModels) {
+  const state = factorStats.get(model.id);
+  result[model.id] = { label: model.label, overall: summary(state.total), segments: state.segments.map(summary) };
+}
 for (const penalty of penalties) {
   const state = penaltyStats.get(penalty);
   const key = penalty === 0 ? "currentMultifactor" : "turnoverPenalty_" + String(penalty).replace(".","_");
@@ -209,7 +227,7 @@ for (const model of models) {
 }
 
 const report = {
-  version: "rolling-539-lab-v3-production-score",
+  version: "rolling-539-lab-v4-factor-ablation",
   dataThrough: draws.at(-1).date,
   dataPeriod: draws.at(-1).period,
   historyCount: draws.length,
