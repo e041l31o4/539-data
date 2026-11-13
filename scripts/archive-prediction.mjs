@@ -114,10 +114,14 @@ function main() {
       (d.date === prediction.sourceDate && d.period > prediction.sourcePeriod));
     if (actual) {
       const actualSet = new Set(actual.numbers);
+      const topHits = prediction.top5.filter(n => actualSet.has(n));
+      const backupHits = (prediction.backup5 || []).filter(n => actualSet.has(n));
+      const top10Hits = [...(prediction.top5 || []), ...(prediction.backup5 || [])].filter(n => actualSet.has(n));
       prediction.result = {
         period: actual.period, date: actual.date, numbers: actual.numbers,
-        hits: prediction.top5.filter(n => actualSet.has(n)),
-        hitCount: prediction.top5.filter(n => actualSet.has(n)).length,
+        hits: topHits, hitCount: topHits.length,
+        backupHits, backupHitCount: backupHits.length,
+        top10Hits, top10HitCount: top10Hits.length,
         settledAt: new Date().toISOString()
       };
       changed = true;
