@@ -99,6 +99,7 @@ function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, lim
   const z30 = candidates.map(n => fz(n,[30],[1]));
   const z90 = candidates.map(n => fz(n,[90],[1]));
   const z365 = candidates.map(n => fz(n,[365],[1]));
+  const adv = candidates.map(n => fz(n,[30,90,180,365],[.34,.29,.22,.15]));
   const last = Array(40).fill(-1);
   for (let t=len-1;t>=0;t--) for(const n of draws[t].numbers) if(last[n]<0) last[n]=len-1-t;
   const maxGap=Math.max(1,...last.slice(1)), link=Array(40).fill(0);
