@@ -1,6 +1,6 @@
 {
   "modelVersion": "multifactor-v1.1-archived",
-  "updatedAt": "2026-11-13T06:44:44.274Z",
+  "updatedAt": "2026-11-13T14:40:43.000Z",
   "predictions": [
     {
       "id": "115000274-multifactor-v1.1-archived",
@@ -336,7 +336,29 @@
           "trend": -0.97266603,
           "omission": 0.30434783
         }
-      ]
+      ],
+      "result": {
+        "period": "115000275",
+        "date": "2026-11-13",
+        "numbers": [
+          8,
+          11,
+          17,
+          38,
+          39
+        ],
+        "hits": [
+          8
+        ],
+        "hitCount": 1,
+        "backupHits": [],
+        "backupHitCount": 0,
+        "top10Hits": [
+          8
+        ],
+        "top10HitCount": 1,
+        "settledAt": "2026-11-13T14:40:43.000Z"
+      }
     }
   ]
 }
