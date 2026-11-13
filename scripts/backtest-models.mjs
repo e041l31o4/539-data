@@ -184,8 +184,6 @@ for (const model of models) {
   result[model.id] = { label: model.label, overall: summary(total), segments: segments.map(summary) };
 }
 
-result.currentMultifactor = { label: "現行正式多因子模型（原公式逐期重播）", overall: summary(currentTotal), segments: currentSegments.map(summary) };
-
 const report = {
   version: "rolling-539-lab-v1",
   dataThrough: draws.at(-1).date,
