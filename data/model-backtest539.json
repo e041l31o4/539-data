@@ -1,5 +1,5 @@
 {
-  "version": "rolling-539-lab-v4-factor-ablation",
+  "version": "rolling-539-lab-v5-weight-sweep",
   "dataThrough": "2026-11-12",
   "dataPeriod": "115000274",
   "historyCount": 6018,
@@ -352,6 +352,282 @@
             419,
             120,
             10,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        }
+      ]
+    },
+    "weightTrend40": {
+      "label": "趨勢權重提高（.42/.40/.08/.10）",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.672,
+        "atLeast1Pct": 53.4,
+        "atLeast2Pct": 12.83,
+        "atLeast3Pct": 0.93,
+        "hitDistribution": [
+          1398,
+          1217,
+          357,
+          27,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": null
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.662,
+          "atLeast1Pct": 52.8,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            472,
+            403,
+            116,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.676,
+          "atLeast1Pct": 53.5,
+          "atLeast2Pct": 13.2,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            465,
+            403,
+            124,
+            7,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.678,
+          "atLeast1Pct": 53.9,
+          "atLeast2Pct": 12.8,
+          "atLeast3Pct": 1.1,
+          "hitDistribution": [
+            461,
+            411,
+            117,
+            11,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        }
+      ]
+    },
+    "weightTrend50": {
+      "label": "趨勢權重提高（.32/.50/.08/.10）",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6703,
+        "atLeast1Pct": 53.07,
+        "atLeast2Pct": 12.97,
+        "atLeast3Pct": 0.97,
+        "hitDistribution": [
+          1408,
+          1203,
+          360,
+          28,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": null
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.66,
+          "atLeast1Pct": 52.3,
+          "atLeast2Pct": 12.8,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            477,
+            395,
+            119,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.675,
+          "atLeast1Pct": 53.1,
+          "atLeast2Pct": 13.4,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            469,
+            397,
+            125,
+            8,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.676,
+          "atLeast1Pct": 53.8,
+          "atLeast2Pct": 12.7,
+          "atLeast3Pct": 1.1,
+          "hitDistribution": [
+            462,
+            411,
+            116,
+            11,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        }
+      ]
+    },
+    "weightTrend45": {
+      "label": "趨勢主導（.35/.45/.10/.10）",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.672,
+        "atLeast1Pct": 53.3,
+        "atLeast2Pct": 12.87,
+        "atLeast3Pct": 1,
+        "hitDistribution": [
+          1401,
+          1213,
+          356,
+          29,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": null
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.66,
+          "atLeast1Pct": 52.6,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            474,
+            401,
+            116,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.677,
+          "atLeast1Pct": 53.4,
+          "atLeast2Pct": 13.3,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            466,
+            401,
+            124,
+            8,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.679,
+          "atLeast1Pct": 53.9,
+          "atLeast2Pct": 12.8,
+          "atLeast3Pct": 1.2,
+          "hitDistribution": [
+            461,
+            411,
+            116,
+            12,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        }
+      ]
+    },
+    "weightBalanced": {
+      "label": "四因子均衡（.40/.40/.10/.10）",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6727,
+        "atLeast1Pct": 53.43,
+        "atLeast2Pct": 12.8,
+        "atLeast3Pct": 1,
+        "hitDistribution": [
+          1397,
+          1219,
+          354,
+          29,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": null
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.661,
+          "atLeast1Pct": 52.8,
+          "atLeast2Pct": 12.4,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            472,
+            404,
+            115,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.677,
+          "atLeast1Pct": 53.5,
+          "atLeast2Pct": 13.2,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            465,
+            403,
+            123,
+            8,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.68,
+          "atLeast1Pct": 54,
+          "atLeast2Pct": 12.8,
+          "atLeast3Pct": 1.2,
+          "hitDistribution": [
+            460,
+            412,
+            116,
+            12,
             0,
             0
           ],
