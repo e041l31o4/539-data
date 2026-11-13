@@ -1,6 +1,6 @@
 {
   "modelVersion": "multifactor-v1.1-archived",
-  "updatedAt": "2026-11-13T14:40:43.000Z",
+  "updatedAt": "2026-11-13T14:45:20.291Z",
   "predictions": [
     {
       "id": "115000274-multifactor-v1.1-archived",
@@ -359,6 +359,342 @@
         "top10HitCount": 1,
         "settledAt": "2026-11-13T14:40:43.000Z"
       }
+    },
+    {
+      "id": "115000275-multifactor-v1.1-archived",
+      "modelVersion": "multifactor-v1.1-archived",
+      "createdAt": "2026-11-13T14:45:20.290Z",
+      "target": "next-draw",
+      "sourcePeriod": "115000275",
+      "sourceDate": "2026-11-13",
+      "top5": [
+        2,
+        28,
+        30,
+        8,
+        32
+      ],
+      "backup5": [
+        34,
+        14,
+        19,
+        23,
+        29
+      ],
+      "ranking": [
+        {
+          "rank": 1,
+          "number": 2,
+          "score": 0.47184103,
+          "linkScore": 0.00631541,
+          "trend": 1.15269632,
+          "omission": 0.04166667
+        },
+        {
+          "rank": 2,
+          "number": 28,
+          "score": 0.44594728,
+          "linkScore": 0.01983257,
+          "trend": 1.0494299,
+          "omission": 0.16666667
+        },
+        {
+          "rank": 3,
+          "number": 30,
+          "score": 0.44101157,
+          "linkScore": -0.01487988,
+          "trend": 1.07720437,
+          "omission": 0.04166667
+        },
+        {
+          "rank": 4,
+          "number": 8,
+          "score": 0.38651692,
+          "linkScore": 0.00673222,
+          "trend": 0.94011326,
+          "omission": 0
+        },
+        {
+          "rank": 5,
+          "number": 32,
+          "score": 0.36784384,
+          "linkScore": -0.00113573,
+          "trend": 0.92559871,
+          "omission": 0.08333333
+        },
+        {
+          "rank": 6,
+          "number": 34,
+          "score": 0.29197085,
+          "linkScore": 0.01207076,
+          "trend": 0.67206533,
+          "omission": 0.125
+        },
+        {
+          "rank": 7,
+          "number": 14,
+          "score": 0.28452463,
+          "linkScore": 0.00994162,
+          "trend": 0.65790924,
+          "omission": 0.08333333
+        },
+        {
+          "rank": 8,
+          "number": 19,
+          "score": 0.14860562,
+          "linkScore": -0.0113063,
+          "trend": 0.3391663,
+          "omission": 0.125
+        },
+        {
+          "rank": 9,
+          "number": 23,
+          "score": 0.14531692,
+          "linkScore": -0.00664257,
+          "trend": 0.3048039,
+          "omission": 0.25
+        },
+        {
+          "rank": 10,
+          "number": 29,
+          "score": 0.13598959,
+          "linkScore": 0.00140038,
+          "trend": 0.32536868,
+          "omission": 0.08333333
+        },
+        {
+          "rank": 11,
+          "number": 35,
+          "score": 0.13290337,
+          "linkScore": 0.00411249,
+          "trend": 0.22579673,
+          "omission": 0.41666667
+        },
+        {
+          "rank": 12,
+          "number": 6,
+          "score": 0.10776721,
+          "linkScore": -0.01875819,
+          "trend": 0.13668639,
+          "omission": 0.58333333
+        },
+        {
+          "rank": 13,
+          "number": 12,
+          "score": 0.10203229,
+          "linkScore": 0.00808007,
+          "trend": 0.12658324,
+          "omission": 0.5
+        },
+        {
+          "rank": 14,
+          "number": 25,
+          "score": 0.08587072,
+          "linkScore": 0.00351084,
+          "trend": -0.03143112,
+          "omission": 1
+        },
+        {
+          "rank": 15,
+          "number": 11,
+          "score": 0.0708677,
+          "linkScore": -0.00781864,
+          "trend": 0.25664389,
+          "omission": 0
+        },
+        {
+          "rank": 16,
+          "number": 3,
+          "score": 0.04682151,
+          "linkScore": -0.01125543,
+          "trend": 0.02331682,
+          "omission": 0.75
+        },
+        {
+          "rank": 17,
+          "number": 17,
+          "score": 0.04517944,
+          "linkScore": 0.01531753,
+          "trend": 0.09186238,
+          "omission": 0
+        },
+        {
+          "rank": 18,
+          "number": 15,
+          "score": 0.04480144,
+          "linkScore": 0.00131944,
+          "trend": 0.00916074,
+          "omission": 0.625
+        },
+        {
+          "rank": 19,
+          "number": 38,
+          "score": 0.04136078,
+          "linkScore": -0.00057745,
+          "trend": 0.09186238,
+          "omission": 0
+        },
+        {
+          "rank": 20,
+          "number": 7,
+          "score": 0.03289493,
+          "linkScore": -0.00511374,
+          "trend": 0.02701128,
+          "omission": 0.16666667
+        },
+        {
+          "rank": 21,
+          "number": 9,
+          "score": -0.00548868,
+          "linkScore": -0.00538006,
+          "trend": -0.00130088,
+          "omission": 0.04166667
+        },
+        {
+          "rank": 22,
+          "number": 13,
+          "score": -0.01439349,
+          "linkScore": -0.00024088,
+          "trend": -0.15526231,
+          "omission": 0.58333333
+        },
+        {
+          "rank": 23,
+          "number": 24,
+          "score": -0.01760882,
+          "linkScore": -0.01189739,
+          "trend": -0.04576643,
+          "omission": 0.125
+        },
+        {
+          "rank": 24,
+          "number": 5,
+          "score": -0.03293161,
+          "linkScore": 0.0126552,
+          "trend": -0.16536547,
+          "omission": 0.375
+        },
+        {
+          "rank": 25,
+          "number": 4,
+          "score": -0.08120426,
+          "linkScore": 0.00827818,
+          "trend": -0.37830699,
+          "omission": 0.83333333
+        },
+        {
+          "rank": 26,
+          "number": 21,
+          "score": -0.08134439,
+          "linkScore": 0.01337124,
+          "trend": -0.25852873,
+          "omission": 0.08333333
+        },
+        {
+          "rank": 27,
+          "number": 27,
+          "score": -0.09467039,
+          "linkScore": 0.02376179,
+          "trend": -0.35792145,
+          "omission": 0.625
+        },
+        {
+          "rank": 28,
+          "number": 20,
+          "score": -0.11748395,
+          "linkScore": -0.00473692,
+          "trend": -0.35810068,
+          "omission": 0.25
+        },
+        {
+          "rank": 29,
+          "number": 31,
+          "score": -0.1326807,
+          "linkScore": -0.02627331,
+          "trend": -0.35774222,
+          "omission": 0.41666667
+        },
+        {
+          "rank": 30,
+          "number": 36,
+          "score": -0.15659536,
+          "linkScore": -0.01686354,
+          "trend": -0.3959783,
+          "omission": 0.29166667
+        },
+        {
+          "rank": 31,
+          "number": 37,
+          "score": -0.17260946,
+          "linkScore": 0.02923288,
+          "trend": -0.45090548,
+          "omission": 0.04166667
+        },
+        {
+          "rank": 32,
+          "number": 1,
+          "score": -0.20469181,
+          "linkScore": 0.00609334,
+          "trend": -0.55047743,
+          "omission": 0.125
+        },
+        {
+          "rank": 33,
+          "number": 10,
+          "score": -0.21736255,
+          "linkScore": 0.00216477,
+          "trend": -0.58114537,
+          "omission": 0.20833333
+        },
+        {
+          "rank": 34,
+          "number": 18,
+          "score": -0.23484633,
+          "linkScore": -0.0128652,
+          "trend": -0.64617569,
+          "omission": 0.33333333
+        },
+        {
+          "rank": 35,
+          "number": 16,
+          "score": -0.24447153,
+          "linkScore": 0.0079692,
+          "trend": -0.80419005,
+          "omission": 0.91666667
+        },
+        {
+          "rank": 36,
+          "number": 22,
+          "score": -0.25049739,
+          "linkScore": -0.0018692,
+          "trend": -0.6702557,
+          "omission": 0.54166667
+        },
+        {
+          "rank": 37,
+          "number": 33,
+          "score": -0.26691754,
+          "linkScore": -0.031189,
+          "trend": -0.63607254,
+          "omission": 0.16666667
+        },
+        {
+          "rank": 38,
+          "number": 39,
+          "score": -0.29174583,
+          "linkScore": -0.01807284,
+          "trend": -0.70497656,
+          "omission": 0
+        },
+        {
+          "rank": 39,
+          "number": 26,
+          "score": -0.31252355,
+          "linkScore": 0.01471635,
+          "trend": -0.88337646,
+          "omission": 0.25
+        }
+      ]
     }
   ]
 }
