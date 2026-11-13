@@ -68,7 +68,7 @@ function addTransition(state, t) {
     }
   });
 }
-function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0) {
+function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, limit = 5) {
   const len = i, candidates = Array.from({ length: 39 }, (_, j) => j + 1);
   const fz = (n, windows, weights) => {
     let z = 0;
@@ -112,7 +112,7 @@ function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0) {
   const mean = scored.reduce((sum,x)=>sum+x.score,0)/scored.length;
   const sd = Math.sqrt(scored.reduce((sum,x)=>sum+(x.score-mean)**2,0)/scored.length) || 1;
   return scored.map(x=>({n:x.n,score:x.score-(previousPicks.includes(x.n)?turnoverPenalty*sd:0)}))
-    .sort((a,b)=>b.score-a.score||Math.abs(a.n-20)-Math.abs(b.n-20)||a.n-b.n).slice(0,5).map(x=>x.n);
+    .sort((a,b)=>b.score-a.score||Math.abs(a.n-20)-Math.abs(b.n-20)||a.n-b.n).slice(0,limit).map(x=>x.n);
 }
 const models = [
   { id: "recent30", label: "近30期頻率", weights: [1, 0, 0, 0] },
@@ -144,11 +144,20 @@ const penalties = [0, .1, .25, .5, 1];
 const penaltyStats = new Map(penalties.map(p => [p, {
   total: blank(), segments: [blank(), blank(), blank()], previous: null
 }]));
+const hybrid = { total: blank(), segments: [blank(), blank(), blank()], previous: null };
 const currentState = newCurrentState();
 for (let t = 0; t < START; t++) addTransition(currentState, t);
 for (let i = START; i < draws.length; i++) {
   const actual = new Set(draws[i].numbers);
   const segment = Math.min(2, Math.floor((i - START) / Math.ceil(TEST_SIZE / 3)));
+  const formalTop3 = currentModelRank(i, currentState, [], 0, 3);
+  const diversifiedOrder = currentModelRank(i, currentState, hybrid.previous || [], .5, 39);
+  const hybridPicks = [...formalTop3, ...diversifiedOrder.filter(n => !formalTop3.includes(n)).slice(0, 2)];
+  const hybridHits = hybridPicks.filter(n => actual.has(n)).length;
+  const hybridOverlap = hybrid.previous ? hybridPicks.filter(n => hybrid.previous.includes(n)).length : null;
+  add(hybrid.total, hybridHits, hybridOverlap);
+  add(hybrid.segments[segment], hybridHits, hybridOverlap);
+  hybrid.previous = hybridPicks;
   for (const penalty of penalties) {
     const state = penaltyStats.get(penalty);
     const picks = currentModelRank(i, currentState, state.previous || [], penalty);
@@ -160,6 +169,7 @@ for (let i = START; i < draws.length; i++) {
   }
   addTransition(currentState, i);
 }
+result.hybridTop3Plus2 = { label: "保留正式前三碼＋換號觀察兩碼（0.5 SD）", overall: summary(hybrid.total), segments: hybrid.segments.map(summary) };
 for (const penalty of penalties) {
   const state = penaltyStats.get(penalty);
   const key = penalty === 0 ? "currentMultifactor" : "turnoverPenalty_" + String(penalty).replace(".","_");
