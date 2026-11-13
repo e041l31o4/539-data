@@ -1,0 +1,538 @@
+{
+  "version": "rolling-539-lab-v1",
+  "dataThrough": "2026-11-12",
+  "dataPeriod": "115000274",
+  "historyCount": 6018,
+  "testPeriodCount": 1200,
+  "testFrom": "2023-01-20",
+  "testTo": "2026-11-12",
+  "selectionRule": "每期只使用該期開獎前已知資料；依分數排序選前5碼；沒有使用當期結果。",
+  "randomBaseline": {
+    "averageHits": 0.6410256410256411,
+    "atLeast1": 0.5167127798706745,
+    "atLeast2": 0.11397342976290337,
+    "atLeast3": 0.010040694251220492
+  },
+  "models": {
+    "recent30": {
+      "label": "近30期頻率",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.6367,
+        "atLeast1Pct": 51.67,
+        "atLeast2Pct": 11,
+        "atLeast3Pct": 1,
+        "hitDistribution": [
+          580,
+          488,
+          120,
+          12,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.59,
+          "atLeast1Pct": 47.5,
+          "atLeast2Pct": 11,
+          "atLeast3Pct": 0.5,
+          "hitDistribution": [
+            210,
+            146,
+            42,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.65,
+          "atLeast1Pct": 52.5,
+          "atLeast2Pct": 11,
+          "atLeast3Pct": 1.5,
+          "hitDistribution": [
+            190,
+            166,
+            38,
+            6,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.67,
+          "atLeast1Pct": 55,
+          "atLeast2Pct": 11,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            180,
+            176,
+            40,
+            4,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "recent90": {
+      "label": "近90期頻率",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.6183,
+        "atLeast1Pct": 50.17,
+        "atLeast2Pct": 10.92,
+        "atLeast3Pct": 0.75,
+        "hitDistribution": [
+          598,
+          471,
+          122,
+          9,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.6175,
+          "atLeast1Pct": 50.25,
+          "atLeast2Pct": 10.75,
+          "atLeast3Pct": 0.75,
+          "hitDistribution": [
+            199,
+            158,
+            40,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.6275,
+          "atLeast1Pct": 50.5,
+          "atLeast2Pct": 12,
+          "atLeast3Pct": 0.25,
+          "hitDistribution": [
+            198,
+            154,
+            47,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.61,
+          "atLeast1Pct": 49.75,
+          "atLeast2Pct": 10,
+          "atLeast3Pct": 1.25,
+          "hitDistribution": [
+            201,
+            159,
+            35,
+            5,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "long365": {
+      "label": "近365期頻率",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.6592,
+        "atLeast1Pct": 53.42,
+        "atLeast2Pct": 11.58,
+        "atLeast3Pct": 0.92,
+        "hitDistribution": [
+          559,
+          502,
+          128,
+          11,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.6275,
+          "atLeast1Pct": 50.5,
+          "atLeast2Pct": 11.25,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            198,
+            157,
+            41,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.695,
+          "atLeast1Pct": 56,
+          "atLeast2Pct": 12.75,
+          "atLeast3Pct": 0.75,
+          "hitDistribution": [
+            176,
+            173,
+            48,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.655,
+          "atLeast1Pct": 53.75,
+          "atLeast2Pct": 10.75,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            185,
+            172,
+            39,
+            4,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "balanced": {
+      "label": "30/90/365融合",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.6667,
+        "atLeast1Pct": 53.33,
+        "atLeast2Pct": 12.42,
+        "atLeast3Pct": 0.92,
+        "hitDistribution": [
+          560,
+          491,
+          138,
+          11,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.6625,
+          "atLeast1Pct": 53.5,
+          "atLeast2Pct": 12.25,
+          "atLeast3Pct": 0.5,
+          "hitDistribution": [
+            186,
+            165,
+            47,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.7025,
+          "atLeast1Pct": 55.75,
+          "atLeast2Pct": 13.25,
+          "atLeast3Pct": 1.25,
+          "hitDistribution": [
+            177,
+            170,
+            48,
+            5,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.635,
+          "atLeast1Pct": 50.75,
+          "atLeast2Pct": 11.75,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            197,
+            156,
+            43,
+            4,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "longBlend": {
+      "label": "短中長期融合",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.6567,
+        "atLeast1Pct": 52.5,
+        "atLeast2Pct": 12.33,
+        "atLeast3Pct": 0.83,
+        "hitDistribution": [
+          570,
+          482,
+          138,
+          10,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.635,
+          "atLeast1Pct": 50.75,
+          "atLeast2Pct": 12.25,
+          "atLeast3Pct": 0.5,
+          "hitDistribution": [
+            197,
+            154,
+            47,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.72,
+          "atLeast1Pct": 57.25,
+          "atLeast2Pct": 13.5,
+          "atLeast3Pct": 1.25,
+          "hitDistribution": [
+            171,
+            175,
+            49,
+            5,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.615,
+          "atLeast1Pct": 49.5,
+          "atLeast2Pct": 11.25,
+          "atLeast3Pct": 0.75,
+          "hitDistribution": [
+            202,
+            153,
+            42,
+            3,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "momentum": {
+      "label": "短期動能",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.6542,
+        "atLeast1Pct": 52.42,
+        "atLeast2Pct": 12.08,
+        "atLeast3Pct": 0.92,
+        "hitDistribution": [
+          571,
+          484,
+          134,
+          11,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.635,
+          "atLeast1Pct": 52,
+          "atLeast2Pct": 10.5,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            192,
+            166,
+            38,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.635,
+          "atLeast1Pct": 50.75,
+          "atLeast2Pct": 12,
+          "atLeast3Pct": 0.75,
+          "hitDistribution": [
+            197,
+            155,
+            45,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.6925,
+          "atLeast1Pct": 54.5,
+          "atLeast2Pct": 13.75,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            182,
+            163,
+            51,
+            4,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "frequencyGap": {
+      "label": "頻率＋遺漏",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.67,
+        "atLeast1Pct": 53.33,
+        "atLeast2Pct": 12.67,
+        "atLeast3Pct": 1,
+        "hitDistribution": [
+          560,
+          488,
+          140,
+          12,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.6575,
+          "atLeast1Pct": 52.75,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 0.5,
+          "hitDistribution": [
+            189,
+            161,
+            48,
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.7125,
+          "atLeast1Pct": 56.25,
+          "atLeast2Pct": 13.75,
+          "atLeast3Pct": 1.25,
+          "hitDistribution": [
+            175,
+            170,
+            50,
+            5,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.64,
+          "atLeast1Pct": 51,
+          "atLeast2Pct": 11.75,
+          "atLeast3Pct": 1.25,
+          "hitDistribution": [
+            196,
+            157,
+            42,
+            5,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "gapOnly": {
+      "label": "單純遺漏",
+      "overall": {
+        "periods": 1200,
+        "averageHits": 0.64,
+        "atLeast1Pct": 51.83,
+        "atLeast2Pct": 11.42,
+        "atLeast3Pct": 0.75,
+        "hitDistribution": [
+          578,
+          485,
+          128,
+          9,
+          0,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 400,
+          "averageHits": 0.6325,
+          "atLeast1Pct": 50.5,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 0.25,
+          "hitDistribution": [
+            198,
+            152,
+            49,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.65,
+          "atLeast1Pct": 53.5,
+          "atLeast2Pct": 10.75,
+          "atLeast3Pct": 0.75,
+          "hitDistribution": [
+            186,
+            171,
+            40,
+            3,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 400,
+          "averageHits": 0.6375,
+          "atLeast1Pct": 51.5,
+          "atLeast2Pct": 11,
+          "atLeast3Pct": 1.25,
+          "hitDistribution": [
+            194,
+            162,
+            39,
+            5,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  }
+}
