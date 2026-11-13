@@ -36,11 +36,13 @@ jobs:
           fi
       - name: Archive next-draw prediction and settle previous record
         run: node scripts/archive-prediction.mjs
+      - name: Run rolling walk-forward model comparison
+        run: node scripts/backtest-models.mjs
       - name: Commit updated dataset and prediction archive
         run: |
           git config user.name "539-data-bot"
           git config user.email "539-data-bot@users.noreply.github.com"
-          git add data/daily539.json data/predictions539.json
+          git add data/daily539.json data/predictions539.json data/model-backtest539.json
           if ! git diff --cached --quiet; then
             git commit -m "data: refresh official 539 results"
             git pull --rebase origin main
