@@ -29,7 +29,8 @@
           33,
           0,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.276
       },
       "segments": [
         {
@@ -45,7 +46,8 @@
             9,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.285
         },
         {
           "periods": 1000,
@@ -60,7 +62,8 @@
             13,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.292
         },
         {
           "periods": 1000,
@@ -75,7 +78,8 @@
             11,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.25
         }
       ]
     },
@@ -94,7 +98,8 @@
           32,
           0,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.53
       },
       "segments": [
         {
@@ -110,7 +115,8 @@
             15,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.55
         },
         {
           "periods": 1000,
@@ -125,7 +131,8 @@
             10,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.547
         },
         {
           "periods": 1000,
@@ -140,7 +147,8 @@
             7,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.492
         }
       ]
     },
@@ -159,7 +167,8 @@
           33,
           2,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.785
       },
       "segments": [
         {
@@ -175,7 +184,8 @@
             9,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.764
         },
         {
           "periods": 1000,
@@ -190,7 +200,8 @@
             14,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.825
         },
         {
           "periods": 1000,
@@ -205,7 +216,8 @@
             10,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.766
         }
       ]
     },
@@ -224,7 +236,8 @@
           25,
           1,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.469
       },
       "segments": [
         {
@@ -240,7 +253,8 @@
             7,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.434
         },
         {
           "periods": 1000,
@@ -255,7 +269,8 @@
             9,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.488
         },
         {
           "periods": 1000,
@@ -270,7 +285,8 @@
             9,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.484
         }
       ]
     },
@@ -289,7 +305,8 @@
           24,
           2,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.558
       },
       "segments": [
         {
@@ -305,7 +322,8 @@
             9,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.52
         },
         {
           "periods": 1000,
@@ -320,7 +338,8 @@
             6,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.563
         },
         {
           "periods": 1000,
@@ -335,7 +354,8 @@
             9,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.59
         }
       ]
     },
@@ -354,7 +374,8 @@
           29,
           0,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.146
       },
       "segments": [
         {
@@ -370,7 +391,8 @@
             7,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.106
         },
         {
           "periods": 1000,
@@ -385,7 +407,8 @@
             12,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.172
         },
         {
           "periods": 1000,
@@ -400,7 +423,8 @@
             10,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.16
         }
       ]
     },
@@ -419,7 +443,8 @@
           27,
           1,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.493
       },
       "segments": [
         {
@@ -435,7 +460,8 @@
             7,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.464
         },
         {
           "periods": 1000,
@@ -450,7 +476,8 @@
             10,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.515
         },
         {
           "periods": 1000,
@@ -465,7 +492,8 @@
             10,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.501
         }
       ]
     },
@@ -484,7 +512,8 @@
           32,
           1,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.345
       },
       "segments": [
         {
@@ -500,7 +529,8 @@
             12,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.31
         },
         {
           "periods": 1000,
@@ -515,7 +545,8 @@
             11,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.363
         },
         {
           "periods": 1000,
@@ -530,7 +561,8 @@
             9,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.363
         }
       ]
     },
@@ -549,7 +581,8 @@
           27,
           1,
           0
-        ]
+        ],
+        "averageOverlapPreviousPick": 4.502
       },
       "segments": [
         {
@@ -565,7 +598,8 @@
             9,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.479
         },
         {
           "periods": 1000,
@@ -580,7 +614,8 @@
             7,
             1,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.519
         },
         {
           "periods": 1000,
@@ -595,7 +630,8 @@
             11,
             0,
             0
-          ]
+          ],
+          "averageOverlapPreviousPick": 4.507
         }
       ]
     }
