@@ -68,7 +68,7 @@ function addTransition(state, t) {
     }
   });
 }
-function currentModelRank(i, state) {
+function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0) {
   const len = i, candidates = Array.from({ length: 39 }, (_, j) => j + 1);
   const fz = (n, windows, weights) => {
     let z = 0;
@@ -104,11 +104,15 @@ function currentModelRank(i, state) {
       }
     }
   });
-  return candidates.map((n,j)=>{
+  const scored = candidates.map((n,j)=>{
     const trend=.40*z30[j]+.30*z90[j]+.30*z365[j];
     const omission=Math.min(2,(last[n]<0?len:last[n])/maxGap);
     return {n,score:.52*link[n]+.30*trend+.08*omission+.10*adv[j]};
-  }).sort((a,b)=>b.score-a.score||Math.abs(a.n-20)-Math.abs(b.n-20)||a.n-b.n).slice(0,5).map(x=>x.n);
+  });
+  const mean = scored.reduce((sum,x)=>sum+x.score,0)/scored.length;
+  const sd = Math.sqrt(scored.reduce((sum,x)=>sum+(x.score-mean)**2,0)/scored.length) || 1;
+  return scored.map(x=>({n:x.n,score:x.score-(previousPicks.includes(x.n)?turnoverPenalty*sd:0)}))
+    .sort((a,b)=>b.score-a.score||Math.abs(a.n-20)-Math.abs(b.n-20)||a.n-b.n).slice(0,5).map(x=>x.n);
 }
 const models = [
   { id: "recent30", label: "近30期頻率", weights: [1, 0, 0, 0] },
@@ -136,19 +140,33 @@ function summary(m) {
 }
 
 const result = {};
-const currentTotal = blank(), currentSegments = [blank(), blank(), blank()];
-let previousCurrentPicks = null;
+const penalties = [0, .1, .25, .5, 1];
+const penaltyStats = new Map(penalties.map(p => [p, {
+  total: blank(), segments: [blank(), blank(), blank()], previous: null
+}]));
 const currentState = newCurrentState();
 for (let t = 0; t < START; t++) addTransition(currentState, t);
 for (let i = START; i < draws.length; i++) {
-  const picks = currentModelRank(i, currentState), actual = new Set(draws[i].numbers);
-  const hits = picks.filter(n => actual.has(n)).length;
-  const overlap = previousCurrentPicks ? picks.filter(n => previousCurrentPicks.includes(n)).length : null;
-  add(currentTotal, hits, overlap);
+  const actual = new Set(draws[i].numbers);
   const segment = Math.min(2, Math.floor((i - START) / Math.ceil(TEST_SIZE / 3)));
-  add(currentSegments[segment], hits, overlap);
-  previousCurrentPicks = picks;
+  for (const penalty of penalties) {
+    const state = penaltyStats.get(penalty);
+    const picks = currentModelRank(i, currentState, state.previous || [], penalty);
+    const hits = picks.filter(n => actual.has(n)).length;
+    const overlap = state.previous ? picks.filter(n => state.previous.includes(n)).length : null;
+    add(state.total, hits, overlap);
+    add(state.segments[segment], hits, overlap);
+    state.previous = picks;
+  }
   addTransition(currentState, i);
+}
+for (const penalty of penalties) {
+  const state = penaltyStats.get(penalty);
+  const key = penalty === 0 ? "currentMultifactor" : "turnoverPenalty_" + String(penalty).replace(".","_");
+  result[key] = {
+    label: penalty === 0 ? "現行正式多因子模型" : "多因子＋換號懲罰 " + penalty + " SD",
+    overall: summary(state.total), segments: state.segments.map(summary)
+  };
 }
 for (const model of models) {
   const total = blank(), segments = [blank(), blank(), blank()];
