@@ -14,6 +14,351 @@
     "atLeast3": 0.010040694251220492
   },
   "models": {
+    "currentMultifactor": {
+      "label": "現行正式多因子模型",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6747,
+        "atLeast1Pct": 53.6,
+        "atLeast2Pct": 12.9,
+        "atLeast3Pct": 0.93,
+        "hitDistribution": [
+          1392,
+          1221,
+          359,
+          27,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": 4.502
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.661,
+          "atLeast1Pct": 52.6,
+          "atLeast2Pct": 12.6,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            474,
+            400,
+            117,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.479
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.68,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 13,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            459,
+            411,
+            122,
+            7,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.519
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.683,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 13.1,
+          "atLeast3Pct": 1.1,
+          "hitDistribution": [
+            459,
+            410,
+            120,
+            11,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.507
+        }
+      ]
+    },
+    "turnoverPenalty_0_1": {
+      "label": "多因子＋換號懲罰 0.1 SD",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6697,
+        "atLeast1Pct": 53.17,
+        "atLeast2Pct": 12.93,
+        "atLeast3Pct": 0.83,
+        "hitDistribution": [
+          1405,
+          1207,
+          363,
+          24,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": 4.229
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.663,
+          "atLeast1Pct": 52.7,
+          "atLeast2Pct": 12.7,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            473,
+            400,
+            118,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.218
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.672,
+          "atLeast1Pct": 52.8,
+          "atLeast2Pct": 13.5,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            472,
+            393,
+            127,
+            7,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.215
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.674,
+          "atLeast1Pct": 54,
+          "atLeast2Pct": 12.6,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            460,
+            414,
+            118,
+            8,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.254
+        }
+      ]
+    },
+    "turnoverPenalty_0_25": {
+      "label": "多因子＋換號懲罰 0.25 SD",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6583,
+        "atLeast1Pct": 52.37,
+        "atLeast2Pct": 12.6,
+        "atLeast3Pct": 0.83,
+        "hitDistribution": [
+          1429,
+          1193,
+          353,
+          24,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": 3.749
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.645,
+          "atLeast1Pct": 51.5,
+          "atLeast2Pct": 12.1,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            485,
+            394,
+            112,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.707
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.658,
+          "atLeast1Pct": 51.7,
+          "atLeast2Pct": 13.2,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            483,
+            385,
+            124,
+            7,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.76
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.672,
+          "atLeast1Pct": 53.9,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            461,
+            414,
+            117,
+            8,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.779
+        }
+      ]
+    },
+    "turnoverPenalty_0_5": {
+      "label": "多因子＋換號懲罰 0.5 SD",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6583,
+        "atLeast1Pct": 52.83,
+        "atLeast2Pct": 11.73,
+        "atLeast3Pct": 1.23,
+        "hitDistribution": [
+          1415,
+          1233,
+          315,
+          36,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": 2.989
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.668,
+          "atLeast1Pct": 53.8,
+          "atLeast2Pct": 11.3,
+          "atLeast3Pct": 1.7,
+          "hitDistribution": [
+            462,
+            425,
+            96,
+            17,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 2.972
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.67,
+          "atLeast1Pct": 52.8,
+          "atLeast2Pct": 13,
+          "atLeast3Pct": 1.1,
+          "hitDistribution": [
+            472,
+            398,
+            119,
+            10,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 2.96
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.637,
+          "atLeast1Pct": 51.9,
+          "atLeast2Pct": 10.9,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            481,
+            410,
+            100,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.035
+        }
+      ]
+    },
+    "turnoverPenalty_1": {
+      "label": "多因子＋換號懲罰 1 SD",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.655,
+        "atLeast1Pct": 52.1,
+        "atLeast2Pct": 12.57,
+        "atLeast3Pct": 0.83,
+        "hitDistribution": [
+          1437,
+          1186,
+          352,
+          25,
+          0,
+          0
+        ],
+        "averageOverlapPreviousPick": 1.652
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.642,
+          "atLeast1Pct": 51,
+          "atLeast2Pct": 12.1,
+          "atLeast3Pct": 1.1,
+          "hitDistribution": [
+            490,
+            389,
+            110,
+            11,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 1.558
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.668,
+          "atLeast1Pct": 51.8,
+          "atLeast2Pct": 14,
+          "atLeast3Pct": 1,
+          "hitDistribution": [
+            482,
+            378,
+            130,
+            10,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 1.645
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.655,
+          "atLeast1Pct": 53.5,
+          "atLeast2Pct": 11.6,
+          "atLeast3Pct": 0.4,
+          "hitDistribution": [
+            465,
+            419,
+            112,
+            4,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 1.753
+        }
+      ]
+    },
     "recent30": {
       "label": "近30期頻率",
       "overall": {
@@ -563,75 +908,6 @@
             0
           ],
           "averageOverlapPreviousPick": 4.363
-        }
-      ]
-    },
-    "currentMultifactor": {
-      "label": "現行正式多因子模型（原公式逐期重播）",
-      "overall": {
-        "periods": 3000,
-        "averageHits": 0.6747,
-        "atLeast1Pct": 53.6,
-        "atLeast2Pct": 12.9,
-        "atLeast3Pct": 0.93,
-        "hitDistribution": [
-          1392,
-          1221,
-          359,
-          27,
-          1,
-          0
-        ],
-        "averageOverlapPreviousPick": 4.502
-      },
-      "segments": [
-        {
-          "periods": 1000,
-          "averageHits": 0.661,
-          "atLeast1Pct": 52.6,
-          "atLeast2Pct": 12.6,
-          "atLeast3Pct": 0.9,
-          "hitDistribution": [
-            474,
-            400,
-            117,
-            9,
-            0,
-            0
-          ],
-          "averageOverlapPreviousPick": 4.479
-        },
-        {
-          "periods": 1000,
-          "averageHits": 0.68,
-          "atLeast1Pct": 54.1,
-          "atLeast2Pct": 13,
-          "atLeast3Pct": 0.8,
-          "hitDistribution": [
-            459,
-            411,
-            122,
-            7,
-            1,
-            0
-          ],
-          "averageOverlapPreviousPick": 4.519
-        },
-        {
-          "periods": 1000,
-          "averageHits": 0.683,
-          "atLeast1Pct": 54.1,
-          "atLeast2Pct": 13.1,
-          "atLeast3Pct": 1.1,
-          "hitDistribution": [
-            459,
-            410,
-            120,
-            11,
-            0,
-            0
-          ],
-          "averageOverlapPreviousPick": 4.507
         }
       ]
     }
