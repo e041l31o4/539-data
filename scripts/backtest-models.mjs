@@ -6,7 +6,7 @@ const draws = JSON.parse(fs.readFileSync(DATA, "utf8")).draws
   .filter(d => Array.isArray(d.numbers) && d.numbers.length === 5)
   .sort((a, b) => a.date.localeCompare(b.date) || a.period.localeCompare(b.period));
 const BASE = 5 / 39;
-const TEST_SIZE = Math.min(1200, draws.length - 365);
+const TEST_SIZE = Math.min(3000, draws.length - 365);
 const START = draws.length - TEST_SIZE;
 const WINDOW = [30, 90, 180, 365];
 
