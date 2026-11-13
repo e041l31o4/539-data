@@ -14,6 +14,75 @@
     "atLeast3": 0.010040694251220492
   },
   "models": {
+    "hybridTop3Plus2": {
+      "label": "保留正式前三碼＋換號觀察兩碼（0.5 SD）",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6617,
+        "atLeast1Pct": 53.43,
+        "atLeast2Pct": 11.7,
+        "atLeast3Pct": 1,
+        "hitDistribution": [
+          1397,
+          1252,
+          321,
+          29,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": 3.209
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.663,
+          "atLeast1Pct": 53.6,
+          "atLeast2Pct": 11.4,
+          "atLeast3Pct": 1.3,
+          "hitDistribution": [
+            464,
+            422,
+            101,
+            13,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.202
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.671,
+          "atLeast1Pct": 53.6,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            464,
+            411,
+            116,
+            8,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.189
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.651,
+          "atLeast1Pct": 53.1,
+          "atLeast2Pct": 11.2,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            469,
+            419,
+            104,
+            8,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 3.237
+        }
+      ]
+    },
     "currentMultifactor": {
       "label": "現行正式多因子模型",
       "overall": {
