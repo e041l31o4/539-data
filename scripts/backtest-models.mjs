@@ -99,15 +99,6 @@ function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, lim
   const z30 = candidates.map(n => fz(n,[30],[1]));
   const z90 = candidates.map(n => fz(n,[90],[1]));
   const z365 = candidates.map(n => fz(n,[365],[1]));
-  const adv = candidates.map(n => {
-    const frequencyZ = fz(n,[30,90,180,365],[.34,.29,.22,.15]);
-    const opportunities = state.opportunities[n], hits = state.conditionalHits[n];
-    const conditional = (hits + 5) / (opportunities + 39);
-    const cse = Math.sqrt(BASE * (1 - BASE) / (opportunities + 39));
-    const conditionalZ = cse ? (conditional - BASE) / cse : 0;
-    const clamped = Math.max(-2, Math.min(2, conditionalZ));
-    return frequencyZ * .82 + clamped * .18;
-  });
   const last = Array(40).fill(-1);
   for (let t=len-1;t>=0;t--) for(const n of draws[t].numbers) if(last[n]<0) last[n]=len-1-t;
   const maxGap=Math.max(1,...last.slice(1)), link=Array(40).fill(0);
@@ -217,14 +208,14 @@ for (const model of models) {
 }
 
 const report = {
-  version: "rolling-539-lab-v2-exact-advanced",
+  version: "rolling-539-lab-v3-production-score",
   dataThrough: draws.at(-1).date,
   dataPeriod: draws.at(-1).period,
   historyCount: draws.length,
   testPeriodCount: TEST_SIZE,
   testFrom: draws[START].date,
   testTo: draws.at(-1).date,
-  selectionRule: "逐期只使用該期開獎前資料；正式多因子模型已對齊 app.js 的 advancedRanking（含鄰號條件機率 18%）；依分數排序選前5碼。",
+  selectionRule: "逐期只使用該期開獎前資料；正式多因子模型對齊 app.js multiFactorRanking，advanced 項使用 advancedRanking.frequencyZ（不使用其綜合 score）；依分數排序選前5碼。",
   randomBaseline: exactBaseline(),
   models: result
 };
