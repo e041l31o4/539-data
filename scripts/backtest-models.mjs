@@ -166,6 +166,13 @@ const factorModels = [
   { id: "ablateAdvanced", label: "移除進階頻率因子", factors: { link: .52, trend: .30, omission: .08, adv: 0 } }
 ];
 const factorStats = new Map(factorModels.map(m => [m.id, { total: blank(), segments: [blank(), blank(), blank()] }]));
+const weightModels = [
+  { id: "weightTrend40", label: "趨勢權重提高（.42/.40/.08/.10）", factors: { link: .42, trend: .40, omission: .08, adv: .10 } },
+  { id: "weightTrend50", label: "趨勢權重提高（.32/.50/.08/.10）", factors: { link: .32, trend: .50, omission: .08, adv: .10 } },
+  { id: "weightTrend45", label: "趨勢主導（.35/.45/.10/.10）", factors: { link: .35, trend: .45, omission: .10, adv: .10 } },
+  { id: "weightBalanced", label: "四因子均衡（.40/.40/.10/.10）", factors: { link: .40, trend: .40, omission: .10, adv: .10 } }
+];
+const weightStats = new Map(weightModels.map(m => [m.id, { total: blank(), segments: [blank(), blank(), blank()] }]));
 const currentState = newCurrentState();
 for (let t = 0; t < START; t++) addTransition(currentState, t);
 for (let i = START; i < draws.length; i++) {
@@ -186,6 +193,13 @@ for (let i = START; i < draws.length; i++) {
     add(state.total, hits);
     add(state.segments[segment], hits);
   }
+  for (const model of weightModels) {
+    const picks = currentModelRank(i, currentState, [], 0, 5, model.factors);
+    const hits = picks.filter(n => actual.has(n)).length;
+    const state = weightStats.get(model.id);
+    add(state.total, hits);
+    add(state.segments[segment], hits);
+  }
   for (const penalty of penalties) {
     const state = penaltyStats.get(penalty);
     const picks = currentModelRank(i, currentState, state.previous || [], penalty);
@@ -200,6 +214,10 @@ for (let i = START; i < draws.length; i++) {
 result.hybridTop3Plus2 = { label: "保留正式前三碼＋換號觀察兩碼（0.5 SD）", overall: summary(hybrid.total), segments: hybrid.segments.map(summary) };
 for (const model of factorModels) {
   const state = factorStats.get(model.id);
+  result[model.id] = { label: model.label, overall: summary(state.total), segments: state.segments.map(summary) };
+}
+for (const model of weightModels) {
+  const state = weightStats.get(model.id);
   result[model.id] = { label: model.label, overall: summary(state.total), segments: state.segments.map(summary) };
 }
 for (const penalty of penalties) {
@@ -227,7 +245,7 @@ for (const model of models) {
 }
 
 const report = {
-  version: "rolling-539-lab-v4-factor-ablation",
+  version: "rolling-539-lab-v5-weight-sweep",
   dataThrough: draws.at(-1).date,
   dataPeriod: draws.at(-1).period,
   historyCount: draws.length,
