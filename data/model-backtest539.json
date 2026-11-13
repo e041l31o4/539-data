@@ -533,6 +533,71 @@
           ]
         }
       ]
+    },
+    "currentMultifactor": {
+      "label": "現行正式多因子模型（原公式逐期重播）",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6747,
+        "atLeast1Pct": 53.6,
+        "atLeast2Pct": 12.9,
+        "atLeast3Pct": 0.93,
+        "hitDistribution": [
+          1392,
+          1221,
+          359,
+          27,
+          1,
+          0
+        ]
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.661,
+          "atLeast1Pct": 52.6,
+          "atLeast2Pct": 12.6,
+          "atLeast3Pct": 0.9,
+          "hitDistribution": [
+            474,
+            400,
+            117,
+            9,
+            0,
+            0
+          ]
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.68,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 13,
+          "atLeast3Pct": 0.8,
+          "hitDistribution": [
+            459,
+            411,
+            122,
+            7,
+            1,
+            0
+          ]
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.683,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 13.1,
+          "atLeast3Pct": 1.1,
+          "hitDistribution": [
+            459,
+            410,
+            120,
+            11,
+            0,
+            0
+          ]
+        }
+      ]
     }
   }
 }
