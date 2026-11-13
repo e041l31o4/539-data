@@ -54,8 +54,15 @@ function subsets(nums) {
   return out;
 }
 const LAGS = [1, 2, 3, 5], LAG_WEIGHTS = [.34, .26, .22, .18];
-function newCurrentState() { return { maps: LAGS.map(() => new Map()), opportunities: Array(40).fill(0), conditionalHits: Array(40).fill(0) }; }
+function newCurrentState() { return { maps: LAGS.map(() => new Map()), opportunities: Array(40).fill(0), conditionalHits: Array(40).fill(0), freq: Object.fromEntries([30,90,180,365].map(w => [w, Array(40).fill(0)])) }; }
 function addTransition(state, t) {
+  if (t >= 0) {
+    for (const n of draws[t].numbers) state.freq[30][n]++;
+    for (const n of draws[t].numbers) state.freq[90][n]++;
+    for (const n of draws[t].numbers) state.freq[180][n]++;
+    for (const n of draws[t].numbers) state.freq[365][n]++;
+    for (const w of [30,90,180,365]) if (t >= w) for (const n of draws[t-w].numbers) state.freq[w][n]--;
+  }
   if (t >= 1) {
     const prev = draws[t - 1].numbers, next = draws[t].numbers;
     for (let n = 1; n <= 39; n++) {
@@ -82,9 +89,7 @@ function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, lim
   const fz = (n, windows, weights) => {
     let z = 0;
     windows.forEach((w, wi) => {
-      const from = Math.max(0, len - w), size = len - from;
-      let count = 0;
-      for (let t = from; t < len; t++) if (draws[t].numbers.includes(n)) count++;
+      const size = Math.min(w, len), count = state.freq[w][n];
       const p = (count + 5) / (size + 39);
       const se = Math.sqrt(BASE * (1 - BASE) / (size + 39));
       z += weights[wi] * (p - BASE) / se;
