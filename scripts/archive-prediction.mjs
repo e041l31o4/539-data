@@ -105,6 +105,7 @@ function main() {
     try { archive = { ...archive, ...JSON.parse(fs.readFileSync(OUT, "utf8")) }; } catch {}
   }
   archive.predictions ||= [];
+  let changed = false;
 
   // 先用最新官方開獎結果結算上一筆預測；不回填或捏造過去的 ChatGPT 推薦。
   for (const prediction of archive.predictions) {
@@ -119,6 +120,7 @@ function main() {
         hitCount: prediction.top5.filter(n => actualSet.has(n)).length,
         settledAt: new Date().toISOString()
       };
+      changed = true;
     }
   }
 
@@ -137,8 +139,10 @@ function main() {
       backup5: ranking.slice(5, 10).map(x => x.n),
       ranking: ranking.map((x, i) => ({ rank: i + 1, number: x.n, score: x.score, linkScore: x.linkScore, trend: x.trend, omission: x.omission }))
     });
+    changed = true;
   }
   archive.modelVersion = MODEL_VERSION;
+  if (!changed) { console.log("預測存檔無變動，略過寫檔，避免觸發無限部署。"); return; }
   archive.updatedAt = new Date().toISOString();
   archive.predictions.sort((a, b) => a.sourceDate.localeCompare(b.sourceDate) || a.sourcePeriod.localeCompare(b.sourcePeriod));
   fs.writeFileSync(OUT, JSON.stringify(archive, null, 2) + "\n");
