@@ -1,11 +1,11 @@
 {
   "version": "rolling-539-lab-v5-weight-sweep",
-  "dataThrough": "2026-11-13",
-  "dataPeriod": "115000275",
-  "historyCount": 6019,
+  "dataThrough": "2026-11-14",
+  "dataPeriod": "115000276",
+  "historyCount": 6020,
   "testPeriodCount": 3000,
-  "testFrom": "2017-04-22",
-  "testTo": "2026-11-13",
+  "testFrom": "2017-04-24",
+  "testTo": "2026-11-14",
   "selectionRule": "逐期只使用該期開獎前資料；正式多因子模型對齊 app.js multiFactorRanking，advanced 項使用 advancedRanking.frequencyZ（不使用其綜合 score）；依分數排序選前5碼。",
   "randomBaseline": {
     "averageHits": 0.6410256410256411,
@@ -18,14 +18,14 @@
       "label": "保留正式前三碼＋換號觀察兩碼（0.5 SD）",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.662,
+        "averageHits": 0.6623,
         "atLeast1Pct": 53.47,
-        "atLeast2Pct": 11.7,
+        "atLeast2Pct": 11.73,
         "atLeast3Pct": 1,
         "hitDistribution": [
           1396,
-          1253,
-          321,
+          1252,
+          322,
           29,
           1,
           0
@@ -35,13 +35,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.663,
-          "atLeast1Pct": 53.6,
+          "averageHits": 0.662,
+          "atLeast1Pct": 53.5,
           "atLeast2Pct": 11.4,
           "atLeast3Pct": 1.3,
           "hitDistribution": [
-            464,
-            422,
+            465,
+            421,
             101,
             13,
             0,
@@ -67,14 +67,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.652,
-          "atLeast1Pct": 53.2,
-          "atLeast2Pct": 11.2,
+          "averageHits": 0.654,
+          "atLeast1Pct": 53.3,
+          "atLeast2Pct": 11.3,
           "atLeast3Pct": 0.8,
           "hitDistribution": [
-            468,
+            467,
             420,
-            104,
+            105,
             8,
             0,
             0
@@ -87,14 +87,14 @@
       "label": "移除歷史關聯因子",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.671,
+        "averageHits": 0.6713,
         "atLeast1Pct": 53.1,
-        "atLeast2Pct": 13.07,
+        "atLeast2Pct": 13.1,
         "atLeast3Pct": 0.9,
         "hitDistribution": [
           1407,
-          1201,
-          365,
+          1200,
+          366,
           26,
           1,
           0
@@ -104,13 +104,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.656,
-          "atLeast1Pct": 52.3,
+          "averageHits": 0.655,
+          "atLeast1Pct": 52.2,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            477,
-            399,
+            478,
+            398,
             115,
             9,
             0,
@@ -136,14 +136,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.679,
-          "atLeast1Pct": 53.8,
-          "atLeast2Pct": 13.1,
+          "averageHits": 0.681,
+          "atLeast1Pct": 53.9,
+          "atLeast2Pct": 13.2,
           "atLeast3Pct": 1,
           "hitDistribution": [
-            462,
+            461,
             407,
-            121,
+            122,
             10,
             0,
             0
@@ -156,13 +156,13 @@
       "label": "移除短中長期趨勢",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6603,
-        "atLeast1Pct": 53.4,
+        "averageHits": 0.6607,
+        "atLeast1Pct": 53.43,
         "atLeast2Pct": 11.6,
         "atLeast3Pct": 0.97,
         "hitDistribution": [
-          1398,
-          1254,
+          1397,
+          1255,
           319,
           27,
           2,
@@ -205,13 +205,13 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.647,
-          "atLeast1Pct": 52.3,
+          "averageHits": 0.648,
+          "atLeast1Pct": 52.4,
           "atLeast2Pct": 11.7,
           "atLeast3Pct": 0.7,
           "hitDistribution": [
-            477,
-            406,
+            476,
+            407,
             110,
             7,
             0,
@@ -225,14 +225,14 @@
       "label": "移除遺漏因子",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6673,
+        "averageHits": 0.6677,
         "atLeast1Pct": 52.83,
-        "atLeast2Pct": 12.97,
+        "atLeast2Pct": 13,
         "atLeast3Pct": 0.9,
         "hitDistribution": [
           1415,
-          1196,
-          362,
+          1195,
+          363,
           26,
           1,
           0
@@ -242,13 +242,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.655,
-          "atLeast1Pct": 51.9,
+          "averageHits": 0.654,
+          "atLeast1Pct": 51.8,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.8,
           "hitDistribution": [
-            481,
-            391,
+            482,
+            390,
             120,
             8,
             0,
@@ -274,14 +274,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.674,
-          "atLeast1Pct": 53.3,
-          "atLeast2Pct": 13,
+          "averageHits": 0.676,
+          "atLeast1Pct": 53.4,
+          "atLeast2Pct": 13.1,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
-            467,
+            466,
             403,
-            119,
+            120,
             11,
             0,
             0
@@ -294,14 +294,14 @@
       "label": "移除進階頻率因子",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6737,
+        "averageHits": 0.674,
         "atLeast1Pct": 53.47,
-        "atLeast2Pct": 12.97,
+        "atLeast2Pct": 13,
         "atLeast3Pct": 0.9,
         "hitDistribution": [
           1396,
-          1215,
-          362,
+          1214,
+          363,
           26,
           1,
           0
@@ -311,13 +311,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.658,
-          "atLeast1Pct": 52.4,
+          "averageHits": 0.657,
+          "atLeast1Pct": 52.3,
           "atLeast2Pct": 12.6,
           "atLeast3Pct": 0.8,
           "hitDistribution": [
-            476,
-            398,
+            477,
+            397,
             118,
             8,
             0,
@@ -343,14 +343,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.69,
-          "atLeast1Pct": 55,
-          "atLeast2Pct": 13,
+          "averageHits": 0.692,
+          "atLeast1Pct": 55.1,
+          "atLeast2Pct": 13.1,
           "atLeast3Pct": 1,
           "hitDistribution": [
-            450,
+            449,
             420,
-            120,
+            121,
             10,
             0,
             0
@@ -363,14 +363,14 @@
       "label": "趨勢權重提高（.42/.40/.08/.10）",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.672,
+        "averageHits": 0.6723,
         "atLeast1Pct": 53.4,
-        "atLeast2Pct": 12.83,
+        "atLeast2Pct": 12.87,
         "atLeast3Pct": 0.93,
         "hitDistribution": [
           1398,
-          1217,
-          357,
+          1216,
+          358,
           27,
           1,
           0
@@ -380,13 +380,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.661,
-          "atLeast1Pct": 52.7,
+          "averageHits": 0.66,
+          "atLeast1Pct": 52.6,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            473,
-            402,
+            474,
+            401,
             116,
             9,
             0,
@@ -412,14 +412,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.679,
-          "atLeast1Pct": 54,
-          "atLeast2Pct": 12.8,
+          "averageHits": 0.681,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 12.9,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
-            460,
+            459,
             412,
-            117,
+            118,
             11,
             0,
             0
@@ -432,14 +432,14 @@
       "label": "趨勢權重提高（.32/.50/.08/.10）",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6703,
+        "averageHits": 0.6707,
         "atLeast1Pct": 53.07,
-        "atLeast2Pct": 12.97,
+        "atLeast2Pct": 13,
         "atLeast3Pct": 0.97,
         "hitDistribution": [
           1408,
-          1203,
-          360,
+          1202,
+          361,
           28,
           1,
           0
@@ -449,13 +449,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.659,
-          "atLeast1Pct": 52.2,
+          "averageHits": 0.658,
+          "atLeast1Pct": 52.1,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            478,
-            394,
+            479,
+            393,
             119,
             9,
             0,
@@ -481,14 +481,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.677,
-          "atLeast1Pct": 53.9,
-          "atLeast2Pct": 12.7,
+          "averageHits": 0.679,
+          "atLeast1Pct": 54,
+          "atLeast2Pct": 12.8,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
-            461,
+            460,
             412,
-            116,
+            117,
             11,
             0,
             0
@@ -501,14 +501,14 @@
       "label": "趨勢主導（.35/.45/.10/.10）",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.672,
+        "averageHits": 0.6723,
         "atLeast1Pct": 53.3,
-        "atLeast2Pct": 12.87,
+        "atLeast2Pct": 12.9,
         "atLeast3Pct": 1,
         "hitDistribution": [
           1401,
-          1213,
-          356,
+          1212,
+          357,
           29,
           1,
           0
@@ -518,13 +518,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.659,
-          "atLeast1Pct": 52.5,
+          "averageHits": 0.658,
+          "atLeast1Pct": 52.4,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            475,
-            400,
+            476,
+            399,
             116,
             9,
             0,
@@ -550,14 +550,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.68,
-          "atLeast1Pct": 54,
-          "atLeast2Pct": 12.8,
+          "averageHits": 0.682,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 12.9,
           "atLeast3Pct": 1.2,
           "hitDistribution": [
-            460,
+            459,
             412,
-            116,
+            117,
             12,
             0,
             0
@@ -570,14 +570,14 @@
       "label": "四因子均衡（.40/.40/.10/.10）",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6727,
+        "averageHits": 0.673,
         "atLeast1Pct": 53.43,
-        "atLeast2Pct": 12.8,
+        "atLeast2Pct": 12.83,
         "atLeast3Pct": 1,
         "hitDistribution": [
           1397,
-          1219,
-          354,
+          1218,
+          355,
           29,
           1,
           0
@@ -587,13 +587,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.66,
-          "atLeast1Pct": 52.7,
+          "averageHits": 0.659,
+          "atLeast1Pct": 52.6,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            473,
-            403,
+            474,
+            402,
             115,
             9,
             0,
@@ -619,14 +619,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.681,
-          "atLeast1Pct": 54.1,
-          "atLeast2Pct": 12.8,
+          "averageHits": 0.683,
+          "atLeast1Pct": 54.2,
+          "atLeast2Pct": 12.9,
           "atLeast3Pct": 1.2,
           "hitDistribution": [
-            459,
+            458,
             413,
-            116,
+            117,
             12,
             0,
             0
@@ -639,14 +639,14 @@
       "label": "現行正式多因子模型",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6747,
+        "averageHits": 0.675,
         "atLeast1Pct": 53.6,
-        "atLeast2Pct": 12.9,
+        "atLeast2Pct": 12.93,
         "atLeast3Pct": 0.93,
         "hitDistribution": [
           1392,
-          1221,
-          359,
+          1220,
+          360,
           27,
           1,
           0
@@ -656,13 +656,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.66,
-          "atLeast1Pct": 52.5,
+          "averageHits": 0.659,
+          "atLeast1Pct": 52.4,
           "atLeast2Pct": 12.6,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            475,
-            399,
+            476,
+            398,
             117,
             9,
             0,
@@ -688,14 +688,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.684,
-          "atLeast1Pct": 54.2,
-          "atLeast2Pct": 13.1,
+          "averageHits": 0.686,
+          "atLeast1Pct": 54.3,
+          "atLeast2Pct": 13.2,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
-            458,
+            457,
             411,
-            120,
+            121,
             11,
             0,
             0
@@ -708,36 +708,36 @@
       "label": "多因子＋換號懲罰 0.1 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6693,
+        "averageHits": 0.6697,
         "atLeast1Pct": 53.13,
-        "atLeast2Pct": 12.93,
+        "atLeast2Pct": 12.97,
         "atLeast3Pct": 0.83,
         "hitDistribution": [
           1406,
-          1206,
-          363,
+          1205,
+          364,
           24,
           1,
           0
         ],
-        "averageOverlapPreviousPick": 4.229
+        "averageOverlapPreviousPick": 4.228
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.662,
-          "atLeast1Pct": 52.6,
+          "averageHits": 0.661,
+          "atLeast1Pct": 52.5,
           "atLeast2Pct": 12.7,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            474,
-            399,
+            475,
+            398,
             118,
             9,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.218
+          "averageOverlapPreviousPick": 4.217
         },
         {
           "periods": 1000,
@@ -753,23 +753,23 @@
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.215
+          "averageOverlapPreviousPick": 4.216
         },
         {
           "periods": 1000,
-          "averageHits": 0.674,
-          "atLeast1Pct": 54,
-          "atLeast2Pct": 12.6,
+          "averageHits": 0.676,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 12.7,
           "atLeast3Pct": 0.8,
           "hitDistribution": [
-            460,
+            459,
             414,
-            118,
+            119,
             8,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.253
+          "averageOverlapPreviousPick": 4.252
         }
       ]
     },
@@ -777,14 +777,14 @@
       "label": "多因子＋換號懲罰 0.25 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6587,
+        "averageHits": 0.659,
         "atLeast1Pct": 52.4,
-        "atLeast2Pct": 12.6,
+        "atLeast2Pct": 12.63,
         "atLeast3Pct": 0.83,
         "hitDistribution": [
           1428,
-          1194,
-          353,
+          1193,
+          354,
           24,
           1,
           0
@@ -794,19 +794,19 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.645,
-          "atLeast1Pct": 51.5,
+          "averageHits": 0.644,
+          "atLeast1Pct": 51.4,
           "atLeast2Pct": 12.1,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            485,
-            394,
+            486,
+            393,
             112,
             9,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.708
+          "averageOverlapPreviousPick": 3.706
         },
         {
           "periods": 1000,
@@ -822,23 +822,23 @@
             1,
             0
           ],
-          "averageOverlapPreviousPick": 3.761
+          "averageOverlapPreviousPick": 3.762
         },
         {
           "periods": 1000,
-          "averageHits": 0.673,
-          "atLeast1Pct": 54,
-          "atLeast2Pct": 12.5,
+          "averageHits": 0.675,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 12.6,
           "atLeast3Pct": 0.8,
           "hitDistribution": [
-            460,
+            459,
             415,
-            117,
+            118,
             8,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.778
+          "averageOverlapPreviousPick": 3.779
         }
       ]
     },
@@ -846,14 +846,14 @@
       "label": "多因子＋換號懲罰 0.5 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6583,
+        "averageHits": 0.6587,
         "atLeast1Pct": 52.83,
-        "atLeast2Pct": 11.73,
+        "atLeast2Pct": 11.77,
         "atLeast3Pct": 1.23,
         "hitDistribution": [
           1415,
-          1233,
-          315,
+          1232,
+          316,
           36,
           1,
           0
@@ -863,13 +863,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.669,
-          "atLeast1Pct": 53.9,
+          "averageHits": 0.668,
+          "atLeast1Pct": 53.8,
           "atLeast2Pct": 11.3,
           "atLeast3Pct": 1.7,
           "hitDistribution": [
-            461,
-            426,
+            462,
+            425,
             96,
             17,
             0,
@@ -895,14 +895,14 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.637,
-          "atLeast1Pct": 51.9,
-          "atLeast2Pct": 10.9,
+          "averageHits": 0.639,
+          "atLeast1Pct": 52,
+          "atLeast2Pct": 11,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            481,
+            480,
             410,
-            100,
+            101,
             9,
             0,
             0
@@ -915,14 +915,14 @@
       "label": "多因子＋換號懲罰 1 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.655,
-        "atLeast1Pct": 52.1,
-        "atLeast2Pct": 12.57,
+        "averageHits": 0.6563,
+        "atLeast1Pct": 52.17,
+        "atLeast2Pct": 12.63,
         "atLeast3Pct": 0.83,
         "hitDistribution": [
-          1437,
+          1435,
           1186,
-          352,
+          354,
           25,
           0,
           0
@@ -932,19 +932,19 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.642,
-          "atLeast1Pct": 51,
-          "atLeast2Pct": 12.1,
+          "averageHits": 0.645,
+          "atLeast1Pct": 51.1,
+          "atLeast2Pct": 12.3,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
-            490,
-            389,
-            110,
+            489,
+            388,
+            112,
             11,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 1.557
+          "averageOverlapPreviousPick": 1.556
         },
         {
           "periods": 1000,
@@ -960,23 +960,23 @@
             0,
             0
           ],
-          "averageOverlapPreviousPick": 1.646
+          "averageOverlapPreviousPick": 1.647
         },
         {
           "periods": 1000,
-          "averageHits": 0.656,
-          "atLeast1Pct": 53.6,
+          "averageHits": 0.657,
+          "atLeast1Pct": 53.7,
           "atLeast2Pct": 11.6,
           "atLeast3Pct": 0.4,
           "hitDistribution": [
-            464,
-            420,
+            463,
+            421,
             112,
             4,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 1.753
+          "averageOverlapPreviousPick": 1.754
         }
       ]
     },
@@ -984,14 +984,14 @@
       "label": "近30期頻率",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6557,
-        "atLeast1Pct": 52.33,
-        "atLeast2Pct": 12.13,
+        "averageHits": 0.6563,
+        "atLeast1Pct": 52.37,
+        "atLeast2Pct": 12.17,
         "atLeast3Pct": 1.1,
         "hitDistribution": [
-          1430,
+          1429,
           1206,
-          331,
+          332,
           33,
           0,
           0
@@ -1017,13 +1017,13 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.68,
-          "atLeast1Pct": 52.8,
+          "averageHits": 0.681,
+          "atLeast1Pct": 52.9,
           "atLeast2Pct": 13.9,
           "atLeast3Pct": 1.3,
           "hitDistribution": [
-            472,
-            389,
+            471,
+            390,
             126,
             13,
             0,
@@ -1033,19 +1033,19 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.634,
+          "averageHits": 0.635,
           "atLeast1Pct": 51.9,
-          "atLeast2Pct": 10.4,
+          "atLeast2Pct": 10.5,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
             481,
-            415,
-            93,
+            414,
+            94,
             11,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.249
+          "averageOverlapPreviousPick": 4.25
         }
       ]
     },
@@ -1053,13 +1053,13 @@
       "label": "近90期頻率",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6333,
-        "atLeast1Pct": 50.4,
+        "averageHits": 0.6337,
+        "atLeast1Pct": 50.43,
         "atLeast2Pct": 11.87,
         "atLeast3Pct": 1.07,
         "hitDistribution": [
-          1488,
-          1156,
+          1487,
+          1157,
           324,
           32,
           0,
@@ -1102,13 +1102,13 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.616,
-          "atLeast1Pct": 50.2,
+          "averageHits": 0.617,
+          "atLeast1Pct": 50.3,
           "atLeast2Pct": 10.7,
           "atLeast3Pct": 0.7,
           "hitDistribution": [
-            498,
-            395,
+            497,
+            396,
             100,
             7,
             0,
@@ -1139,13 +1139,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.647,
-          "atLeast1Pct": 52.1,
+          "averageHits": 0.648,
+          "atLeast1Pct": 52.2,
           "atLeast2Pct": 11.5,
           "atLeast3Pct": 1,
           "hitDistribution": [
-            479,
-            406,
+            478,
+            407,
             105,
             9,
             1,
@@ -1155,13 +1155,13 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.691,
-          "atLeast1Pct": 54.8,
+          "averageHits": 0.69,
+          "atLeast1Pct": 54.7,
           "atLeast2Pct": 12.7,
           "atLeast3Pct": 1.5,
           "hitDistribution": [
-            452,
-            421,
+            453,
+            420,
             112,
             14,
             1,
@@ -1191,14 +1191,14 @@
       "label": "30/90/365融合",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6643,
+        "averageHits": 0.6647,
         "atLeast1Pct": 52.7,
-        "atLeast2Pct": 12.83,
+        "atLeast2Pct": 12.87,
         "atLeast3Pct": 0.87,
         "hitDistribution": [
           1419,
-          1196,
-          359,
+          1195,
+          360,
           25,
           1,
           0
@@ -1208,13 +1208,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.651,
-          "atLeast1Pct": 51.5,
+          "averageHits": 0.65,
+          "atLeast1Pct": 51.4,
           "atLeast2Pct": 12.9,
           "atLeast3Pct": 0.7,
           "hitDistribution": [
-            485,
-            386,
+            486,
+            385,
             122,
             7,
             0,
@@ -1236,23 +1236,23 @@
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.488
+          "averageOverlapPreviousPick": 4.487
         },
         {
           "periods": 1000,
-          "averageHits": 0.671,
-          "atLeast1Pct": 53.8,
-          "atLeast2Pct": 12.4,
+          "averageHits": 0.673,
+          "atLeast1Pct": 53.9,
+          "atLeast2Pct": 12.5,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            462,
+            461,
             414,
-            115,
+            116,
             9,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.484
+          "averageOverlapPreviousPick": 4.485
         }
       ]
     },
@@ -1260,13 +1260,13 @@
       "label": "短中長期融合",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6537,
-        "atLeast1Pct": 52.43,
+        "averageHits": 0.654,
+        "atLeast1Pct": 52.47,
         "atLeast2Pct": 12,
         "atLeast3Pct": 0.87,
         "hitDistribution": [
-          1427,
-          1213,
+          1426,
+          1214,
           334,
           24,
           2,
@@ -1289,7 +1289,7 @@
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.52
+          "averageOverlapPreviousPick": 4.519
         },
         {
           "periods": 1000,
@@ -1305,17 +1305,17 @@
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.563
+          "averageOverlapPreviousPick": 4.564
         },
         {
           "periods": 1000,
-          "averageHits": 0.67,
-          "atLeast1Pct": 53.4,
+          "averageHits": 0.671,
+          "atLeast1Pct": 53.5,
           "atLeast2Pct": 12.7,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            466,
-            407,
+            465,
+            408,
             118,
             9,
             0,
@@ -1329,13 +1329,13 @@
       "label": "短期動能",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.648,
-        "atLeast1Pct": 52.27,
+        "averageHits": 0.6483,
+        "atLeast1Pct": 52.3,
         "atLeast2Pct": 11.57,
         "atLeast3Pct": 0.97,
         "hitDistribution": [
-          1432,
-          1221,
+          1431,
+          1222,
           318,
           29,
           0,
@@ -1362,19 +1362,19 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.678,
-          "atLeast1Pct": 54,
+          "averageHits": 0.679,
+          "atLeast1Pct": 54.1,
           "atLeast2Pct": 12.6,
           "atLeast3Pct": 1.2,
           "hitDistribution": [
-            460,
-            414,
+            459,
+            415,
             114,
             12,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.172
+          "averageOverlapPreviousPick": 4.173
         },
         {
           "periods": 1000,
@@ -1390,7 +1390,7 @@
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.16
+          "averageOverlapPreviousPick": 4.159
         }
       ]
     },
@@ -1398,14 +1398,14 @@
       "label": "頻率＋遺漏",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6677,
+        "averageHits": 0.668,
         "atLeast1Pct": 52.87,
-        "atLeast2Pct": 12.93,
+        "atLeast2Pct": 12.97,
         "atLeast3Pct": 0.93,
         "hitDistribution": [
           1414,
-          1198,
-          360,
+          1197,
+          361,
           27,
           1,
           0
@@ -1415,13 +1415,13 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.653,
-          "atLeast1Pct": 51.8,
+          "averageHits": 0.652,
+          "atLeast1Pct": 51.7,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.7,
           "hitDistribution": [
-            482,
-            390,
+            483,
+            389,
             121,
             7,
             0,
@@ -1443,23 +1443,23 @@
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.515
+          "averageOverlapPreviousPick": 4.514
         },
         {
           "periods": 1000,
-          "averageHits": 0.675,
-          "atLeast1Pct": 53.9,
-          "atLeast2Pct": 12.6,
+          "averageHits": 0.677,
+          "atLeast1Pct": 54,
+          "atLeast2Pct": 12.7,
           "atLeast3Pct": 1,
           "hitDistribution": [
-            461,
+            460,
             413,
-            116,
+            117,
             10,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.501
+          "averageOverlapPreviousPick": 4.502
         }
       ]
     },
@@ -1479,35 +1479,35 @@
           1,
           0
         ],
-        "averageOverlapPreviousPick": 4.345
+        "averageOverlapPreviousPick": 4.346
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.69,
+          "averageHits": 0.691,
           "atLeast1Pct": 53.8,
-          "atLeast2Pct": 13.8,
+          "atLeast2Pct": 13.9,
           "atLeast3Pct": 1.3,
           "hitDistribution": [
             462,
-            400,
-            125,
+            399,
+            126,
             12,
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.309
+          "averageOverlapPreviousPick": 4.31
         },
         {
           "periods": 1000,
-          "averageHits": 0.636,
-          "atLeast1Pct": 51.6,
-          "atLeast2Pct": 10.9,
+          "averageHits": 0.634,
+          "atLeast1Pct": 51.5,
+          "atLeast2Pct": 10.8,
           "atLeast3Pct": 1.1,
           "hitDistribution": [
-            484,
+            485,
             407,
-            98,
+            97,
             11,
             0,
             0
@@ -1516,13 +1516,13 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.637,
-          "atLeast1Pct": 51.9,
+          "averageHits": 0.638,
+          "atLeast1Pct": 52,
           "atLeast2Pct": 10.9,
           "atLeast3Pct": 0.9,
           "hitDistribution": [
-            481,
-            410,
+            480,
+            411,
             100,
             9,
             0,
