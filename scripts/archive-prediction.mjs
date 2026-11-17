@@ -214,6 +214,7 @@ function main() {
   const exists = archive.predictions.some(p => p.sourcePeriod === latest.period);
   const pendingLatest = archive.predictions.find(p => p.sourcePeriod === latest.period && !p.result);
   if (pendingLatest && (
+    pendingLatest.modelVersion !== MODEL_VERSION ||
     !pendingLatest.experimentalModels?.adaptive ||
     !pendingLatest.experimentalModels?.twoStar ||
     !pendingLatest.experimentalModels?.tripleChallenge
@@ -224,21 +225,42 @@ function main() {
         (p.sourceDate === pendingLatest.sourceDate && p.sourcePeriod < pendingLatest.sourcePeriod))
       .at(-1)?.top5 || [];
     const experimental = experimentalRankings(draws, ranking, previousTop5);
-    pendingLatest.experimentalModels ||= {};
-    pendingLatest.experimentalModels.twoStar ||= {
-      version: "ablate-link-v1",
-      objective: "優先檢驗二星以上比例",
-      top5: experimental.twoStar
-    };
-    pendingLatest.experimentalModels.tripleChallenge ||= {
-      version: "turnover-0.5sd-v1",
-      objective: "獨立檢驗三星以上比例，不保證提高",
-      top5: experimental.tripleChallenge
-    };
-    pendingLatest.experimentalModels.adaptive ||= {
-      version: "adaptive-rank-ensemble-v1",
-      objective: "依最近100期策略實績動態調整權重，獨立追蹤未來命中",
-      ...adaptiveObjectiveRanking(draws, ranking)
+    const adaptive = adaptiveObjectiveRanking(draws, ranking);
+
+    // Preserve the previously issued pending pick for audit before revising it.
+    if (pendingLatest.modelVersion !== MODEL_VERSION) {
+      pendingLatest.revisions ||= [];
+      pendingLatest.revisions.push({
+        modelVersion: pendingLatest.modelVersion || "unknown",
+        revisedAt: new Date().toISOString(),
+        top5: pendingLatest.top5,
+        backup5: pendingLatest.backup5
+      });
+    }
+    pendingLatest.id = latest.period + "-" + MODEL_VERSION;
+    pendingLatest.modelVersion = MODEL_VERSION;
+    pendingLatest.top5 = ranking.slice(0, 5).map(x => x.n);
+    pendingLatest.backup5 = ranking.slice(5, 10).map(x => x.n);
+    pendingLatest.ranking = ranking.map((x, i) => ({
+      rank: i + 1, number: x.n, score: x.score,
+      linkScore: x.linkScore, trend: x.trend, omission: x.omission
+    }));
+    pendingLatest.experimentalModels = {
+      twoStar: {
+        version: "ablate-link-v1",
+        objective: "優先檢驗二星以上比例",
+        top5: experimental.twoStar
+      },
+      tripleChallenge: {
+        version: "turnover-0.5sd-v1",
+        objective: "獨立檢驗三星以上比例，不保證提高",
+        top5: experimental.tripleChallenge
+      },
+      adaptive: {
+        version: "adaptive-rank-ensemble-v1",
+        objective: "依最近100期策略實績動態調整權重，獨立追蹤未來命中",
+        ...adaptive
+      }
     };
     changed = true;
   }
