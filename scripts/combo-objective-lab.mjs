@@ -54,5 +54,5 @@ for(let i=START;i<draws.length;i++){
 const models={};
 for(const lam of lambdas)models[String(lam)]={overall:summary(stats.get(lam)),segments:segments.get(lam).map(summary)};
 const report={version:"combo-objective-pair-lab-v1",dataThrough:draws.at(-1).date,historyCount:draws.length,testPeriodCount:TEST,testFrom:draws[START].date,testTo:draws.at(-1).date,method:"每期只用此前365期資料；先以近期頻率選12碼候選池，再窮舉其中792種五碼組合。配對共現分數以超幾何基準近似的二項期望、標準誤及收縮計算；lambda固定，不以測試結果挑參數。",randomBaseline:baseline,individualTop5:summary(baseStats),pairOptimized:models};
-fs.writeFileSync("data/combo-objective-lab539.json",JSON.stringify(report,null,2)+"\\n");
+fs.writeFileSync("data/combo-objective-lab539.json",JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({randomBaseline:baseline,individualTop5:summary(baseStats),pairOptimized:models},null,2));
