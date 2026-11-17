@@ -1,6 +1,6 @@
 {
   "modelVersion": "multifactor-v1.1-archived",
-  "updatedAt": "2026-11-17T18:43:51.602Z",
+  "updatedAt": "2026-11-17T19:04:19.912Z",
   "predictions": [
     {
       "id": "115000274-multifactor-v1.1-archived",
@@ -1770,7 +1770,33 @@
           "trend": -0.92802124,
           "omission": 0.11111111
         }
-      ]
+      ],
+      "experimentalModels": {
+        "adaptive": {
+          "version": "adaptive-rank-ensemble-v1",
+          "objective": "依最近100期策略實績動態調整權重，獨立追蹤未來命中",
+          "top5": [
+            28,
+            32,
+            30,
+            2,
+            8
+          ],
+          "weights": {
+            "hot": 0.2575970619771302,
+            "gap": 0.24182188236351612,
+            "neighbor": 0.24215574859872485,
+            "tail": 0.2584253070606288
+          },
+          "samples": 100,
+          "recentMeanHits": {
+            "hot": 0.77,
+            "gap": 0.68,
+            "neighbor": 0.62,
+            "tail": 0.76
+          }
+        }
+      }
     }
   ]
 }
