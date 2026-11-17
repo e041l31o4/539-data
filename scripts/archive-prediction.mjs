@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 const DATA = "data/daily539.json";
 const OUT = "data/predictions539.json";
-const MODEL_VERSION = "multifactor-v1.1-archived";
+const MODEL_VERSION = "twohit-priority-v1.2-archived";
 const baseRate = 5 / 39;
 
 function gaps(draws) {
@@ -90,7 +90,10 @@ function multiFactorRanking(draws) {
   return candidates.map((n, i) => {
     const trend = .40 * z30[i] + .30 * z90[i] + .30 * z365[i];
     const omission = Math.min(2, gap[n] / maxGap);
-    const score = .52 * linkScores[n] + .30 * trend + .08 * omission + .10 * adv.get(n);
+    // Walk-forward sweep: removing the historical-link factor gave the best
+    // >=2-hit rate among tested factor ablations (13.10% over 3,000 draws).
+    // This is an experimental selection rule, not proof of a predictive edge.
+    const score = .30 * trend + .08 * omission + .10 * adv.get(n);
     return { n, score: Number(score.toFixed(8)), linkScore: Number(linkScores[n].toFixed(8)), trend: Number(trend.toFixed(8)), omission: Number(omission.toFixed(8)) };
   }).sort((a, b) => b.score - a.score || Math.abs(a.n - 20) - Math.abs(b.n - 20) || a.n - b.n);
 }
