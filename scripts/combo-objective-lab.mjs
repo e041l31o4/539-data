@@ -11,7 +11,14 @@ const pHit=[0,1,2,3,4,5].map(h=>choose(5,h)*choose(34,5-h)/choose(39,5));
 const baseline={atLeast2Pct:100*(pHit[2]+pHit[3]+pHit[4]+pHit[5]),atLeast3Pct:100*(pHit[3]+pHit[4]+pHit[5])};
 function blank(){return {periods:0,ge2:0,ge3:0,total:0,dist:[0,0,0,0,0,0]};}
 function add(s,h){s.periods++;s.total+=h;s.dist[h]++;if(h>=2)s.ge2++;if(h>=3)s.ge3++;}
-function summary(s){return {periods:s.periods,averageHits:+(s.total/s.periods).toFixed(4),atLeast2Pct:+(100*s.ge2/s.periods).toFixed(2),atLeast3Pct:+(100*s.ge3/s.periods).toFixed(2),distribution:s.dist};}
+function wilson(k,n,z=1.96){
+  if(!n)return null;
+  const p=k/n, den=1+z*z/n;
+  const center=(p+z*z/(2*n))/den;
+  const half=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/den;
+  return [+((center-half)*100).toFixed(2),+((center+half)*100).toFixed(2)];
+}
+function summary(s){return {periods:s.periods,averageHits:+(s.total/s.periods).toFixed(4),atLeast2Pct:+(100*s.ge2/s.periods).toFixed(2),atLeast2Wilson95Pct:wilson(s.ge2,s.periods),atLeast3Pct:+(100*s.ge3/s.periods).toFixed(2),atLeast3Wilson95Pct:wilson(s.ge3,s.periods),distribution:s.dist};}
 const lambdas=[0,0.25,0.5,1,2];
 const stats=new Map(lambdas.map(x=>[x,blank()]));
 const segments=new Map(lambdas.map(x=>[x,[blank(),blank(),blank()]]));
