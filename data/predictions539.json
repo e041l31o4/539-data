@@ -1,6 +1,6 @@
 {
   "modelVersion": "multifactor-v1.1-archived",
-  "updatedAt": "2026-11-17T19:04:19.912Z",
+  "updatedAt": "2026-11-17T19:05:38.437Z",
   "predictions": [
     {
       "id": "115000274-multifactor-v1.1-archived",
@@ -1795,6 +1795,28 @@
             "neighbor": 0.62,
             "tail": 0.76
           }
+        },
+        "twoStar": {
+          "version": "ablate-link-v1",
+          "objective": "優先檢驗二星以上比例",
+          "top5": [
+            30,
+            32,
+            28,
+            2,
+            8
+          ]
+        },
+        "tripleChallenge": {
+          "version": "turnover-0.5sd-v1",
+          "objective": "獨立檢驗三星以上比例，不保證提高",
+          "top5": [
+            30,
+            32,
+            2,
+            28,
+            8
+          ]
         }
       }
     }
