@@ -210,10 +210,29 @@ function main() {
   const latest = draws.at(-1);
   const exists = archive.predictions.some(p => p.sourcePeriod === latest.period);
   const pendingLatest = archive.predictions.find(p => p.sourcePeriod === latest.period && !p.result);
-  if (pendingLatest && !pendingLatest.experimentalModels?.adaptive) {
+  if (pendingLatest && (
+    !pendingLatest.experimentalModels?.adaptive ||
+    !pendingLatest.experimentalModels?.twoStar ||
+    !pendingLatest.experimentalModels?.tripleChallenge
+  )) {
     const ranking = multiFactorRanking(draws);
+    const previousTop5 = archive.predictions
+      .filter(p => p.sourceDate < pendingLatest.sourceDate ||
+        (p.sourceDate === pendingLatest.sourceDate && p.sourcePeriod < pendingLatest.sourcePeriod))
+      .at(-1)?.top5 || [];
+    const experimental = experimentalRankings(draws, ranking, previousTop5);
     pendingLatest.experimentalModels ||= {};
-    pendingLatest.experimentalModels.adaptive = {
+    pendingLatest.experimentalModels.twoStar ||= {
+      version: "ablate-link-v1",
+      objective: "優先檢驗二星以上比例",
+      top5: experimental.twoStar
+    };
+    pendingLatest.experimentalModels.tripleChallenge ||= {
+      version: "turnover-0.5sd-v1",
+      objective: "獨立檢驗三星以上比例，不保證提高",
+      top5: experimental.tripleChallenge
+    };
+    pendingLatest.experimentalModels.adaptive ||= {
       version: "adaptive-rank-ensemble-v1",
       objective: "依最近100期策略實績動態調整權重，獨立追蹤未來命中",
       ...adaptiveObjectiveRanking(draws, ranking)
