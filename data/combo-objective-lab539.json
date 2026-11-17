@@ -14,7 +14,15 @@
     "periods": 3000,
     "averageHits": 0.6703,
     "atLeast2Pct": 12.47,
+    "atLeast2Wilson95Pct": [
+      11.33,
+      13.7
+    ],
     "atLeast3Pct": 1.17,
+    "atLeast3Wilson95Pct": [
+      0.84,
+      1.62
+    ],
     "distribution": [
       1400,
       1226,
@@ -30,7 +38,15 @@
         "periods": 3000,
         "averageHits": 0.6703,
         "atLeast2Pct": 12.47,
+        "atLeast2Wilson95Pct": [
+          11.33,
+          13.7
+        ],
         "atLeast3Pct": 1.17,
+        "atLeast3Wilson95Pct": [
+          0.84,
+          1.62
+        ],
         "distribution": [
           1400,
           1226,
@@ -45,7 +61,15 @@
           "periods": 1000,
           "averageHits": 0.653,
           "atLeast2Pct": 12.6,
+          "atLeast2Wilson95Pct": [
+            10.69,
+            14.8
+          ],
           "atLeast3Pct": 0.8,
+          "atLeast3Wilson95Pct": [
+            0.41,
+            1.57
+          ],
           "distribution": [
             482,
             392,
@@ -59,7 +83,15 @@
           "periods": 1000,
           "averageHits": 0.681,
           "atLeast2Pct": 12.6,
+          "atLeast2Wilson95Pct": [
+            10.69,
+            14.8
+          ],
           "atLeast3Pct": 1.4,
+          "atLeast3Wilson95Pct": [
+            0.84,
+            2.34
+          ],
           "distribution": [
             460,
             414,
@@ -73,7 +105,15 @@
           "periods": 1000,
           "averageHits": 0.677,
           "atLeast2Pct": 12.2,
+          "atLeast2Wilson95Pct": [
+            10.31,
+            14.37
+          ],
           "atLeast3Pct": 1.3,
+          "atLeast3Wilson95Pct": [
+            0.76,
+            2.21
+          ],
           "distribution": [
             458,
             420,
@@ -90,7 +130,15 @@
         "periods": 3000,
         "averageHits": 0.6533,
         "atLeast2Pct": 12.2,
+        "atLeast2Wilson95Pct": [
+          11.08,
+          13.42
+        ],
         "atLeast3Pct": 1.03,
+        "atLeast3Wilson95Pct": [
+          0.73,
+          1.46
+        ],
         "distribution": [
           1438,
           1196,
@@ -105,7 +153,15 @@
           "periods": 1000,
           "averageHits": 0.63,
           "atLeast2Pct": 11.2,
+          "atLeast2Wilson95Pct": [
+            9.39,
+            13.31
+          ],
           "atLeast3Pct": 0.7,
+          "atLeast3Wilson95Pct": [
+            0.34,
+            1.44
+          ],
           "distribution": [
             490,
             398,
@@ -119,7 +175,15 @@
           "periods": 1000,
           "averageHits": 0.662,
           "atLeast2Pct": 11.8,
+          "atLeast2Wilson95Pct": [
+            9.95,
+            13.95
+          ],
           "atLeast3Pct": 0.8,
+          "atLeast3Wilson95Pct": [
+            0.41,
+            1.57
+          ],
           "distribution": [
             464,
             418,
@@ -133,7 +197,15 @@
           "periods": 1000,
           "averageHits": 0.668,
           "atLeast2Pct": 13.6,
+          "atLeast2Wilson95Pct": [
+            11.61,
+            15.86
+          ],
           "atLeast3Pct": 1.6,
+          "atLeast3Wilson95Pct": [
+            0.99,
+            2.58
+          ],
           "distribution": [
             484,
             380,
@@ -150,7 +222,15 @@
         "periods": 3000,
         "averageHits": 0.6533,
         "atLeast2Pct": 12.2,
+        "atLeast2Wilson95Pct": [
+          11.08,
+          13.42
+        ],
         "atLeast3Pct": 1.03,
+        "atLeast3Wilson95Pct": [
+          0.73,
+          1.46
+        ],
         "distribution": [
           1438,
           1196,
@@ -165,7 +245,15 @@
           "periods": 1000,
           "averageHits": 0.63,
           "atLeast2Pct": 11.2,
+          "atLeast2Wilson95Pct": [
+            9.39,
+            13.31
+          ],
           "atLeast3Pct": 0.7,
+          "atLeast3Wilson95Pct": [
+            0.34,
+            1.44
+          ],
           "distribution": [
             490,
             398,
@@ -179,7 +267,15 @@
           "periods": 1000,
           "averageHits": 0.662,
           "atLeast2Pct": 11.8,
+          "atLeast2Wilson95Pct": [
+            9.95,
+            13.95
+          ],
           "atLeast3Pct": 0.8,
+          "atLeast3Wilson95Pct": [
+            0.41,
+            1.57
+          ],
           "distribution": [
             464,
             418,
@@ -193,7 +289,15 @@
           "periods": 1000,
           "averageHits": 0.668,
           "atLeast2Pct": 13.6,
+          "atLeast2Wilson95Pct": [
+            11.61,
+            15.86
+          ],
           "atLeast3Pct": 1.6,
+          "atLeast3Wilson95Pct": [
+            0.99,
+            2.58
+          ],
           "distribution": [
             484,
             380,
@@ -210,7 +314,15 @@
         "periods": 3000,
         "averageHits": 0.651,
         "atLeast2Pct": 12.07,
+        "atLeast2Wilson95Pct": [
+          10.95,
+          13.28
+        ],
         "atLeast3Pct": 1.03,
+        "atLeast3Wilson95Pct": [
+          0.73,
+          1.46
+        ],
         "distribution": [
           1441,
           1197,
@@ -225,7 +337,15 @@
           "periods": 1000,
           "averageHits": 0.624,
           "atLeast2Pct": 11,
+          "atLeast2Wilson95Pct": [
+            9.21,
+            13.09
+          ],
           "atLeast3Pct": 0.7,
+          "atLeast3Wilson95Pct": [
+            0.34,
+            1.44
+          ],
           "distribution": [
             494,
             396,
@@ -239,7 +359,15 @@
           "periods": 1000,
           "averageHits": 0.662,
           "atLeast2Pct": 11.8,
+          "atLeast2Wilson95Pct": [
+            9.95,
+            13.95
+          ],
           "atLeast3Pct": 0.8,
+          "atLeast3Wilson95Pct": [
+            0.41,
+            1.57
+          ],
           "distribution": [
             464,
             418,
@@ -253,7 +381,15 @@
           "periods": 1000,
           "averageHits": 0.667,
           "atLeast2Pct": 13.4,
+          "atLeast2Wilson95Pct": [
+            11.43,
+            15.65
+          ],
           "atLeast3Pct": 1.6,
+          "atLeast3Wilson95Pct": [
+            0.99,
+            2.58
+          ],
           "distribution": [
             483,
             383,
@@ -270,7 +406,15 @@
         "periods": 3000,
         "averageHits": 0.6533,
         "atLeast2Pct": 12.2,
+        "atLeast2Wilson95Pct": [
+          11.08,
+          13.42
+        ],
         "atLeast3Pct": 1.03,
+        "atLeast3Wilson95Pct": [
+          0.73,
+          1.46
+        ],
         "distribution": [
           1438,
           1196,
@@ -285,7 +429,15 @@
           "periods": 1000,
           "averageHits": 0.63,
           "atLeast2Pct": 11.2,
+          "atLeast2Wilson95Pct": [
+            9.39,
+            13.31
+          ],
           "atLeast3Pct": 0.7,
+          "atLeast3Wilson95Pct": [
+            0.34,
+            1.44
+          ],
           "distribution": [
             490,
             398,
@@ -299,7 +451,15 @@
           "periods": 1000,
           "averageHits": 0.662,
           "atLeast2Pct": 11.8,
+          "atLeast2Wilson95Pct": [
+            9.95,
+            13.95
+          ],
           "atLeast3Pct": 0.8,
+          "atLeast3Wilson95Pct": [
+            0.41,
+            1.57
+          ],
           "distribution": [
             464,
             418,
@@ -313,7 +473,15 @@
           "periods": 1000,
           "averageHits": 0.668,
           "atLeast2Pct": 13.6,
+          "atLeast2Wilson95Pct": [
+            11.61,
+            15.86
+          ],
           "atLeast3Pct": 1.6,
+          "atLeast3Wilson95Pct": [
+            0.99,
+            2.58
+          ],
           "distribution": [
             484,
             380,
