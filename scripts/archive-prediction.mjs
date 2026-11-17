@@ -117,6 +117,54 @@ function experimentalRankings(draws, formalRanking, previousTop5 = []) {
   };
 }
 
+
+function adaptiveObjectiveRanking(draws, formalRanking) {
+  const names = ["hot", "gap", "neighbor", "tail"];
+  const strategies = hist => {
+    const freq = Array(40).fill(0), gap = gaps(hist), prev = hist.at(-1)?.numbers || [];
+    hist.slice(-30).forEach(d => d.numbers.forEach(n => freq[n]++));
+    const neighbor = new Set(prev.flatMap(n => [n - 1, n + 1]).filter(n => n >= 1 && n <= 39));
+    const tails = new Set(prev.map(n => n % 10));
+    const all = Array.from({ length: 39 }, (_, i) => i + 1);
+    const sort = score => all.slice().sort((a, b) => score(b) - score(a) || Math.abs(a - 20) - Math.abs(b - 20) || a - b);
+    return {
+      hot: sort(n => freq[n]),
+      gap: sort(n => gap[n]),
+      neighbor: sort(n => neighbor.has(n) ? 1 : 0),
+      tail: sort(n => tails.has(n % 10) ? 1 : 0)
+    };
+  };
+  const outcomes = Object.fromEntries(names.map(k => [k, []]));
+  const start = Math.max(150, draws.length - 100);
+  for (let i = start; i < draws.length; i++) {
+    const ranks = strategies(draws.slice(0, i)), actual = new Set(draws[i].numbers);
+    for (const name of names) outcomes[name].push(ranks[name].slice(0, 5).filter(n => actual.has(n)).length);
+  }
+  const windows = [30, 60, 100], windowWeights = [.5, .3, .2], raw = {};
+  for (const name of names) {
+    let observed = 0, totalWeight = 0;
+    windows.forEach((w, j) => {
+      const vals = outcomes[name].slice(-w), weight = windowWeights[j];
+      if (vals.length) { observed += weight * vals.reduce((a, b) => a + b, 0) / vals.length; totalWeight += weight; }
+    });
+    const avg = totalWeight ? observed / totalWeight : 5 * baseRate;
+    const count = outcomes[name].length;
+    const shrunk = (avg * count + 5 * baseRate * 40) / (count + 40);
+    raw[name] = Math.max(.85, Math.min(1.15, shrunk / (5 * baseRate)));
+  }
+  const total = Object.values(raw).reduce((a, b) => a + b, 0);
+  const weights = Object.fromEntries(names.map(k => [k, raw[k] / total]));
+  const current = strategies(draws);
+  const formalMap = new Map(formalRanking.map((x, i) => [x.n, (39 - i) / 38]));
+  const scores = Array.from({ length: 39 }, (_, i) => {
+    const n = i + 1;
+    const strategy = names.reduce((sum, k) => sum + weights[k] * (39 - current[k].indexOf(n)) / 38, 0);
+    return { n, score: .65 * formalMap.get(n) + .35 * strategy };
+  }).sort((a, b) => b.score - a.score || a.n - b.n);
+  return { top5: scores.slice(0, 5).map(x => x.n), weights, samples: outcomes.hot.length,
+    recentMeanHits: Object.fromEntries(names.map(k => [k, outcomes[k].length ? Number((outcomes[k].reduce((a,b)=>a+b,0)/outcomes[k].length).toFixed(3)) : null])) };
+}
+
 function main() {
   const source = JSON.parse(fs.readFileSync(DATA, "utf8"));
   const draws = (source.draws || []).filter(d => Array.isArray(d.numbers) && d.numbers.length === 5)
@@ -142,6 +190,7 @@ function main() {
       const experimental = prediction.experimentalModels || {};
       const twoStarHits = (experimental.twoStar?.top5 || []).filter(n => actualSet.has(n));
       const tripleHits = (experimental.tripleChallenge?.top5 || []).filter(n => actualSet.has(n));
+      const adaptiveHits = (experimental.adaptive?.top5 || []).filter(n => actualSet.has(n));
       prediction.result = {
         period: actual.period, date: actual.date, numbers: actual.numbers,
         hits: topHits, hitCount: topHits.length,
@@ -149,7 +198,8 @@ function main() {
         top10Hits, top10HitCount: top10Hits.length,
         experimental: {
           twoStarHits, twoStarHitCount: twoStarHits.length,
-          tripleChallengeHits: tripleHits, tripleChallengeHitCount: tripleHits.length
+          tripleChallengeHits: tripleHits, tripleChallengeHitCount: tripleHits.length,
+          adaptiveHits, adaptiveHitCount: adaptiveHits.length
         },
         settledAt: new Date().toISOString()
       };
@@ -159,10 +209,22 @@ function main() {
 
   const latest = draws.at(-1);
   const exists = archive.predictions.some(p => p.sourcePeriod === latest.period);
+  const pendingLatest = archive.predictions.find(p => p.sourcePeriod === latest.period && !p.result);
+  if (pendingLatest && !pendingLatest.experimentalModels?.adaptive) {
+    const ranking = multiFactorRanking(draws);
+    pendingLatest.experimentalModels ||= {};
+    pendingLatest.experimentalModels.adaptive = {
+      version: "adaptive-rank-ensemble-v1",
+      objective: "依最近100期策略實績動態調整權重，獨立追蹤未來命中",
+      ...adaptiveObjectiveRanking(draws, ranking)
+    };
+    changed = true;
+  }
   if (!exists) {
     const ranking = multiFactorRanking(draws);
     const previousTop5 = archive.predictions.at(-1)?.top5 || [];
     const experimental = experimentalRankings(draws, ranking, previousTop5);
+    const adaptive = adaptiveObjectiveRanking(draws, ranking);
     archive.predictions.push({
       id: latest.period + "-" + MODEL_VERSION,
       modelVersion: MODEL_VERSION,
@@ -174,7 +236,8 @@ function main() {
       backup5: ranking.slice(5, 10).map(x => x.n),
       experimentalModels: {
         twoStar: { version: "ablate-link-v1", objective: "優先檢驗中二星以上比例", top5: experimental.twoStar },
-        tripleChallenge: { version: "turnover-0.5sd-v1", objective: "降低連續重複、觀察三星以上比例", top5: experimental.tripleChallenge }
+        tripleChallenge: { version: "turnover-0.5sd-v1", objective: "降低連續重複、觀察三星以上比例", top5: experimental.tripleChallenge },
+        adaptive: { version: "adaptive-rank-ensemble-v1", objective: "依最近100期策略實績動態調整權重，獨立追蹤未來命中", ...adaptive }
       },
       ranking: ranking.map((x, i) => ({ rank: i + 1, number: x.n, score: x.score, linkScore: x.linkScore, trend: x.trend, omission: x.omission }))
     });
