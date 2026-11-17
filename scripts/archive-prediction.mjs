@@ -95,6 +95,28 @@ function multiFactorRanking(draws) {
   }).sort((a, b) => b.score - a.score || Math.abs(a.n - 20) - Math.abs(b.n - 20) || a.n - b.n);
 }
 
+
+function experimentalRankings(draws, formalRanking, previousTop5 = []) {
+  const advanced = new Map(advancedRanking(draws).map(x => [x.n, x.frequencyZ]));
+  const twoStar = formalRanking.map(x => ({
+    n: x.n,
+    score: .30 * x.trend + .08 * x.omission + .10 * (advanced.get(x.n) || 0)
+  })).sort((a, b) => b.score - a.score || a.n - b.n);
+
+  const scores = formalRanking.map(x => x.score);
+  const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const sd = Math.sqrt(scores.reduce((a, b) => a + (b - mean) ** 2, 0) / scores.length) || 1;
+  const tripleChallenge = formalRanking.map(x => ({
+    n: x.n,
+    score: x.score - (previousTop5.includes(x.n) ? .5 * sd : 0)
+  })).sort((a, b) => b.score - a.score || a.n - b.n);
+
+  return {
+    twoStar: twoStar.slice(0, 5).map(x => x.n),
+    tripleChallenge: tripleChallenge.slice(0, 5).map(x => x.n)
+  };
+}
+
 function main() {
   const source = JSON.parse(fs.readFileSync(DATA, "utf8"));
   const draws = (source.draws || []).filter(d => Array.isArray(d.numbers) && d.numbers.length === 5)
@@ -117,11 +139,18 @@ function main() {
       const topHits = prediction.top5.filter(n => actualSet.has(n));
       const backupHits = (prediction.backup5 || []).filter(n => actualSet.has(n));
       const top10Hits = [...(prediction.top5 || []), ...(prediction.backup5 || [])].filter(n => actualSet.has(n));
+      const experimental = prediction.experimentalModels || {};
+      const twoStarHits = (experimental.twoStar?.top5 || []).filter(n => actualSet.has(n));
+      const tripleHits = (experimental.tripleChallenge?.top5 || []).filter(n => actualSet.has(n));
       prediction.result = {
         period: actual.period, date: actual.date, numbers: actual.numbers,
         hits: topHits, hitCount: topHits.length,
         backupHits, backupHitCount: backupHits.length,
         top10Hits, top10HitCount: top10Hits.length,
+        experimental: {
+          twoStarHits, twoStarHitCount: twoStarHits.length,
+          tripleChallengeHits: tripleHits, tripleChallengeHitCount: tripleHits.length
+        },
         settledAt: new Date().toISOString()
       };
       changed = true;
@@ -132,6 +161,8 @@ function main() {
   const exists = archive.predictions.some(p => p.sourcePeriod === latest.period);
   if (!exists) {
     const ranking = multiFactorRanking(draws);
+    const previousTop5 = archive.predictions.at(-1)?.top5 || [];
+    const experimental = experimentalRankings(draws, ranking, previousTop5);
     archive.predictions.push({
       id: latest.period + "-" + MODEL_VERSION,
       modelVersion: MODEL_VERSION,
@@ -141,6 +172,10 @@ function main() {
       sourceDate: latest.date,
       top5: ranking.slice(0, 5).map(x => x.n),
       backup5: ranking.slice(5, 10).map(x => x.n),
+      experimentalModels: {
+        twoStar: { version: "ablate-link-v1", objective: "優先檢驗中二星以上比例", top5: experimental.twoStar },
+        tripleChallenge: { version: "turnover-0.5sd-v1", objective: "降低連續重複、觀察三星以上比例", top5: experimental.tripleChallenge }
+      },
       ranking: ranking.map((x, i) => ({ rank: i + 1, number: x.n, score: x.score, linkScore: x.linkScore, trend: x.trend, omission: x.omission }))
     });
     changed = true;
