@@ -168,7 +168,7 @@ const factorModels = [
   { id: "ablateOmission", label: "移除遺漏因子", factors: { link: .52, trend: .30, omission: 0, adv: .10 } },
   { id: "ablateAdvanced", label: "移除進階頻率因子", factors: { link: .52, trend: .30, omission: .08, adv: 0 } }
 ];
-const factorStats = new Map(factorModels.map(m => [m.id, { total: blank(), segments: [blank(), blank(), blank()] }]));
+const HOLDOUT_SIZE = Math.floor(TEST_SIZE / 3);\nconst HOLDOUT_START = draws.length - HOLDOUT_SIZE;\nconst factorStats = new Map(factorModels.map(m => [m.id, { total: blank(), train: blank(), holdout: blank(), segments: [blank(), blank(), blank()] }]));
 const weightModels = [
   { id: "weightTrend40", label: "趨勢權重提高（.42/.40/.08/.10）", factors: { link: .42, trend: .40, omission: .08, adv: .10 } },
   { id: "weightTrend50", label: "趨勢權重提高（.32/.50/.08/.10）", factors: { link: .32, trend: .50, omission: .08, adv: .10 } },
@@ -217,7 +217,7 @@ for (let i = START; i < draws.length; i++) {
 result.hybridTop3Plus2 = { label: "保留正式前三碼＋換號觀察兩碼（0.5 SD）", overall: summary(hybrid.total), segments: hybrid.segments.map(summary) };
 for (const model of factorModels) {
   const state = factorStats.get(model.id);
-  result[model.id] = { label: model.label, overall: summary(state.total), segments: state.segments.map(summary) };
+  result[model.id] = { label: model.label, objective: "single fixed set of 5 numbers per draw", overall: summary(state.total), selectionWindow: summary(state.train), untouchedChronologicalHoldout: summary(state.holdout), holdoutFrom: draws[HOLDOUT_START].date, holdoutTo: draws.at(-1).date, segments: state.segments.map(summary) };
 }
 for (const model of weightModels) {
   const state = weightStats.get(model.id);
@@ -255,7 +255,7 @@ const report = {
   testPeriodCount: TEST_SIZE,
   testFrom: draws[START].date,
   testTo: draws.at(-1).date,
-  selectionRule: "逐期只使用該期開獎前資料；現行正式模型與 app.js/archive-prediction.mjs 統一為 link=0, trend=.30, omission=.08, advanced=.10；舊版 link=.52 作對照；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
+  selectionRule: "每期只評估一組正式5碼，不把備選或其他模型號碼合併計算；逐期只使用開獎前資料。另將最近三分之一測試期設為時間順序保留驗證集，模型候選只在前段選擇、後段單獨報告；此保留集是診斷性驗證，候選模型曾經歷既有歷史探索，並非預先註冊的全新盲測。現行正式模型與 app.js/archive-prediction.mjs 統一為 link=0, trend=.30, omission=.08, advanced=.10；舊版 link=.52 作對照；所有命中率均只計算單組5碼，並與精確隨機基準比較。",
   randomBaseline: exactBaseline(),
   models: result
 };
