@@ -168,7 +168,9 @@ const factorModels = [
   { id: "ablateOmission", label: "移除遺漏因子", factors: { link: .52, trend: .30, omission: 0, adv: .10 } },
   { id: "ablateAdvanced", label: "移除進階頻率因子", factors: { link: .52, trend: .30, omission: .08, adv: 0 } }
 ];
-const HOLDOUT_SIZE = Math.floor(TEST_SIZE / 3);\nconst HOLDOUT_START = draws.length - HOLDOUT_SIZE;\nconst factorStats = new Map(factorModels.map(m => [m.id, { total: blank(), train: blank(), holdout: blank(), segments: [blank(), blank(), blank()] }]));
+const HOLDOUT_SIZE = Math.floor(TEST_SIZE / 3);
+const HOLDOUT_START = draws.length - HOLDOUT_SIZE;
+const factorStats = new Map(factorModels.map(m => [m.id, { total: blank(), train: blank(), holdout: blank(), segments: [blank(), blank(), blank()] }]));
 const weightModels = [
   { id: "weightTrend40", label: "趨勢權重提高（.42/.40/.08/.10）", factors: { link: .42, trend: .40, omission: .08, adv: .10 } },
   { id: "weightTrend50", label: "趨勢權重提高（.32/.50/.08/.10）", factors: { link: .32, trend: .50, omission: .08, adv: .10 } },
@@ -194,6 +196,7 @@ for (let i = START; i < draws.length; i++) {
     const hits = picks.filter(n => actual.has(n)).length;
     const state = factorStats.get(model.id);
     add(state.total, hits);
+    if (i < HOLDOUT_START) add(state.train, hits); else add(state.holdout, hits);
     add(state.segments[segment], hits);
   }
   for (const model of weightModels) {
