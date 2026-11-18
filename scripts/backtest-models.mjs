@@ -17,7 +17,8 @@ function exactBaseline() {
     averageHits: 25 / 39,
     atLeast1: 1 - p(0),
     atLeast2: 1 - p(0) - p(1),
-    atLeast3: 1 - p(0) - p(1) - p(2)
+    atLeast3: 1 - p(0) - p(1) - p(2),
+    atLeast4: p(4) + p(5)
   };
 }
 
@@ -139,8 +140,8 @@ const models = [
   { id: "gapOnly", label: "單純遺漏", weights: [0, 0, 0, 0], gapWeight: 1 }
 ];
 
-function blank() { return { periods: 0, totalHits: 0, distribution: [0,0,0,0,0,0], ge1: 0, ge2: 0, ge3: 0, overlapTotal: 0, overlapCount: 0 }; }
-function add(m, hit, overlap = null) { m.periods++; m.totalHits += hit; m.distribution[hit]++; if (hit >= 1) m.ge1++; if (hit >= 2) m.ge2++; if (hit >= 3) m.ge3++; if (overlap !== null) { m.overlapTotal += overlap; m.overlapCount++; } }
+function blank() { return { periods: 0, totalHits: 0, distribution: [0,0,0,0,0,0], ge1: 0, ge2: 0, ge3: 0, ge4: 0, overlapTotal: 0, overlapCount: 0 }; }
+function add(m, hit, overlap = null) { m.periods++; m.totalHits += hit; m.distribution[hit]++; if (hit >= 1) m.ge1++; if (hit >= 2) m.ge2++; if (hit >= 3) m.ge3++; if (hit >= 4) m.ge4++; if (overlap !== null) { m.overlapTotal += overlap; m.overlapCount++; } }
 function summary(m) {
   return {
     periods: m.periods,
@@ -148,6 +149,7 @@ function summary(m) {
     atLeast1Pct: Number((100 * m.ge1 / m.periods).toFixed(2)),
     atLeast2Pct: Number((100 * m.ge2 / m.periods).toFixed(2)),
     atLeast3Pct: Number((100 * m.ge3 / m.periods).toFixed(2)),
+    atLeast4Pct: Number((100 * m.ge4 / m.periods).toFixed(3)),
     hitDistribution: m.distribution,
     averageOverlapPreviousPick: m.overlapCount ? Number((m.overlapTotal / m.overlapCount).toFixed(3)) : null
   };
@@ -245,14 +247,14 @@ for (const model of models) {
 }
 
 const report = {
-  version: "rolling-539-lab-v5-weight-sweep",
+  version: "rolling-539-lab-v6-star-objectives",
   dataThrough: draws.at(-1).date,
   dataPeriod: draws.at(-1).period,
   historyCount: draws.length,
   testPeriodCount: TEST_SIZE,
   testFrom: draws[START].date,
   testTo: draws.at(-1).date,
-  selectionRule: "逐期只使用該期開獎前資料；正式多因子模型對齊 app.js multiFactorRanking，advanced 項使用 advancedRanking.frequencyZ（不使用其綜合 score）；依分數排序選前5碼。",
+  selectionRule: "逐期只使用該期開獎前資料；正式多因子模型對齊 archive-prediction.mjs；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
   randomBaseline: exactBaseline(),
   models: result
 };
