@@ -85,7 +85,7 @@ function addTransition(state, t) {
     }
   });
 }
-function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, limit = 5, factors = { link: .52, trend: .30, omission: .08, adv: .10 }) {
+function currentModelRank(i, state, previousPicks = [], turnoverPenalty = 0, limit = 5, factors = { link: 0, trend: .30, omission: .08, adv: .10 }) {
   const len = i, candidates = Array.from({ length: 39 }, (_, j) => j + 1);
   const fz = (n, windows, weights) => {
     let z = 0;
@@ -162,7 +162,8 @@ const penaltyStats = new Map(penalties.map(p => [p, {
 }]));
 const hybrid = { total: blank(), segments: [blank(), blank(), blank()], previous: null };
 const factorModels = [
-  { id: "ablateLink", label: "移除歷史關聯因子", factors: { link: 0, trend: .30, omission: .08, adv: .10 } },
+  { id: "legacyLinkV11", label: "舊版含歷史關聯因子 v1.1", factors: { link: .52, trend: .30, omission: .08, adv: .10 } },
+  { id: "ablateLink", label: "現行二星優先模型 v1.2（移除歷史關聯）", factors: { link: 0, trend: .30, omission: .08, adv: .10 } },
   { id: "ablateTrend", label: "移除短中長期趨勢", factors: { link: .52, trend: 0, omission: .08, adv: .10 } },
   { id: "ablateOmission", label: "移除遺漏因子", factors: { link: .52, trend: .30, omission: 0, adv: .10 } },
   { id: "ablateAdvanced", label: "移除進階頻率因子", factors: { link: .52, trend: .30, omission: .08, adv: 0 } }
@@ -247,14 +248,14 @@ for (const model of models) {
 }
 
 const report = {
-  version: "rolling-539-lab-v6-star-objectives",
+  version: "rolling-539-lab-v7-model-alignment",
   dataThrough: draws.at(-1).date,
   dataPeriod: draws.at(-1).period,
   historyCount: draws.length,
   testPeriodCount: TEST_SIZE,
   testFrom: draws[START].date,
   testTo: draws.at(-1).date,
-  selectionRule: "逐期只使用該期開獎前資料；正式多因子模型對齊 archive-prediction.mjs；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
+  selectionRule: "逐期只使用該期開獎前資料；現行正式模型與 app.js/archive-prediction.mjs 統一為 link=0, trend=.30, omission=.08, advanced=.10；舊版 link=.52 作對照；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
   randomBaseline: exactBaseline(),
   models: result
 };
