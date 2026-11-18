@@ -30,4 +30,4 @@ GitHub Actions 每日台灣時間 22:15 嘗試更新最近兩個月資料，也�
 - GitHub Actions 的排程可能延遲，開獎資料以台灣彩券正式公告為準。
 - 本專案的統計及回測屬歷史描述，不構成投注建議。
 
-<!-- deployment-refresh: 2026-10-31 -->
+<!-- deployment-refresh: 2026-11-18 official draw 115000279 verified -->
