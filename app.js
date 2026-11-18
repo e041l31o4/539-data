@@ -64,7 +64,7 @@ function multiFactorRanking(a){
  return candidates.map((n,i)=>{
   const trend=.40*z30[i]+.30*z90[i]+.30*z365[i];
   const omission=Math.min(2,gap[n]/Math.max(1,gMax));
-  const score=.52*linkScores[n]+.30*trend+.08*omission+.10*advanced.find(x=>x.n===n).frequencyZ;
+  const score=.30*trend+.08*omission+.10*advanced.find(x=>x.n===n).frequencyZ;
   return {n,score,linkScore:linkScores[n],trend,omission,parts:linkParts[n]};
  }).sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
 }
@@ -125,8 +125,8 @@ function binomialUpperTail(k,n,p){
 }
 const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
- const best="多因子連動融合";
- // 正式版唯一推薦來源：固定參數多因子模型。相同歷史資料必定得到相同排序。
+ const best="二星優先趨勢融合 v1.2";
+ // 正式版唯一推薦來源：二星優先趨勢融合 v1.2（移除未證實的歷史關聯因子）。相同歷史資料必定得到相同排序。
  const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
  $("#mainPicks").innerHTML=mainRows.map((x,i)=>'<button type="button" class="pick-ball-button" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><span class="ball">'+String(x.n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=altRows.map((x,i)=>'<span class="backup-pick"><small>#'+(i+6)+'</small><span class="ball">'+String(x.n).padStart(2,"0")+'</span></span>').join("");
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
