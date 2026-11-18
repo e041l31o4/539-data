@@ -196,13 +196,13 @@ function main() {
       const adaptiveHits = (experimental.adaptive?.top5 || []).filter(n => actualSet.has(n));
       prediction.result = {
         period: actual.period, date: actual.date, numbers: actual.numbers,
-        hits: topHits, hitCount: topHits.length,
-        backupHits, backupHitCount: backupHits.length,
-        top10Hits, top10HitCount: top10Hits.length,
+        hits: topHits, hitCount: topHits.length, fourStar: topHits.length >= 4,
+        backupHits, backupHitCount: backupHits.length, fourStarBackup: backupHits.length >= 4,
+        top10Hits, top10HitCount: top10Hits.length, fourStarTop10: top10Hits.length >= 4,
         experimental: {
-          twoStarHits, twoStarHitCount: twoStarHits.length,
-          tripleChallengeHits: tripleHits, tripleChallengeHitCount: tripleHits.length,
-          adaptiveHits, adaptiveHitCount: adaptiveHits.length
+          twoStarHits, twoStarHitCount: twoStarHits.length, twoStarFourPlus: twoStarHits.length >= 4,
+          tripleChallengeHits: tripleHits, tripleChallengeHitCount: tripleHits.length, tripleChallengeFourPlus: tripleHits.length >= 4,
+          adaptiveHits, adaptiveHitCount: adaptiveHits.length, adaptiveFourPlus: adaptiveHits.length >= 4
         },
         settledAt: new Date().toISOString()
       };
