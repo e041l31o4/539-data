@@ -1,17 +1,18 @@
 {
-  "version": "rolling-539-lab-v5-weight-sweep",
+  "version": "rolling-539-lab-v6-star-objectives",
   "dataThrough": "2026-11-17",
   "dataPeriod": "115000278",
   "historyCount": 6022,
   "testPeriodCount": 3000,
   "testFrom": "2017-04-26",
   "testTo": "2026-11-17",
-  "selectionRule": "逐期只使用該期開獎前資料；正式多因子模型對齊 app.js multiFactorRanking，advanced 項使用 advancedRanking.frequencyZ（不使用其綜合 score）；依分數排序選前5碼。",
+  "selectionRule": "逐期只使用該期開獎前資料；正式多因子模型對齊 archive-prediction.mjs；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
   "randomBaseline": {
     "averageHits": 0.6410256410256411,
     "atLeast1": 0.5167127798706745,
     "atLeast2": 0.11397342976290337,
-    "atLeast3": 0.010040694251220492
+    "atLeast3": 0.010040694251220492,
+    "atLeast4": 0.000297000297000297
   },
   "models": {
     "hybridTop3Plus2": {
@@ -22,6 +23,7 @@
         "atLeast1Pct": 53.47,
         "atLeast2Pct": 11.73,
         "atLeast3Pct": 1,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1396,
           1252,
@@ -39,6 +41,7 @@
           "atLeast1Pct": 53.5,
           "atLeast2Pct": 11.5,
           "atLeast3Pct": 1.3,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             465,
             420,
@@ -55,6 +58,7 @@
           "atLeast1Pct": 53.6,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             464,
             412,
@@ -71,6 +75,7 @@
           "atLeast1Pct": 53.3,
           "atLeast2Pct": 11.3,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             467,
             420,
@@ -91,6 +96,7 @@
         "atLeast1Pct": 53.07,
         "atLeast2Pct": 13.1,
         "atLeast3Pct": 0.9,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1408,
           1199,
@@ -108,6 +114,7 @@
           "atLeast1Pct": 52.1,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             479,
             397,
@@ -124,6 +131,7 @@
           "atLeast1Pct": 53.2,
           "atLeast2Pct": 13.7,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             468,
             395,
@@ -140,6 +148,7 @@
           "atLeast1Pct": 53.9,
           "atLeast2Pct": 13.2,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             461,
             407,
@@ -160,6 +169,7 @@
         "atLeast1Pct": 53.47,
         "atLeast2Pct": 11.6,
         "atLeast3Pct": 0.97,
+        "atLeast4Pct": 0.067,
         "hitDistribution": [
           1396,
           1256,
@@ -177,6 +187,7 @@
           "atLeast1Pct": 53.5,
           "atLeast2Pct": 11.2,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             465,
             423,
@@ -193,6 +204,7 @@
           "atLeast1Pct": 54.4,
           "atLeast2Pct": 11.9,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0.2,
           "hitDistribution": [
             456,
             425,
@@ -209,6 +221,7 @@
           "atLeast1Pct": 52.5,
           "atLeast2Pct": 11.7,
           "atLeast3Pct": 0.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             475,
             408,
@@ -229,6 +242,7 @@
         "atLeast1Pct": 52.8,
         "atLeast2Pct": 13,
         "atLeast3Pct": 0.9,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1416,
           1194,
@@ -246,6 +260,7 @@
           "atLeast1Pct": 51.7,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             483,
             389,
@@ -262,6 +277,7 @@
           "atLeast1Pct": 53.2,
           "atLeast2Pct": 13.1,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             468,
             401,
@@ -278,6 +294,7 @@
           "atLeast1Pct": 53.5,
           "atLeast2Pct": 13.1,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             465,
             404,
@@ -298,6 +315,7 @@
         "atLeast1Pct": 53.43,
         "atLeast2Pct": 13,
         "atLeast3Pct": 0.9,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1397,
           1213,
@@ -315,6 +333,7 @@
           "atLeast1Pct": 52.2,
           "atLeast2Pct": 12.6,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             478,
             396,
@@ -331,6 +350,7 @@
           "atLeast1Pct": 52.9,
           "atLeast2Pct": 13.3,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             471,
             396,
@@ -347,6 +367,7 @@
           "atLeast1Pct": 55.2,
           "atLeast2Pct": 13.1,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             448,
             421,
@@ -367,6 +388,7 @@
         "atLeast1Pct": 53.37,
         "atLeast2Pct": 12.87,
         "atLeast3Pct": 0.93,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1399,
           1215,
@@ -384,6 +406,7 @@
           "atLeast1Pct": 52.5,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             475,
             400,
@@ -400,6 +423,7 @@
           "atLeast1Pct": 53.4,
           "atLeast2Pct": 13.2,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             466,
             402,
@@ -416,6 +440,7 @@
           "atLeast1Pct": 54.2,
           "atLeast2Pct": 12.9,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             458,
             413,
@@ -436,6 +461,7 @@
         "atLeast1Pct": 53.03,
         "atLeast2Pct": 13,
         "atLeast3Pct": 0.97,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1409,
           1201,
@@ -453,6 +479,7 @@
           "atLeast1Pct": 52,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             480,
             392,
@@ -469,6 +496,7 @@
           "atLeast1Pct": 53,
           "atLeast2Pct": 13.4,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             470,
             396,
@@ -485,6 +513,7 @@
           "atLeast1Pct": 54.1,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             459,
             413,
@@ -505,6 +534,7 @@
         "atLeast1Pct": 53.27,
         "atLeast2Pct": 12.9,
         "atLeast3Pct": 1,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1402,
           1211,
@@ -522,6 +552,7 @@
           "atLeast1Pct": 52.3,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             477,
             398,
@@ -538,6 +569,7 @@
           "atLeast1Pct": 53.3,
           "atLeast2Pct": 13.3,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             467,
             400,
@@ -554,6 +586,7 @@
           "atLeast1Pct": 54.2,
           "atLeast2Pct": 12.9,
           "atLeast3Pct": 1.2,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             458,
             413,
@@ -574,6 +607,7 @@
         "atLeast1Pct": 53.4,
         "atLeast2Pct": 12.83,
         "atLeast3Pct": 1,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1398,
           1217,
@@ -591,6 +625,7 @@
           "atLeast1Pct": 52.5,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             475,
             401,
@@ -607,6 +642,7 @@
           "atLeast1Pct": 53.4,
           "atLeast2Pct": 13.2,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             466,
             402,
@@ -623,6 +659,7 @@
           "atLeast1Pct": 54.3,
           "atLeast2Pct": 12.9,
           "atLeast3Pct": 1.2,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             457,
             414,
@@ -643,6 +680,7 @@
         "atLeast1Pct": 53.57,
         "atLeast2Pct": 12.93,
         "atLeast3Pct": 0.93,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1393,
           1219,
@@ -660,6 +698,7 @@
           "atLeast1Pct": 52.3,
           "atLeast2Pct": 12.6,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             477,
             397,
@@ -676,6 +715,7 @@
           "atLeast1Pct": 54.1,
           "atLeast2Pct": 13,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             459,
             411,
@@ -692,6 +732,7 @@
           "atLeast1Pct": 54.3,
           "atLeast2Pct": 13.2,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             457,
             411,
@@ -712,6 +753,7 @@
         "atLeast1Pct": 53.1,
         "atLeast2Pct": 12.97,
         "atLeast3Pct": 0.83,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1407,
           1204,
@@ -729,6 +771,7 @@
           "atLeast1Pct": 52.4,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             476,
             396,
@@ -745,6 +788,7 @@
           "atLeast1Pct": 52.8,
           "atLeast2Pct": 13.4,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             472,
             394,
@@ -761,6 +805,7 @@
           "atLeast1Pct": 54.1,
           "atLeast2Pct": 12.7,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             459,
             414,
@@ -781,6 +826,7 @@
         "atLeast1Pct": 52.4,
         "atLeast2Pct": 12.63,
         "atLeast3Pct": 0.83,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1428,
           1193,
@@ -798,6 +844,7 @@
           "atLeast1Pct": 51.4,
           "atLeast2Pct": 12.2,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             486,
             392,
@@ -814,6 +861,7 @@
           "atLeast1Pct": 51.6,
           "atLeast2Pct": 13.1,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             484,
             385,
@@ -830,6 +878,7 @@
           "atLeast1Pct": 54.2,
           "atLeast2Pct": 12.6,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             458,
             416,
@@ -850,6 +899,7 @@
         "atLeast1Pct": 52.83,
         "atLeast2Pct": 11.77,
         "atLeast3Pct": 1.23,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1415,
           1232,
@@ -867,6 +917,7 @@
           "atLeast1Pct": 53.8,
           "atLeast2Pct": 11.3,
           "atLeast3Pct": 1.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             462,
             425,
@@ -883,6 +934,7 @@
           "atLeast1Pct": 52.7,
           "atLeast2Pct": 13,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             473,
             397,
@@ -899,6 +951,7 @@
           "atLeast1Pct": 52,
           "atLeast2Pct": 11,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             480,
             410,
@@ -919,6 +972,7 @@
         "atLeast1Pct": 52.17,
         "atLeast2Pct": 12.63,
         "atLeast3Pct": 0.83,
+        "atLeast4Pct": 0,
         "hitDistribution": [
           1435,
           1186,
@@ -936,6 +990,7 @@
           "atLeast1Pct": 51.1,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             489,
             387,
@@ -952,6 +1007,7 @@
           "atLeast1Pct": 51.7,
           "atLeast2Pct": 13.9,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             483,
             378,
@@ -968,6 +1024,7 @@
           "atLeast1Pct": 53.7,
           "atLeast2Pct": 11.6,
           "atLeast3Pct": 0.4,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             463,
             421,
@@ -988,6 +1045,7 @@
         "atLeast1Pct": 52.37,
         "atLeast2Pct": 12.17,
         "atLeast3Pct": 1.1,
+        "atLeast4Pct": 0,
         "hitDistribution": [
           1429,
           1206,
@@ -1005,6 +1063,7 @@
           "atLeast1Pct": 52.4,
           "atLeast2Pct": 12.2,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             476,
             402,
@@ -1021,6 +1080,7 @@
           "atLeast1Pct": 52.7,
           "atLeast2Pct": 13.8,
           "atLeast3Pct": 1.3,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             473,
             389,
@@ -1037,6 +1097,7 @@
           "atLeast1Pct": 52,
           "atLeast2Pct": 10.5,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             480,
             415,
@@ -1057,6 +1118,7 @@
         "atLeast1Pct": 50.43,
         "atLeast2Pct": 11.87,
         "atLeast3Pct": 1.07,
+        "atLeast4Pct": 0,
         "hitDistribution": [
           1487,
           1157,
@@ -1074,6 +1136,7 @@
           "atLeast1Pct": 50.2,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 1.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             498,
             377,
@@ -1090,6 +1153,7 @@
           "atLeast1Pct": 50.7,
           "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             493,
             383,
@@ -1106,6 +1170,7 @@
           "atLeast1Pct": 50.4,
           "atLeast2Pct": 10.7,
           "atLeast3Pct": 0.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             496,
             397,
@@ -1126,6 +1191,7 @@
         "atLeast1Pct": 53.7,
         "atLeast2Pct": 12.07,
         "atLeast3Pct": 1.17,
+        "atLeast4Pct": 0.067,
         "hitDistribution": [
           1389,
           1249,
@@ -1143,6 +1209,7 @@
           "atLeast1Pct": 52.2,
           "atLeast2Pct": 11.5,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             478,
             407,
@@ -1159,6 +1226,7 @@
           "atLeast1Pct": 54.7,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 1.5,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             453,
             419,
@@ -1175,6 +1243,7 @@
           "atLeast1Pct": 54.2,
           "atLeast2Pct": 11.9,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             458,
             423,
@@ -1195,6 +1264,7 @@
         "atLeast1Pct": 52.67,
         "atLeast2Pct": 12.87,
         "atLeast3Pct": 0.87,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1420,
           1194,
@@ -1212,6 +1282,7 @@
           "atLeast1Pct": 51.3,
           "atLeast2Pct": 12.9,
           "atLeast3Pct": 0.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             487,
             384,
@@ -1228,6 +1299,7 @@
           "atLeast1Pct": 52.7,
           "atLeast2Pct": 13.2,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             473,
             395,
@@ -1244,6 +1316,7 @@
           "atLeast1Pct": 54,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             460,
             415,
@@ -1264,6 +1337,7 @@
         "atLeast1Pct": 52.47,
         "atLeast2Pct": 12,
         "atLeast3Pct": 0.87,
+        "atLeast4Pct": 0.067,
         "hitDistribution": [
           1426,
           1214,
@@ -1281,6 +1355,7 @@
           "atLeast1Pct": 50.5,
           "atLeast2Pct": 11.4,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             495,
             391,
@@ -1297,6 +1372,7 @@
           "atLeast1Pct": 53.4,
           "atLeast2Pct": 11.9,
           "atLeast3Pct": 0.7,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             466,
             415,
@@ -1313,6 +1389,7 @@
           "atLeast1Pct": 53.5,
           "atLeast2Pct": 12.7,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             465,
             408,
@@ -1333,6 +1410,7 @@
         "atLeast1Pct": 52.33,
         "atLeast2Pct": 11.53,
         "atLeast3Pct": 0.97,
+        "atLeast4Pct": 0,
         "hitDistribution": [
           1430,
           1224,
@@ -1350,6 +1428,7 @@
           "atLeast1Pct": 51.5,
           "atLeast2Pct": 10.7,
           "atLeast3Pct": 0.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             485,
             408,
@@ -1366,6 +1445,7 @@
           "atLeast1Pct": 54,
           "atLeast2Pct": 12.5,
           "atLeast3Pct": 1.2,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             460,
             415,
@@ -1382,6 +1462,7 @@
           "atLeast1Pct": 51.5,
           "atLeast2Pct": 11.4,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             485,
             401,
@@ -1402,6 +1483,7 @@
         "atLeast1Pct": 52.83,
         "atLeast2Pct": 12.97,
         "atLeast3Pct": 0.93,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1415,
           1196,
@@ -1419,6 +1501,7 @@
           "atLeast1Pct": 51.6,
           "atLeast2Pct": 12.8,
           "atLeast3Pct": 0.7,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             484,
             388,
@@ -1435,6 +1518,7 @@
           "atLeast1Pct": 52.8,
           "atLeast2Pct": 13.4,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             472,
             394,
@@ -1451,6 +1535,7 @@
           "atLeast1Pct": 54.1,
           "atLeast2Pct": 12.7,
           "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             459,
             414,
@@ -1471,6 +1556,7 @@
         "atLeast1Pct": 52.4,
         "atLeast2Pct": 11.87,
         "atLeast3Pct": 1.1,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
           1428,
           1216,
@@ -1488,6 +1574,7 @@
           "atLeast1Pct": 53.7,
           "atLeast2Pct": 13.9,
           "atLeast3Pct": 1.3,
+          "atLeast4Pct": 0.1,
           "hitDistribution": [
             463,
             398,
@@ -1504,6 +1591,7 @@
           "atLeast1Pct": 51.7,
           "atLeast2Pct": 10.9,
           "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             483,
             408,
@@ -1520,6 +1608,7 @@
           "atLeast1Pct": 51.8,
           "atLeast2Pct": 10.8,
           "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
           "hitDistribution": [
             482,
             410,
