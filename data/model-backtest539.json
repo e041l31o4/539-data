@@ -1,12 +1,12 @@
 {
-  "version": "rolling-539-lab-v6-star-objectives",
+  "version": "rolling-539-lab-v7-model-alignment",
   "dataThrough": "2026-11-17",
   "dataPeriod": "115000278",
   "historyCount": 6022,
   "testPeriodCount": 3000,
   "testFrom": "2017-04-26",
   "testTo": "2026-11-17",
-  "selectionRule": "逐期只使用該期開獎前資料；正式多因子模型對齊 archive-prediction.mjs；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
+  "selectionRule": "逐期只使用該期開獎前資料；現行正式模型與 app.js/archive-prediction.mjs 統一為 link=0, trend=.30, omission=.08, advanced=.10；舊版 link=.52 作對照；新增 >=4 命中率追蹤，所有星級比例均與精確隨機基準比較。",
   "randomBaseline": {
     "averageHits": 0.6410256410256411,
     "atLeast1": 0.5167127798706745,
@@ -19,77 +19,150 @@
       "label": "保留正式前三碼＋換號觀察兩碼（0.5 SD）",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6623,
-        "atLeast1Pct": 53.47,
-        "atLeast2Pct": 11.73,
-        "atLeast3Pct": 1,
+        "averageHits": 0.6617,
+        "atLeast1Pct": 52.83,
+        "atLeast2Pct": 12.1,
+        "atLeast3Pct": 1.2,
         "atLeast4Pct": 0.033,
         "hitDistribution": [
-          1396,
-          1252,
-          322,
-          29,
+          1415,
+          1222,
+          327,
+          35,
           1,
           0
         ],
-        "averageOverlapPreviousPick": 3.21
+        "averageOverlapPreviousPick": 3.214
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.663,
-          "atLeast1Pct": 53.5,
-          "atLeast2Pct": 11.5,
+          "averageHits": 0.66,
+          "atLeast1Pct": 52.9,
+          "atLeast2Pct": 11.8,
           "atLeast3Pct": 1.3,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            465,
-            420,
-            102,
+            471,
+            411,
+            105,
             13,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.2
+          "averageOverlapPreviousPick": 3.205
         },
         {
           "periods": 1000,
-          "averageHits": 0.67,
-          "atLeast1Pct": 53.6,
-          "atLeast2Pct": 12.4,
+          "averageHits": 0.666,
+          "atLeast1Pct": 52.5,
+          "atLeast2Pct": 13.1,
           "atLeast3Pct": 0.9,
           "atLeast4Pct": 0.1,
           "hitDistribution": [
-            464,
-            412,
-            115,
+            475,
+            394,
+            122,
             8,
             1,
             0
           ],
-          "averageOverlapPreviousPick": 3.191
+          "averageOverlapPreviousPick": 3.197
         },
         {
           "periods": 1000,
-          "averageHits": 0.654,
-          "atLeast1Pct": 53.3,
-          "atLeast2Pct": 11.3,
-          "atLeast3Pct": 0.8,
+          "averageHits": 0.659,
+          "atLeast1Pct": 53.1,
+          "atLeast2Pct": 11.4,
+          "atLeast3Pct": 1.4,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            467,
-            420,
-            105,
-            8,
+            469,
+            417,
+            100,
+            14,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.238
+          "averageOverlapPreviousPick": 3.24
+        }
+      ]
+    },
+    "legacyLinkV11": {
+      "label": "舊版含歷史關聯因子 v1.1",
+      "overall": {
+        "periods": 3000,
+        "averageHits": 0.6747,
+        "atLeast1Pct": 53.57,
+        "atLeast2Pct": 12.93,
+        "atLeast3Pct": 0.93,
+        "atLeast4Pct": 0.033,
+        "hitDistribution": [
+          1393,
+          1219,
+          360,
+          27,
+          1,
+          0
+        ],
+        "averageOverlapPreviousPick": null
+      },
+      "segments": [
+        {
+          "periods": 1000,
+          "averageHits": 0.658,
+          "atLeast1Pct": 52.3,
+          "atLeast2Pct": 12.6,
+          "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0,
+          "hitDistribution": [
+            477,
+            397,
+            117,
+            9,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.68,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 13,
+          "atLeast3Pct": 0.8,
+          "atLeast4Pct": 0.1,
+          "hitDistribution": [
+            459,
+            411,
+            122,
+            7,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": null
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.686,
+          "atLeast1Pct": 54.3,
+          "atLeast2Pct": 13.2,
+          "atLeast3Pct": 1.1,
+          "atLeast4Pct": 0,
+          "hitDistribution": [
+            457,
+            411,
+            121,
+            11,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": null
         }
       ]
     },
     "ablateLink": {
-      "label": "移除歷史關聯因子",
+      "label": "現行二星優先模型 v1.2（移除歷史關聯）",
       "overall": {
         "periods": 3000,
         "averageHits": 0.671,
@@ -676,72 +749,72 @@
       "label": "現行正式多因子模型",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6747,
-        "atLeast1Pct": 53.57,
-        "atLeast2Pct": 12.93,
-        "atLeast3Pct": 0.93,
+        "averageHits": 0.671,
+        "atLeast1Pct": 53.07,
+        "atLeast2Pct": 13.1,
+        "atLeast3Pct": 0.9,
         "atLeast4Pct": 0.033,
         "hitDistribution": [
-          1393,
-          1219,
-          360,
-          27,
+          1408,
+          1199,
+          366,
+          26,
           1,
           0
         ],
-        "averageOverlapPreviousPick": 4.502
+        "averageOverlapPreviousPick": 4.523
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.658,
-          "atLeast1Pct": 52.3,
-          "atLeast2Pct": 12.6,
+          "averageHits": 0.654,
+          "atLeast1Pct": 52.1,
+          "atLeast2Pct": 12.4,
           "atLeast3Pct": 0.9,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            477,
+            479,
             397,
-            117,
+            115,
             9,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.479
+          "averageOverlapPreviousPick": 4.496
         },
         {
           "periods": 1000,
-          "averageHits": 0.68,
-          "atLeast1Pct": 54.1,
-          "atLeast2Pct": 13,
+          "averageHits": 0.678,
+          "atLeast1Pct": 53.2,
+          "atLeast2Pct": 13.7,
           "atLeast3Pct": 0.8,
           "atLeast4Pct": 0.1,
           "hitDistribution": [
-            459,
-            411,
-            122,
+            468,
+            395,
+            129,
             7,
             1,
             0
           ],
-          "averageOverlapPreviousPick": 4.517
+          "averageOverlapPreviousPick": 4.536
         },
         {
           "periods": 1000,
-          "averageHits": 0.686,
-          "atLeast1Pct": 54.3,
+          "averageHits": 0.681,
+          "atLeast1Pct": 53.9,
           "atLeast2Pct": 13.2,
-          "atLeast3Pct": 1.1,
+          "atLeast3Pct": 1,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            457,
-            411,
-            121,
-            11,
+            461,
+            407,
+            122,
+            10,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.509
+          "averageOverlapPreviousPick": 4.535
         }
       ]
     },
@@ -749,16 +822,16 @@
       "label": "多因子＋換號懲罰 0.1 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6693,
-        "atLeast1Pct": 53.1,
-        "atLeast2Pct": 12.97,
-        "atLeast3Pct": 0.83,
+        "averageHits": 0.67,
+        "atLeast1Pct": 52.87,
+        "atLeast2Pct": 13.2,
+        "atLeast3Pct": 0.9,
         "atLeast4Pct": 0.033,
         "hitDistribution": [
-          1407,
-          1204,
-          364,
-          24,
+          1414,
+          1190,
+          369,
+          26,
           1,
           0
         ],
@@ -769,52 +842,52 @@
           "periods": 1000,
           "averageHits": 0.661,
           "atLeast1Pct": 52.4,
-          "atLeast2Pct": 12.8,
-          "atLeast3Pct": 0.9,
+          "atLeast2Pct": 12.9,
+          "atLeast3Pct": 0.8,
           "atLeast4Pct": 0,
           "hitDistribution": [
             476,
-            396,
-            119,
-            9,
-            0,
-            0
-          ],
-          "averageOverlapPreviousPick": 4.215
-        },
-        {
-          "periods": 1000,
-          "averageHits": 0.671,
-          "atLeast1Pct": 52.8,
-          "atLeast2Pct": 13.4,
-          "atLeast3Pct": 0.8,
-          "atLeast4Pct": 0.1,
-          "hitDistribution": [
-            472,
-            394,
-            126,
-            7,
-            1,
-            0
-          ],
-          "averageOverlapPreviousPick": 4.216
-        },
-        {
-          "periods": 1000,
-          "averageHits": 0.676,
-          "atLeast1Pct": 54.1,
-          "atLeast2Pct": 12.7,
-          "atLeast3Pct": 0.8,
-          "atLeast4Pct": 0,
-          "hitDistribution": [
-            459,
-            414,
-            119,
+            395,
+            121,
             8,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 4.254
+          "averageOverlapPreviousPick": 4.214
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.675,
+          "atLeast1Pct": 52.8,
+          "atLeast2Pct": 13.7,
+          "atLeast3Pct": 0.9,
+          "atLeast4Pct": 0.1,
+          "hitDistribution": [
+            472,
+            391,
+            128,
+            8,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.22
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.674,
+          "atLeast1Pct": 53.4,
+          "atLeast2Pct": 13,
+          "atLeast3Pct": 1,
+          "atLeast4Pct": 0,
+          "hitDistribution": [
+            466,
+            404,
+            120,
+            10,
+            0,
+            0
+          ],
+          "averageOverlapPreviousPick": 4.249
         }
       ]
     },
@@ -822,72 +895,72 @@
       "label": "多因子＋換號懲罰 0.25 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.659,
-        "atLeast1Pct": 52.4,
-        "atLeast2Pct": 12.63,
-        "atLeast3Pct": 0.83,
+        "averageHits": 0.6643,
+        "atLeast1Pct": 52.7,
+        "atLeast2Pct": 12.7,
+        "atLeast3Pct": 1,
         "atLeast4Pct": 0.033,
         "hitDistribution": [
-          1428,
-          1193,
-          354,
-          24,
+          1419,
+          1200,
+          351,
+          29,
           1,
           0
         ],
-        "averageOverlapPreviousPick": 3.75
+        "averageOverlapPreviousPick": 3.758
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.645,
-          "atLeast1Pct": 51.4,
-          "atLeast2Pct": 12.2,
-          "atLeast3Pct": 0.9,
+          "averageHits": 0.654,
+          "atLeast1Pct": 51.9,
+          "atLeast2Pct": 12.5,
+          "atLeast3Pct": 1,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            486,
-            392,
-            113,
-            9,
+            481,
+            394,
+            115,
+            10,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.706
+          "averageOverlapPreviousPick": 3.72
         },
         {
           "periods": 1000,
-          "averageHits": 0.656,
-          "atLeast1Pct": 51.6,
-          "atLeast2Pct": 13.1,
-          "atLeast3Pct": 0.8,
+          "averageHits": 0.665,
+          "atLeast1Pct": 52.1,
+          "atLeast2Pct": 13.4,
+          "atLeast3Pct": 0.9,
           "atLeast4Pct": 0.1,
           "hitDistribution": [
-            484,
-            385,
-            123,
-            7,
+            479,
+            387,
+            125,
+            8,
             1,
             0
           ],
-          "averageOverlapPreviousPick": 3.762
+          "averageOverlapPreviousPick": 3.779
         },
         {
           "periods": 1000,
-          "averageHits": 0.676,
-          "atLeast1Pct": 54.2,
-          "atLeast2Pct": 12.6,
-          "atLeast3Pct": 0.8,
+          "averageHits": 0.674,
+          "atLeast1Pct": 54.1,
+          "atLeast2Pct": 12.2,
+          "atLeast3Pct": 1.1,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            458,
-            416,
-            118,
-            8,
+            459,
+            419,
+            111,
+            11,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.781
+          "averageOverlapPreviousPick": 3.774
         }
       ]
     },
@@ -895,72 +968,72 @@
       "label": "多因子＋換號懲罰 0.5 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6587,
-        "atLeast1Pct": 52.83,
-        "atLeast2Pct": 11.77,
-        "atLeast3Pct": 1.23,
+        "averageHits": 0.6593,
+        "atLeast1Pct": 52.57,
+        "atLeast2Pct": 12.03,
+        "atLeast3Pct": 1.3,
         "atLeast4Pct": 0.033,
         "hitDistribution": [
-          1415,
-          1232,
-          316,
-          36,
+          1423,
+          1216,
+          322,
+          38,
           1,
           0
         ],
-        "averageOverlapPreviousPick": 2.99
+        "averageOverlapPreviousPick": 2.988
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.668,
-          "atLeast1Pct": 53.8,
-          "atLeast2Pct": 11.3,
-          "atLeast3Pct": 1.7,
+          "averageHits": 0.656,
+          "atLeast1Pct": 53.1,
+          "atLeast2Pct": 11.1,
+          "atLeast3Pct": 1.4,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            462,
-            425,
-            96,
-            17,
+            469,
+            420,
+            97,
+            14,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 2.97
+          "averageOverlapPreviousPick": 2.95
         },
         {
           "periods": 1000,
-          "averageHits": 0.669,
-          "atLeast1Pct": 52.7,
-          "atLeast2Pct": 13,
-          "atLeast3Pct": 1.1,
+          "averageHits": 0.673,
+          "atLeast1Pct": 52.3,
+          "atLeast2Pct": 13.7,
+          "atLeast3Pct": 1.2,
           "atLeast4Pct": 0.1,
           "hitDistribution": [
-            473,
-            397,
-            119,
-            10,
+            477,
+            386,
+            125,
+            11,
             1,
             0
           ],
-          "averageOverlapPreviousPick": 2.962
+          "averageOverlapPreviousPick": 2.979
         },
         {
           "periods": 1000,
-          "averageHits": 0.639,
-          "atLeast1Pct": 52,
-          "atLeast2Pct": 11,
-          "atLeast3Pct": 0.9,
+          "averageHits": 0.649,
+          "atLeast1Pct": 52.3,
+          "atLeast2Pct": 11.3,
+          "atLeast3Pct": 1.3,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            480,
+            477,
             410,
-            101,
-            9,
+            100,
+            13,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 3.037
+          "averageOverlapPreviousPick": 3.035
         }
       ]
     },
@@ -968,72 +1041,72 @@
       "label": "多因子＋換號懲罰 1 SD",
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6563,
-        "atLeast1Pct": 52.17,
-        "atLeast2Pct": 12.63,
-        "atLeast3Pct": 0.83,
-        "atLeast4Pct": 0,
+        "averageHits": 0.661,
+        "atLeast1Pct": 52.97,
+        "atLeast2Pct": 12.33,
+        "atLeast3Pct": 0.77,
+        "atLeast4Pct": 0.033,
         "hitDistribution": [
-          1435,
-          1186,
-          354,
-          25,
-          0,
+          1411,
+          1219,
+          347,
+          22,
+          1,
           0
         ],
-        "averageOverlapPreviousPick": 1.654
+        "averageOverlapPreviousPick": 1.648
       },
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.646,
+          "averageHits": 0.64,
           "atLeast1Pct": 51.1,
-          "atLeast2Pct": 12.4,
-          "atLeast3Pct": 1.1,
-          "atLeast4Pct": 0,
-          "hitDistribution": [
-            489,
-            387,
-            113,
-            11,
-            0,
-            0
-          ],
-          "averageOverlapPreviousPick": 1.558
-        },
-        {
-          "periods": 1000,
-          "averageHits": 0.666,
-          "atLeast1Pct": 51.7,
-          "atLeast2Pct": 13.9,
+          "atLeast2Pct": 11.9,
           "atLeast3Pct": 1,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            483,
-            378,
-            129,
+            489,
+            392,
+            109,
             10,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 1.646
+          "averageOverlapPreviousPick": 1.554
         },
         {
           "periods": 1000,
-          "averageHits": 0.657,
-          "atLeast1Pct": 53.7,
-          "atLeast2Pct": 11.6,
-          "atLeast3Pct": 0.4,
+          "averageHits": 0.684,
+          "atLeast1Pct": 53.2,
+          "atLeast2Pct": 14.1,
+          "atLeast3Pct": 1,
+          "atLeast4Pct": 0.1,
+          "hitDistribution": [
+            468,
+            391,
+            131,
+            9,
+            1,
+            0
+          ],
+          "averageOverlapPreviousPick": 1.633
+        },
+        {
+          "periods": 1000,
+          "averageHits": 0.659,
+          "atLeast1Pct": 54.6,
+          "atLeast2Pct": 11,
+          "atLeast3Pct": 0.3,
           "atLeast4Pct": 0,
           "hitDistribution": [
-            463,
-            421,
-            112,
-            4,
+            454,
+            436,
+            107,
+            3,
             0,
             0
           ],
-          "averageOverlapPreviousPick": 1.757
+          "averageOverlapPreviousPick": 1.758
         }
       ]
     },
