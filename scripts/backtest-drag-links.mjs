@@ -48,7 +48,8 @@ const validation={method:"Expanding walk-forward. For each test draw, rank candi
 const dayCounts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
 const dayOpp=Array.from({length:5},()=>Array(40).fill(0));
 function addDayPair(draw,next){for(let p=0;p<5;p++){const trigger=draw.numbers[p];dayOpp[p][trigger]++;for(const n of next.numbers)dayCounts[p][trigger][n]++;}}
-const dayIndex=new Map(draws.map((d,i)=>[d.date,i]));\nfor(let i=0;i<split;i++){const draw=draws[i],dt=new Date(draw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const nextDate=dt.toISOString().slice(0,10),next=drawByDate.get(nextDate),nextIndex=dayIndex.get(nextDate);if(next&&nextIndex!==undefined&&nextIndex<split)addDayPair(draw,next);}
+const dayIndex=new Map(draws.map((d,i)=>[d.date,i]));
+for(let i=0;i<split;i++){const draw=draws[i],dt=new Date(draw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const nextDate=dt.toISOString().slice(0,10),next=drawByDate.get(nextDate),nextIndex=dayIndex.get(nextDate);if(next&&nextIndex!==undefined&&nextIndex<split)addDayPair(draw,next);}
 let dayHits=0,dayAtLeast=0,dayAtLeast2=0,dayTestPairs=0;
 const dayByPosition=Array.from({length:5},()=>({hits:0,atLeast:0,n:0}));
 for(let i=split;i<draws.length;i++){
