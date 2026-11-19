@@ -9,6 +9,22 @@ for(let position=0;position<=5;position++)for(let trigger=1;trigger<=39;trigger+
  const top=Array.from({length:39},(_,i)=>i+1).map(number=>({number,hits:hits[number],rate:opportunities?hits[number]/opportunities:0,lift:opportunities?(hits[number]/opportunities)/baselineRate:0})).sort((a,b)=>b.rate-a.rate||b.hits-a.hits||a.number-b.number);
  records.push({position,trigger,lag,opportunities,top});
 }
+// Exact next-calendar-day drag links. Events without a draw on the following calendar date are not counted.
+const drawByDate=new Map(draws.map(d=>[d.date,d]));
+const nextDayRecords=[];
+for(let position=0;position<=5;position++)for(let trigger=1;trigger<=39;trigger++){
+ const hits=Array(40).fill(0);let opportunities=0;
+ for(const draw of draws){
+  const dt=new Date(draw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);
+  const nextDate=dt.toISOString().slice(0,10),next=drawByDate.get(nextDate);
+  if(!next)continue;
+  const matched=position===0?draw.numbers.includes(trigger):draw.numbers[position-1]===trigger;
+  if(!matched)continue;
+  opportunities++;for(const n of next.numbers)hits[n]++;
+ }
+ const top=Array.from({length:39},(_,i)=>i+1).map(number=>({number,hits:hits[number],rate:opportunities?hits[number]/opportunities:0,lift:opportunities?(hits[number]/opportunities)/baselineRate:0})).sort((a,b)=>b.rate-a.rate||b.hits-a.hits||a.number-b.number);
+ nextDayRecords.push({position,trigger,opportunities,top});
+}
 // Expanding walk-forward validation: each test prediction uses only historical pairs available before that draw.
 const split=Math.floor(draws.length*.7);
 const counts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
@@ -28,5 +44,5 @@ for(let t=split;t<draws.length;t++){
 }
 const testDraws=draws.length-split,randomExpectedHits=25/39,randomAtLeastOne=1-(34*33*32*31*30)/(39*38*37*36*35);
 const validation={method:"Expanding walk-forward. For each test draw, rank candidates from position-specific trigger-number to next-draw co-occurrence counts using only pairs available before the prediction. Top 5; exclude previous draw's trigger numbers.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,trainDraws:split,testDraws,randomExpectedHits,randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerDraw:totalHits/testDraws,hitRate:totalHits/(testDraws*5),atLeastOneRate:atLeast/testDraws,hits:totalHits,picks:testDraws*5},...byPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",avgHitsPerDraw:x.hits/x.n,atLeastOneRate:x.atLeast/x.n}))]};
-const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",validation,records};
+const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",validation,nextDayRecords,records};
 fs.writeFileSync(OUT,JSON.stringify(report));console.log(`Generated ${records.length} trigger rows from ${draws.length} draws; holdout avg hits ${validation.rows[0].avgHitsPerDraw.toFixed(3)}.`);
