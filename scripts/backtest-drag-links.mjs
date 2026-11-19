@@ -25,34 +25,6 @@ for(let position=0;position<=5;position++)for(let trigger=1;trigger<=39;trigger+
  const top=Array.from({length:39},(_,i)=>i+1).map(number=>({number,hits:hits[number],rate:opportunities?hits[number]/opportunities:0,lift:opportunities?(hits[number]/opportunities)/baselineRate:0})).sort((a,b)=>b.rate-a.rate||b.hits-a.hits||a.number-b.number);
  nextDayRecords.push({position,trigger,opportunities,top});
 }
-// Exact next-calendar-day walk-forward validation, separate from next-draw validation.
-const dateIndex=new Map(draws.map((d,i)=>[d.date,i]));
-const nextDayCounts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
-const nextDayOpp=Array.from({length:5},()=>Array(40).fill(0));
-function addNextDayPair(i){
- const sourceDraw=draws[i],dt=new Date(sourceDraw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);
- const target=drawByDate.get(dt.toISOString().slice(0,10));if(!target)return;
- for(let p=0;p<5;p++){const trigger=sourceDraw.numbers[p];nextDayOpp[p][trigger]++;for(const n of target.numbers)nextDayCounts[p][trigger][n]++;}
-}
-for(let i=0;i<draws.length;i++){
- const dt=new Date(draws[i].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);
- const targetIndex=dateIndex.get(dt.toISOString().slice(0,10));
- if(targetIndex!==undefined&&targetIndex<split)addNextDayPair(i);
-}
-let nextDayHits=0,nextDayAtLeast=0,nextDayTestCount=0;
-for(let j=split;j<draws.length;j++){
- const dt=new Date(draws[j].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()-1);
- const sourceIndex=dateIndex.get(dt.toISOString().slice(0,10));
- if(sourceIndex!==undefined){
-  const triggers=draws[sourceIndex].numbers,candidates=[];
-  for(let n=1;n<=39;n++){let h=0,o=0;for(let p=0;p<5;p++){const tr=triggers[p];h+=nextDayCounts[p][tr][n];o+=nextDayOpp[p][tr];}candidates.push({n,rate:o?h/o:0,h});}
-  candidates.sort((a,b)=>b.rate-a.rate||b.h-a.h||a.n-b.n);
-  const actual=draws[j].numbers,picks=candidates.slice(0,5).map(x=>x.n),hits=picks.filter(n=>actual.includes(n)).length;
-  nextDayHits+=hits;if(hits>0)nextDayAtLeast++;nextDayTestCount++;
-  addNextDayPair(sourceIndex);
- }
-}
-const nextDayValidation={testDraws:nextDayTestCount,avgHitsPerDraw:nextDayTestCount?nextDayHits/nextDayTestCount:0,hitRate:nextDayTestCount?nextDayHits/(nextDayTestCount*5):0,atLeastOneRate:nextDayTestCount?nextDayAtLeast/nextDayTestCount:0,hits:nextDayHits,picks:nextDayTestCount*5,randomExpectedHits:25/39,randomAtLeastOne:1-(34*33*32*31*30)/(39*38*37*36*35)};
 // Expanding walk-forward validation: each test prediction uses only historical pairs available before that draw.
 const split=Math.floor(draws.length*.7);
 const counts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
@@ -71,12 +43,12 @@ for(let t=split;t<draws.length;t++){
  addPair(t-1);
 }
 const testDraws=draws.length-split,randomExpectedHits=25/39,randomAtLeastOne=1-(34*33*32*31*30)/(39*38*37*36*35);
-const validation={nextCalendarDay:nextDayValidation,method:"Expanding walk-forward. For each test draw, rank candidates from position-specific trigger-number to next-draw co-occurrence counts using only pairs available before the prediction. Top 5; exclude previous draw's trigger numbers.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,trainDraws:split,testDraws,randomExpectedHits,randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerDraw:totalHits/testDraws,hitRate:totalHits/(testDraws*5),atLeastOneRate:atLeast/testDraws,hits:totalHits,picks:testDraws*5},...byPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",avgHitsPerDraw:x.hits/x.n,atLeastOneRate:x.atLeast/x.n}))]};
+const validation={method:"Expanding walk-forward. For each test draw, rank candidates from position-specific trigger-number to next-draw co-occurrence counts using only pairs available before the prediction. Top 5; exclude previous draw's trigger numbers.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,trainDraws:split,testDraws,randomExpectedHits,randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerDraw:totalHits/testDraws,hitRate:totalHits/(testDraws*5),atLeastOneRate:atLeast/testDraws,hits:totalHits,picks:testDraws*5},...byPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",avgHitsPerDraw:x.hits/x.n,atLeastOneRate:x.atLeast/x.n}))]};
 // Exact next-calendar-day expanding walk-forward validation. Only date D -> D+1 pairs are used.
 const dayCounts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
 const dayOpp=Array.from({length:5},()=>Array(40).fill(0));
 function addDayPair(draw,next){for(let p=0;p<5;p++){const trigger=draw.numbers[p];dayOpp[p][trigger]++;for(const n of next.numbers)dayCounts[p][trigger][n]++;}}
-for(let i=0;i<split;i++){const draw=draws[i],dt=new Date(draw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const next=drawByDate.get(dt.toISOString().slice(0,10));if(next)addDayPair(draw,next);}
+const dayIndex=new Map(draws.map((d,i)=>[d.date,i]));\nfor(let i=0;i<split;i++){const draw=draws[i],dt=new Date(draw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const nextDate=dt.toISOString().slice(0,10),next=drawByDate.get(nextDate),nextIndex=dayIndex.get(nextDate);if(next&&nextIndex!==undefined&&nextIndex<split)addDayPair(draw,next);}
 let dayHits=0,dayAtLeast=0,dayAtLeast2=0,dayTestPairs=0;
 const dayByPosition=Array.from({length:5},()=>({hits:0,atLeast:0,n:0}));
 for(let i=split;i<draws.length;i++){
