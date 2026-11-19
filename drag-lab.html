@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#9e1b25"><meta name="description" content="今彩539全號碼、排序位置與後續開獎期拖牌關聯分析。">
+<title>539 DATA｜號碼拖牌關聯實驗室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{font-family:"DM Sans","Noto Sans TC",system-ui,sans-serif;color:#282522;background:#f5f3f0}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1050px;margin:auto;padding:24px 18px 56px}.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.brand{font-weight:900;color:#9e1b25;text-decoration:none}.top a:last-child{color:#777;text-decoration:none}.intro{margin:34px 0 22px}.eyebrow{font-size:11px;letter-spacing:1.8px;color:#9e1b25;font-weight:800}.intro h1{font-size:clamp(27px,5vw,39px);margin:7px 0}.muted{color:#777;font-size:13px;line-height:1.7}.notice,.panel,.metric{background:white;border:1px solid #e8e2dc;border-radius:14px}.notice{padding:14px 16px;line-height:1.8;margin:15px 0}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px;background:white;border:1px solid #e8e2dc;border-radius:14px}.field label{display:block;font-size:12px;color:#777;margin-bottom:7px}.field select{width:100%;padding:12px;border:1px solid #ded8d1;border-radius:9px;background:#fff;font:inherit;color:#282522}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}.metric{padding:14px}.metric span{display:block;color:#777;font-size:12px}.metric b{display:block;font-size:22px;margin-top:5px}.panel{padding:16px;margin-top:14px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.panel-head h2{font-size:17px;margin:0}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:520px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #eee;font-size:14px}th{font-size:12px;color:#777;background:#faf9f7}td b{font-variant-numeric:tabular-nums}.ball{display:inline-flex;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;background:#9e1b25;color:white;font-weight:800}.lift{font-weight:700}.foot{color:#777;font-size:12px;line-height:1.8;margin-top:18px}.empty{padding:18px;color:#777}@media(max-width:620px){.controls{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}}
+</style></head>
+<body><main class="wrap">
+<div class="top"><a class="brand" href="./">539 DATA</a><a href="./model-lab.html">模型實驗室 ↗</a></div>
+<section class="intro"><div class="eyebrow">NUMBER POSITION · FOLLOW-UP DRAW LINKS</div><h1>號碼拖牌關聯實驗室</h1><p class="muted">01–39 全號碼 × 排序位置 × 後續第 1–5 期，並另計「當期有開出」的隔期關聯。</p></section>
+<div class="notice"><b>資料口徑：</b>官方歷史獎號以小到大排序，因此「第 1～5 位」是排序位置，不是實際搖出先後順序。第 1 期代表下一個開獎期，不一定是下一個日曆日。每個拖牌的命中率以觸發樣本數為分母，隨機參考值為 5/39 = 12.82%。</div>
+<section class="controls">
+<div class="field"><label for="mode">觸發條件</label><select id="mode"><option value="0">當期有開出（不分位置）</option><option value="1">排序第 1 位</option><option value="2">排序第 2 位</option><option value="3" selected>排序第 3 位</option><option value="4">排序第 4 位</option><option value="5">排序第 5 位</option></select></div>
+<div class="field"><label for="number">觸發號碼</label><select id="number"></select></div>
+<div class="field"><label for="lag">觀察後續第幾期</label><select id="lag"><option value="1">下一期</option><option value="2">後第 2 期</option><option value="3">後第 3 期</option><option value="4">後第 4 期</option><option value="5">後第 5 期</option></select></div>
+</section>
+<section class="metrics"><div class="metric"><span>觸發樣本數</span><b id="samples">—</b></div><div class="metric"><span>隨機參考命中率</span><b>12.82%</b></div><div class="metric"><span>資料期數／截止日</span><b id="periods" style="font-size:17px">—</b></div></section>
+<section class="panel"><div class="panel-head"><h2>關聯拖牌 TOP 10</h2><span class="muted" id="caption">—</span></div><div class="tablewrap"><table><thead><tr><th>排名</th><th>拖牌號碼</th><th>命中次數</th><th>條件命中率</th><th>相對隨機基準</th></tr></thead><tbody id="rows"><tr><td colspan="5">載入分析資料中…</td></tr></tbody></table></div></section>
+<p class="foot">重要：這是歷史條件關聯統計，不代表下一期會開出，也不代表號碼之間存在因果關係。對 39 個候選號碼同時挑選最高值，容易出現偶然高點；正式採用前應做時間切分的樣本外驗證，並與隨機基準比較。相同觸發號碼會從拖牌候選中排除。</p>
+</main>
+<script>
+(async()=>{
+ const $=s=>document.querySelector(s), pad=n=>String(n).padStart(2,"0");
+ const number=$("#number");for(let n=1;n<=39;n++){const o=document.createElement("option");o.value=n;o.textContent=pad(n);if(n===29)o.selected=true;number.append(o)}
+ try{
+  const r=await fetch("./data/drag-links539.json?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("分析資料尚未部署");const d=await r.json();
+  $("#periods").textContent=d.historyCount.toLocaleString("zh-TW")+" 期｜"+d.through;
+  function render(){const p=Number($("#mode").value),n=Number(number.value),lag=Number($("#lag").value),item=d.records.find(x=>x.position===p&&x.trigger===n&&x.lag===lag);if(!item)throw Error("找不到對應統計");
+   $("#samples").textContent=item.opportunities.toLocaleString("zh-TW");$("#caption").textContent=(p===0?"當期有開出":("排序第 "+p+" 位"))+"｜觸發 "+pad(n)+"｜後續第 "+lag+" 期";
+   $("#rows").innerHTML=item.top.map((x,i)=>'<tr><td>'+(i+1)+'</td><td><span class="ball">'+pad(x.number)+'</span></td><td><b>'+x.hits+'</b></td><td><b>'+ (x.rate*100).toFixed(2)+'%</b></td><td class="lift">'+x.lift.toFixed(2)+' 倍</td></tr>').join("");
+  }
+  ["mode","number","lag"].forEach(id=>$("#"+id).addEventListener("change",render));render();
+ }catch(e){$("#rows").innerHTML='<tr><td colspan="5" class="empty">'+e.message+'</td></tr>'}
+})();
+</script></body></html>
