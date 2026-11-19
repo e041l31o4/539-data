@@ -25,6 +25,34 @@ for(let position=0;position<=5;position++)for(let trigger=1;trigger<=39;trigger+
  const top=Array.from({length:39},(_,i)=>i+1).map(number=>({number,hits:hits[number],rate:opportunities?hits[number]/opportunities:0,lift:opportunities?(hits[number]/opportunities)/baselineRate:0})).sort((a,b)=>b.rate-a.rate||b.hits-a.hits||a.number-b.number);
  nextDayRecords.push({position,trigger,opportunities,top});
 }
+// Exact next-calendar-day walk-forward validation, separate from next-draw validation.
+const dateIndex=new Map(draws.map((d,i)=>[d.date,i]));
+const nextDayCounts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
+const nextDayOpp=Array.from({length:5},()=>Array(40).fill(0));
+function addNextDayPair(i){
+ const sourceDraw=draws[i],dt=new Date(sourceDraw.date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);
+ const target=drawByDate.get(dt.toISOString().slice(0,10));if(!target)return;
+ for(let p=0;p<5;p++){const trigger=sourceDraw.numbers[p];nextDayOpp[p][trigger]++;for(const n of target.numbers)nextDayCounts[p][trigger][n]++;}
+}
+for(let i=0;i<draws.length;i++){
+ const dt=new Date(draws[i].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);
+ const targetIndex=dateIndex.get(dt.toISOString().slice(0,10));
+ if(targetIndex!==undefined&&targetIndex<split)addNextDayPair(i);
+}
+let nextDayHits=0,nextDayAtLeast=0,nextDayTestCount=0;
+for(let j=split;j<draws.length;j++){
+ const dt=new Date(draws[j].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()-1);
+ const sourceIndex=dateIndex.get(dt.toISOString().slice(0,10));
+ if(sourceIndex!==undefined){
+  const triggers=draws[sourceIndex].numbers,candidates=[];
+  for(let n=1;n<=39;n++){let h=0,o=0;for(let p=0;p<5;p++){const tr=triggers[p];h+=nextDayCounts[p][tr][n];o+=nextDayOpp[p][tr];}candidates.push({n,rate:o?h/o:0,h});}
+  candidates.sort((a,b)=>b.rate-a.rate||b.h-a.h||a.n-b.n);
+  const actual=draws[j].numbers,picks=candidates.slice(0,5).map(x=>x.n),hits=picks.filter(n=>actual.includes(n)).length;
+  nextDayHits+=hits;if(hits>0)nextDayAtLeast++;nextDayTestCount++;
+  addNextDayPair(sourceIndex);
+ }
+}
+const nextDayValidation={testDraws:nextDayTestCount,avgHitsPerDraw:nextDayTestCount?nextDayHits/nextDayTestCount:0,hitRate:nextDayTestCount?nextDayHits/(nextDayTestCount*5):0,atLeastOneRate:nextDayTestCount?nextDayAtLeast/nextDayTestCount:0,hits:nextDayHits,picks:nextDayTestCount*5,randomExpectedHits:25/39,randomAtLeastOne:1-(34*33*32*31*30)/(39*38*37*36*35)};
 // Expanding walk-forward validation: each test prediction uses only historical pairs available before that draw.
 const split=Math.floor(draws.length*.7);
 const counts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
@@ -43,6 +71,6 @@ for(let t=split;t<draws.length;t++){
  addPair(t-1);
 }
 const testDraws=draws.length-split,randomExpectedHits=25/39,randomAtLeastOne=1-(34*33*32*31*30)/(39*38*37*36*35);
-const validation={method:"Expanding walk-forward. For each test draw, rank candidates from position-specific trigger-number to next-draw co-occurrence counts using only pairs available before the prediction. Top 5; exclude previous draw's trigger numbers.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,trainDraws:split,testDraws,randomExpectedHits,randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerDraw:totalHits/testDraws,hitRate:totalHits/(testDraws*5),atLeastOneRate:atLeast/testDraws,hits:totalHits,picks:testDraws*5},...byPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",avgHitsPerDraw:x.hits/x.n,atLeastOneRate:x.atLeast/x.n}))]};
+const validation={nextCalendarDay:nextDayValidation,method:"Expanding walk-forward. For each test draw, rank candidates from position-specific trigger-number to next-draw co-occurrence counts using only pairs available before the prediction. Top 5; exclude previous draw's trigger numbers.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,trainDraws:split,testDraws,randomExpectedHits,randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerDraw:totalHits/testDraws,hitRate:totalHits/(testDraws*5),atLeastOneRate:atLeast/testDraws,hits:totalHits,picks:testDraws*5},...byPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",avgHitsPerDraw:x.hits/x.n,atLeastOneRate:x.atLeast/x.n}))]};
 const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",validation,nextDayRecords,records};
 fs.writeFileSync(OUT,JSON.stringify(report));console.log(`Generated ${records.length} trigger rows from ${draws.length} draws; holdout avg hits ${validation.rows[0].avgHitsPerDraw.toFixed(3)}.`);
