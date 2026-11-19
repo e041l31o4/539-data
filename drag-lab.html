@@ -20,7 +20,7 @@
 </section>
 <section class="metrics"><div class="metric"><span>觸發樣本數</span><b id="samples">—</b></div><div class="metric"><span>隨機參考命中率</span><b>12.82%</b></div><div class="metric"><span>資料期數／截止日</span><b id="periods" style="font-size:17px">—</b></div></section>
 <section class="panel"><div class="panel-head"><h2>關聯拖牌 TOP 10</h2><span class="muted" id="caption">—</span></div><div class="tablewrap"><table><thead><tr><th>排名</th><th>拖牌號碼</th><th>命中次數</th><th>條件命中率</th><th>相對隨機基準</th></tr></thead><tbody id="rows"><tr><td colspan="5">載入分析資料中…</td></tr></tbody></table></div></section>
-<p class="foot">重要：這是歷史條件關聯統計，不代表下一期會開出，也不代表號碼之間存在因果關係。對 39 個候選號碼同時挑選最高值，容易出現偶然高點；正式採用前應做時間切分的樣本外驗證，並與隨機基準比較。相同觸發號碼會從拖牌候選中排除。</p>
+<section class="panel"><div class="panel-head"><h2>時間切分樣本外驗證</h2><span class="muted">前 70% 訓練｜後 30% 測試</span></div><p class="muted" id="validationMeta">—</p><div class="tablewrap"><table><thead><tr><th>後續期數</th><th>測試觸發樣本</th><th>平均命中顆數</th><th>隨機基準</th><th>至少中 1 顆</th><th>隨機基準</th></tr></thead><tbody id="validationRows"><tr><td colspan="6">載入驗證資料中…</td></tr></tbody></table></div></section><p class="foot">重要：這是歷史條件關聯統計，不代表下一期會開出，也不代表號碼之間存在因果關係。對 39 個候選號碼同時挑選最高值，容易出現偶然高點；正式採用前應做時間切分的樣本外驗證，並與隨機基準比較。相同觸發號碼會從拖牌候選中排除。</p>
 </main>
 <script>
 (async()=>{
@@ -29,11 +29,12 @@
  try{
   const r=await fetch("./data/drag-links539.json?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("分析資料尚未部署");const d=await r.json();
   $("#periods").textContent=d.historyCount.toLocaleString("zh-TW")+" 期｜"+d.through;
+  function renderValidation(){const p=Number($("#mode").value),v=d.validation;if(!v)return;$("#validationMeta").textContent="訓練資料截至 "+v.trainThrough+"；樣本外測試 "+v.testFrom+" 至 "+v.testThrough+"。每個觸發號碼只用訓練期的歷史關聯挑選 TOP 5，再計算測試期命中。";$("#validationRows").innerHTML=v.rows.filter(x=>x.position===p).map(x=>"<tr><td>第 "+x.lag+" 期</td><td>"+x.testOpportunities.toLocaleString("zh-TW")+"</td><td><b>"+x.avgHitsPerOpportunity.toFixed(3)+"</b></td><td>"+x.randomExpectedHits.toFixed(3)+"</td><td>"+(x.atLeastOneRate*100).toFixed(2)+"%</td><td>"+(x.randomAtLeastOne*100).toFixed(2)+"%</td></tr>").join("");}
   function render(){const p=Number($("#mode").value),n=Number(number.value),lag=Number($("#lag").value),item=d.records.find(x=>x.position===p&&x.trigger===n&&x.lag===lag);if(!item)throw Error("找不到對應統計");
    $("#samples").textContent=item.opportunities.toLocaleString("zh-TW");$("#caption").textContent=(p===0?"當期有開出":("排序第 "+p+" 位"))+"｜觸發 "+pad(n)+"｜後續第 "+lag+" 期";
    $("#rows").innerHTML=item.top.map((x,i)=>'<tr><td>'+(i+1)+'</td><td><span class="ball">'+pad(x.number)+'</span></td><td><b>'+x.hits+'</b></td><td><b>'+ (x.rate*100).toFixed(2)+'%</b></td><td class="lift">'+x.lift.toFixed(2)+' 倍</td></tr>').join("");
   }
-  ["mode","number","lag"].forEach(id=>$("#"+id).addEventListener("change",render));render();
+  ["mode","number","lag"].forEach(id=>$("#"+id).addEventListener("change",()=>{render();renderValidation()}));render();renderValidation();
  }catch(e){$("#rows").innerHTML='<tr><td colspan="5" class="empty">'+e.message+'</td></tr>'}
 })();
 </script></body></html>
