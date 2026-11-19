@@ -129,10 +129,11 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  // 正式版唯一推薦來源：二星優先趨勢融合 v1.2（移除未證實的歷史關聯因子）。相同歷史資料必定得到相同排序。
  const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
  // 拖牌關聯先列為獨立實驗因子：依最新一期排序位置，合併各觸發號碼的下一期歷史拖牌率；尚未通過樣本外驗證前不改正式TOP5權重。
- const dragCandidates=Array.from({length:39},(_,i)=>i+1).filter(n=>!prev.includes(n));
+ const triggerNumbers=draws.at(-1).numbers;
+ const dragCandidates=Array.from({length:39},(_,i)=>i+1).filter(n=>!triggerNumbers.includes(n));
  const dragStats=dragCandidates.map(n=>{
   let weighted=0,total=0,sources=0;
-  if(dragLinkData)prev.forEach((trigger,i)=>{
+  if(dragLinkData)triggerNumbers.forEach((trigger,i)=>{
    const row=dragLinkData.records.find(x=>x.position===i+1&&x.trigger===trigger&&x.lag===1);
    const hit=row?.top.find(x=>x.number===n);
    if(hit&&row.opportunities){weighted+=hit.rate*row.opportunities;total+=row.opportunities;sources++}
