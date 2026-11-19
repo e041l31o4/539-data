@@ -141,6 +141,15 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   return {n,rate:total?weighted/total:0,samples:total,sources};
  }).sort((a,b)=>b.rate-a.rate||b.samples-a.samples||a.n-b.n);
  const dragRank=new Map(dragStats.map((x,i)=>[x.n,{...x,rank:i+1}]));
+ const nextDayStats=dragCandidates.map(n=>{
+  let weighted=0,total=0,sources=0;
+  if(dragLinkData)triggerNumbers.forEach((trigger,i)=>{
+   const row=dragLinkData.nextDayRecords?.find(x=>x.position===i+1&&x.trigger===trigger);
+   const hit=row?.top.find(x=>x.number===n);
+   if(hit&&row.opportunities){weighted+=hit.rate*row.opportunities;total+=row.opportunities;sources++}
+  });
+  return {n,rate:total?weighted/total:0,samples:total,sources};
+ }).sort((a,b)=>b.rate-a.rate||b.samples-a.samples||a.n-b.n);
  $("#mainPicks").innerHTML=mainRows.map((x,i)=>'<button type="button" class="pick-ball-button" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><span class="ball">'+String(x.n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=altRows.map((x,i)=>'<span class="backup-pick"><small>#'+(i+6)+'</small><span class="ball">'+String(x.n).padStart(2,"0")+'</span></span>').join("");
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
  const universe=Array.from({length:39},(_,i)=>i+1);
@@ -171,6 +180,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  };
  let reasonBox=$("#pickReasons");if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
  reasonBox.innerHTML='<div class="panel-head"><b>最新一期位置拖牌觀察 TOP 10</b><span class="muted">實驗因子｜未納入正式TOP5權重</span></div><div class="number-rank-grid">'+dragStats.slice(0,10).map((x,i)=>'<div class="number-rank"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,'0')+'</b><small>'+(x.rate*100).toFixed(2)+'%</small></div>').join('')+'</div><p class="number-rank-note">依最新一期五個排序位置的觸發號碼，合併歷史下一期拖牌率；每一個號碼最多只納入前10關聯清單，未列入者不代表命中率為零。此項先作分析參考，不直接改變正式推薦排序。</p><div class="panel-head"><b>1～39 號碼完整推薦排名</b><span class="muted">點選任一號碼查看完整分析</span></div><div class="number-rank-grid">'+allRanks.map((x,i)=>'<button type="button" class="number-rank '+(main.includes(x.n)?"is-top":"")+'" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+x.score.toFixed(3)+'</small></button>').join("")+'</div><div class="number-detail-modal" id="numberDetailModal" hidden><div class="number-detail-card"><button type="button" class="detail-close" aria-label="關閉">×</button><div id="numberDetailContent"></div></div></div><p class="number-rank-note">前五名為目前模型綜合排序；其他34碼仍可點選查看分數、連動樣本、期距表現及落後原因。分數不等於開獎機率。</p>';
+ reasonBox.insertAdjacentHTML("afterbegin",'<div class="panel-head"><b>最新一期位置「隔天」拖牌 TOP 10</b><span class="muted">次一日曆日｜獨立統計</span></div><div class="number-rank-grid">'+nextDayStats.slice(0,10).map((x,i)=>'<div class="number-rank"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+(x.rate*100).toFixed(2)+'%</small></div>').join('')+'</div><p class="number-rank-note">依最新一期五個排序位置的觸發號碼，統計下一個日曆日有開獎時的拖牌率；無次日開獎的日期不納入樣本。</p>');
  // 將分析函式掛到 window，讓全頁事件委派能穩定呼叫，不受區塊重繪影響。
  window.show539NumberDetail=(number)=>{
   const modal=document.querySelector("#numberDetailModal"),content=document.querySelector("#numberDetailContent");
