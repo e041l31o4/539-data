@@ -1,10 +1,10 @@
 {
   "version": "combo-objective-pair-lab-v1",
-  "dataThrough": "2026-11-18",
-  "historyCount": 6023,
+  "dataThrough": "2026-11-19",
+  "historyCount": 6024,
   "testPeriodCount": 3000,
-  "testFrom": "2017-04-27",
-  "testTo": "2026-11-18",
+  "testFrom": "2017-04-28",
+  "testTo": "2026-11-19",
   "method": "每期只用此前365期資料；先以近期頻率選12碼候選池，再窮舉其中792種五碼組合。配對共現分數以超幾何基準近似的二項期望、標準誤及收縮計算；lambda固定，不以測試結果挑參數。",
   "randomBaseline": {
     "atLeast2Pct": 11.397342976290345,
@@ -12,7 +12,7 @@
   },
   "individualTop5": {
     "periods": 3000,
-    "averageHits": 0.6703,
+    "averageHits": 0.6707,
     "atLeast2Pct": 12.47,
     "atLeast2Wilson95Pct": [
       11.33,
@@ -24,8 +24,8 @@
       1.62
     ],
     "distribution": [
-      1400,
-      1226,
+      1399,
+      1227,
       339,
       33,
       2,
@@ -36,7 +36,7 @@
     "0": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6703,
+        "averageHits": 0.6707,
         "atLeast2Pct": 12.47,
         "atLeast2Wilson95Pct": [
           11.33,
@@ -48,8 +48,8 @@
           1.62
         ],
         "distribution": [
-          1400,
-          1226,
+          1399,
+          1227,
           339,
           33,
           2,
@@ -103,7 +103,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.676,
+          "averageHits": 0.677,
           "atLeast2Pct": 12.2,
           "atLeast2Wilson95Pct": [
             10.31,
@@ -115,8 +115,8 @@
             2.21
           ],
           "distribution": [
-            459,
-            419,
+            458,
+            420,
             109,
             13,
             0,
@@ -128,7 +128,7 @@
     "1": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6533,
+        "averageHits": 0.6537,
         "atLeast2Pct": 12.2,
         "atLeast2Wilson95Pct": [
           11.08,
@@ -140,8 +140,8 @@
           1.46
         ],
         "distribution": [
-          1438,
-          1196,
+          1437,
+          1197,
           335,
           30,
           1,
@@ -173,7 +173,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.66,
+          "averageHits": 0.661,
           "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
             9.85,
@@ -185,8 +185,8 @@
             1.57
           ],
           "distribution": [
-            465,
-            418,
+            464,
+            419,
             109,
             8,
             0,
@@ -220,7 +220,7 @@
     "2": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6533,
+        "averageHits": 0.6537,
         "atLeast2Pct": 12.2,
         "atLeast2Wilson95Pct": [
           11.08,
@@ -232,8 +232,8 @@
           1.46
         ],
         "distribution": [
-          1438,
-          1196,
+          1437,
+          1197,
           335,
           30,
           1,
@@ -265,7 +265,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.66,
+          "averageHits": 0.661,
           "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
             9.85,
@@ -277,8 +277,8 @@
             1.57
           ],
           "distribution": [
-            465,
-            418,
+            464,
+            419,
             109,
             8,
             0,
@@ -312,7 +312,7 @@
     "0.25": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.651,
+        "averageHits": 0.6513,
         "atLeast2Pct": 12.07,
         "atLeast2Wilson95Pct": [
           10.95,
@@ -324,8 +324,8 @@
           1.46
         ],
         "distribution": [
-          1441,
-          1197,
+          1440,
+          1198,
           331,
           30,
           1,
@@ -357,7 +357,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.66,
+          "averageHits": 0.661,
           "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
             9.85,
@@ -369,8 +369,8 @@
             1.57
           ],
           "distribution": [
-            465,
-            418,
+            464,
+            419,
             109,
             8,
             0,
@@ -404,7 +404,7 @@
     "0.5": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6533,
+        "averageHits": 0.6537,
         "atLeast2Pct": 12.2,
         "atLeast2Wilson95Pct": [
           11.08,
@@ -416,8 +416,8 @@
           1.46
         ],
         "distribution": [
-          1438,
-          1196,
+          1437,
+          1197,
           335,
           30,
           1,
@@ -449,7 +449,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.66,
+          "averageHits": 0.661,
           "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
             9.85,
@@ -461,8 +461,8 @@
             1.57
           ],
           "distribution": [
-            465,
-            418,
+            464,
+            419,
             109,
             8,
             0,
