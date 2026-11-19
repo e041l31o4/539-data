@@ -130,7 +130,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
  // 拖牌關聯先列為獨立實驗因子：依最新一期排序位置，合併各觸發號碼的下一期歷史拖牌率；尚未通過樣本外驗證前不改正式TOP5權重。
  const triggerNumbers=draws.at(-1).numbers;
- const dragCandidates=Array.from({length:39},(_,i)=>i+1).filter(n=>!triggerNumbers.includes(n));
+ const dragCandidates=Array.from({length:39},(_,i)=>i+1);
  const dragStats=dragCandidates.map(n=>{
   let weighted=0,total=0,sources=0;
   if(dragLinkData)triggerNumbers.forEach((trigger,i)=>{
