@@ -9,5 +9,24 @@ for(let position=0;position<=5;position++)for(let trigger=1;trigger<=39;trigger+
  const top=Array.from({length:39},(_,i)=>i+1).filter(n=>n!==trigger).map(number=>({number,hits:hits[number],rate:opportunities?hits[number]/opportunities:0,lift:opportunities?(hits[number]/opportunities)/baselineRate:0})).sort((a,b)=>b.rate-a.rate||b.hits-a.hits||a.number-b.number);
  records.push({position,trigger,lag,opportunities,top});
 }
-const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",records};
-fs.writeFileSync(OUT,JSON.stringify(report));console.log(`Generated ${records.length} trigger rows from ${draws.length} draws.`);
+// Expanding walk-forward validation: each test prediction uses only historical pairs available before that draw.
+const split=Math.floor(draws.length*.7);
+const counts=Array.from({length:5},()=>Array.from({length:40},()=>Array(40).fill(0)));
+const opp=Array.from({length:5},()=>Array(40).fill(0));
+function addPair(i){for(let p=0;p<5;p++){const trigger=draws[i].numbers[p];opp[p][trigger]++;for(const n of draws[i+1].numbers)if(n!==trigger)counts[p][trigger][n]++;}}
+for(let i=0;i<split-1;i++)addPair(i);
+let totalHits=0,atLeast=0;
+const byPosition=Array.from({length:5},()=>({hits:0,atLeast:0,n:0}));
+for(let t=split;t<draws.length;t++){
+ const triggers=draws[t-1].numbers,candidates=[];
+ for(let n=1;n<=39;n++){if(triggers.includes(n))continue;let h=0,o=0;for(let p=0;p<5;p++){const tr=triggers[p];h+=counts[p][tr][n];o+=opp[p][tr];}candidates.push({n,rate:o?h/o:0,h});}
+ candidates.sort((a,b)=>b.rate-a.rate||b.h-a.h||a.n-b.n);
+ const actual=draws[t].numbers,picks=candidates.slice(0,5).map(x=>x.n),hits=picks.filter(n=>actual.includes(n)).length;
+ totalHits+=hits;if(hits>0)atLeast++;
+ for(let p=0;p<5;p++){const tr=triggers[p],ranked=Array.from({length:39},(_,i)=>i+1).filter(n=>n!==tr).map(n=>({n,rate:opp[p][tr]?counts[p][tr][n]/opp[p][tr]:0,h:counts[p][tr][n]})).sort((a,b)=>b.rate-a.rate||b.h-a.h||a.n-b.n).slice(0,5);const ph=ranked.filter(x=>actual.includes(x.n)).length;byPosition[p].hits+=ph;byPosition[p].n++;if(ph>0)byPosition[p].atLeast++;}
+ addPair(t-1);
+}
+const testDraws=draws.length-split,randomExpectedHits=25/39,randomAtLeastOne=1-(34*33*32*31*30)/(39*38*37*36*35);
+const validation={method:"Expanding walk-forward. For each test draw, rank candidates from position-specific trigger-number to next-draw co-occurrence counts using only pairs available before the prediction. Top 5; exclude previous draw's trigger numbers.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,trainDraws:split,testDraws,randomExpectedHits,randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerDraw:totalHits/testDraws,hitRate:totalHits/(testDraws*5),atLeastOneRate:atLeast/testDraws,hits:totalHits,picks:testDraws*5},...byPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",avgHitsPerDraw:x.hits/x.n,atLeastOneRate:x.atLeast/x.n}))]};
+const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",validation,records};
+fs.writeFileSync(OUT,JSON.stringify(report));console.log(`Generated ${records.length} trigger rows from ${draws.length} draws; holdout avg hits ${validation.rows[0].avgHitsPerDraw.toFixed(3)}.`);
