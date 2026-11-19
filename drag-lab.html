@@ -16,7 +16,7 @@
 <section class="controls">
 <div class="field"><label for="mode">觸發條件</label><select id="mode"><option value="0">當期有開出（不分位置）</option><option value="1">排序第 1 位</option><option value="2">排序第 2 位</option><option value="3" selected>排序第 3 位</option><option value="4">排序第 4 位</option><option value="5">排序第 5 位</option></select></div>
 <div class="field"><label for="number">觸發號碼</label><select id="number"></select></div>
-<div class="field"><label for="lag">觀察後續第幾期</label><select id="lag"><option value="1">下一期</option><option value="2">後第 2 期</option><option value="3">後第 3 期</option><option value="4">後第 4 期</option><option value="5">後第 5 期</option></select></div>
+<div class="field"><label for="lag">觀察後續第幾期</label><select id="lag"><option value="day+1">隔天（下一個日曆日）</option><option value="1">下一期</option><option value="2">後第 2 期</option><option value="3">後第 3 期</option><option value="4">後第 4 期</option><option value="5">後第 5 期</option></select></div>
 </section>
 <section class="metrics"><div class="metric"><span>觸發樣本數</span><b id="samples">—</b></div><div class="metric"><span>隨機參考命中率</span><b>12.82%</b></div><div class="metric"><span>資料期數／截止日</span><b id="periods" style="font-size:17px">—</b></div></section>
 <section class="panel"><div class="panel-head"><h2>樣本外驗證｜拖牌 TOP 5</h2><span class="muted">前 70% 訓練、後 30% 逐期測試</span></div><div class="tablewrap"><table><thead><tr><th>策略</th><th>平均命中顆數</th><th>至少中 1 顆</th></tr></thead><tbody id="validationRows"><tr><td colspan="3">讀取驗證資料…</td></tr></tbody></table></div><p class="muted" id="validationNote"></p></section>
@@ -31,8 +31,8 @@
   const r=await fetch("./data/drag-links539.json?v="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("分析資料尚未部署");const d=await r.json();
   $("#periods").textContent=d.historyCount.toLocaleString("zh-TW")+" 期｜"+d.through;
   if(d.validation){const v=d.validation,rows=v.rows||[];$("#validationRows").innerHTML=rows.map(x=>'<tr><td>'+x.name+'</td><td><b>'+x.avgHitsPerDraw.toFixed(3)+'</b></td><td>'+ (x.atLeastOneRate*100).toFixed(2)+'%</td></tr>').join('');$("#validationNote").textContent='測試期：'+v.testFrom+' 至 '+v.testThrough+'，共 '+v.testDraws+' 期。隨機基準平均 '+v.randomExpectedHits.toFixed(3)+' 顆／期，至少中 1 顆 '+(v.randomAtLeastOne*100).toFixed(2)+'%。目前提升幅度有限，尚不能證明有穩定統計優勢。';}
-  function render(){const p=Number($("#mode").value),n=Number(number.value),lag=Number($("#lag").value),item=d.records.find(x=>x.position===p&&x.trigger===n&&x.lag===lag);if(!item)throw Error("找不到對應統計");
-   $("#samples").textContent=item.opportunities.toLocaleString("zh-TW");$("#caption").textContent=(p===0?"當期有開出":("排序第 "+p+" 位"))+"｜觸發 "+pad(n)+"｜後續第 "+lag+" 期";
+  function render(){const p=Number($("#mode").value),n=Number(number.value),lag=$("#lag").value,item=lag==="day+1"?d.nextDayRecords?.find(x=>x.position===p&&x.trigger===n):d.records.find(x=>x.position===p&&x.trigger===n&&x.lag===Number(lag));if(!item)throw Error("找不到對應統計");
+   $("#samples").textContent=item.opportunities.toLocaleString("zh-TW");$("#caption").textContent=(p===0?"當期有開出":("排序第 "+p+" 位"))+"｜觸發 "+pad(n)+"｜"+(lag==="day+1"?"隔天（下一個日曆日）":"後續第 "+lag+" 期");
    $("#rows").innerHTML=item.top.map((x,i)=>'<tr><td>'+(i+1)+'</td><td><span class="ball">'+pad(x.number)+'</span></td><td><b>'+x.hits+'</b></td><td><b>'+ (x.rate*100).toFixed(2)+'%</b></td><td class="lift">'+x.lift.toFixed(2)+' 倍</td></tr>').join("");
   }
   ["mode","number","lag"].forEach(id=>$("#"+id).addEventListener("change",render));render();
