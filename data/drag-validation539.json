@@ -1,0 +1,798 @@
+{
+  "version": "dplus1-formal-vs-position3-v1",
+  "dataThrough": "2026-11-19",
+  "trainThrough": "2021-02-16",
+  "testFrom": "2021-02-17",
+  "testPairs": 1513,
+  "method": "Exact D -> D+1 calendar-day pairs only. Expanding walk-forward. Formal multifactor weights match production: link 0, trend .30, omission .08, advanced .10. Position-3 drag uses only earlier D->D+1 pairs. Random reference is hypergeometric.",
+  "randomBaseline": {
+    "avgHits": 0.6410256410256411,
+    "atLeast1": 0.5167127798706747
+  },
+  "formalMultifactor": {
+    "pairs": 1513,
+    "avgHits": 0.6655651024454726,
+    "atLeast1": 0.5287508261731659,
+    "atLeast2": 0.12690019828155982,
+    "atLeast3": 0.00991407799074686
+  },
+  "position3DragTop5": {
+    "pairs": 1513,
+    "avgHits": 0.6768010575016523,
+    "atLeast1": 0.5465961665565102,
+    "atLeast2": 0.12029081295439524,
+    "atLeast3": 0.00991407799074686
+  },
+  "byTrigger": [
+    {
+      "trigger": 17,
+      "samples": 83,
+      "hits": 51,
+      "ge1": 46,
+      "blocks": [
+        {
+          "samples": 38,
+          "atLeast1": 0.4473684210526316
+        },
+        {
+          "samples": 26,
+          "atLeast1": 0.6153846153846154
+        },
+        {
+          "samples": 19,
+          "atLeast1": 0.6842105263157895
+        }
+      ],
+      "avgHits": 0.6144578313253012,
+      "atLeast1": 0.5542168674698795
+    },
+    {
+      "trigger": 23,
+      "samples": 76,
+      "hits": 48,
+      "ge1": 38,
+      "blocks": [
+        {
+          "samples": 23,
+          "atLeast1": 0.5217391304347826
+        },
+        {
+          "samples": 19,
+          "atLeast1": 0.5263157894736842
+        },
+        {
+          "samples": 34,
+          "atLeast1": 0.47058823529411764
+        }
+      ],
+      "avgHits": 0.631578947368421,
+      "atLeast1": 0.5
+    },
+    {
+      "trigger": 16,
+      "samples": 75,
+      "hits": 55,
+      "ge1": 43,
+      "blocks": [
+        {
+          "samples": 30,
+          "atLeast1": 0.6333333333333333
+        },
+        {
+          "samples": 30,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 15,
+          "atLeast1": 0.26666666666666666
+        }
+      ],
+      "avgHits": 0.7333333333333333,
+      "atLeast1": 0.5733333333333334
+    },
+    {
+      "trigger": 18,
+      "samples": 74,
+      "hits": 44,
+      "ge1": 36,
+      "blocks": [
+        {
+          "samples": 27,
+          "atLeast1": 0.4444444444444444
+        },
+        {
+          "samples": 25,
+          "atLeast1": 0.4
+        },
+        {
+          "samples": 22,
+          "atLeast1": 0.6363636363636364
+        }
+      ],
+      "avgHits": 0.5945945945945946,
+      "atLeast1": 0.4864864864864865
+    },
+    {
+      "trigger": 19,
+      "samples": 71,
+      "hits": 50,
+      "ge1": 37,
+      "blocks": [
+        {
+          "samples": 24,
+          "atLeast1": 0.5416666666666666
+        },
+        {
+          "samples": 22,
+          "atLeast1": 0.5909090909090909
+        },
+        {
+          "samples": 25,
+          "atLeast1": 0.44
+        }
+      ],
+      "avgHits": 0.704225352112676,
+      "atLeast1": 0.5211267605633803
+    },
+    {
+      "trigger": 21,
+      "samples": 71,
+      "hits": 45,
+      "ge1": 38,
+      "blocks": [
+        {
+          "samples": 20,
+          "atLeast1": 0.55
+        },
+        {
+          "samples": 24,
+          "atLeast1": 0.5416666666666666
+        },
+        {
+          "samples": 27,
+          "atLeast1": 0.5185185185185185
+        }
+      ],
+      "avgHits": 0.6338028169014085,
+      "atLeast1": 0.5352112676056338
+    },
+    {
+      "trigger": 20,
+      "samples": 70,
+      "hits": 47,
+      "ge1": 38,
+      "blocks": [
+        {
+          "samples": 24,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 23,
+          "atLeast1": 0.6086956521739131
+        },
+        {
+          "samples": 23,
+          "atLeast1": 0.5217391304347826
+        }
+      ],
+      "avgHits": 0.6714285714285714,
+      "atLeast1": 0.5428571428571428
+    },
+    {
+      "trigger": 15,
+      "samples": 69,
+      "hits": 41,
+      "ge1": 33,
+      "blocks": [
+        {
+          "samples": 21,
+          "atLeast1": 0.42857142857142855
+        },
+        {
+          "samples": 24,
+          "atLeast1": 0.625
+        },
+        {
+          "samples": 24,
+          "atLeast1": 0.375
+        }
+      ],
+      "avgHits": 0.5942028985507246,
+      "atLeast1": 0.4782608695652174
+    },
+    {
+      "trigger": 25,
+      "samples": 68,
+      "hits": 42,
+      "ge1": 38,
+      "blocks": [
+        {
+          "samples": 27,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 22,
+          "atLeast1": 0.5454545454545454
+        },
+        {
+          "samples": 19,
+          "atLeast1": 0.42105263157894735
+        }
+      ],
+      "avgHits": 0.6176470588235294,
+      "atLeast1": 0.5588235294117647
+    },
+    {
+      "trigger": 24,
+      "samples": 64,
+      "hits": 35,
+      "ge1": 32,
+      "blocks": [
+        {
+          "samples": 22,
+          "atLeast1": 0.45454545454545453
+        },
+        {
+          "samples": 15,
+          "atLeast1": 0.5333333333333333
+        },
+        {
+          "samples": 27,
+          "atLeast1": 0.5185185185185185
+        }
+      ],
+      "avgHits": 0.546875,
+      "atLeast1": 0.5
+    },
+    {
+      "trigger": 22,
+      "samples": 62,
+      "hits": 39,
+      "ge1": 34,
+      "blocks": [
+        {
+          "samples": 19,
+          "atLeast1": 0.5263157894736842
+        },
+        {
+          "samples": 20,
+          "atLeast1": 0.55
+        },
+        {
+          "samples": 23,
+          "atLeast1": 0.5652173913043478
+        }
+      ],
+      "avgHits": 0.6290322580645161,
+      "atLeast1": 0.5483870967741935
+    },
+    {
+      "trigger": 27,
+      "samples": 62,
+      "hits": 36,
+      "ge1": 32,
+      "blocks": [
+        {
+          "samples": 18,
+          "atLeast1": 0.3888888888888889
+        },
+        {
+          "samples": 25,
+          "atLeast1": 0.4
+        },
+        {
+          "samples": 19,
+          "atLeast1": 0.7894736842105263
+        }
+      ],
+      "avgHits": 0.5806451612903226,
+      "atLeast1": 0.5161290322580645
+    },
+    {
+      "trigger": 13,
+      "samples": 61,
+      "hits": 45,
+      "ge1": 35,
+      "blocks": [
+        {
+          "samples": 20,
+          "atLeast1": 0.65
+        },
+        {
+          "samples": 23,
+          "atLeast1": 0.5652173913043478
+        },
+        {
+          "samples": 18,
+          "atLeast1": 0.5
+        }
+      ],
+      "avgHits": 0.7377049180327869,
+      "atLeast1": 0.5737704918032787
+    },
+    {
+      "trigger": 12,
+      "samples": 60,
+      "hits": 53,
+      "ge1": 41,
+      "blocks": [
+        {
+          "samples": 15,
+          "atLeast1": 0.7333333333333333
+        },
+        {
+          "samples": 18,
+          "atLeast1": 0.6111111111111112
+        },
+        {
+          "samples": 27,
+          "atLeast1": 0.7037037037037037
+        }
+      ],
+      "avgHits": 0.8833333333333333,
+      "atLeast1": 0.6833333333333333
+    },
+    {
+      "trigger": 14,
+      "samples": 60,
+      "hits": 38,
+      "ge1": 32,
+      "blocks": [
+        {
+          "samples": 14,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 22,
+          "atLeast1": 0.5909090909090909
+        },
+        {
+          "samples": 24,
+          "atLeast1": 0.5
+        }
+      ],
+      "avgHits": 0.6333333333333333,
+      "atLeast1": 0.5333333333333333
+    },
+    {
+      "trigger": 26,
+      "samples": 55,
+      "hits": 34,
+      "ge1": 27,
+      "blocks": [
+        {
+          "samples": 16,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 20,
+          "atLeast1": 0.45
+        },
+        {
+          "samples": 19,
+          "atLeast1": 0.5263157894736842
+        }
+      ],
+      "avgHits": 0.6181818181818182,
+      "atLeast1": 0.4909090909090909
+    },
+    {
+      "trigger": 11,
+      "samples": 50,
+      "hits": 44,
+      "ge1": 30,
+      "blocks": [
+        {
+          "samples": 18,
+          "atLeast1": 0.7222222222222222
+        },
+        {
+          "samples": 15,
+          "atLeast1": 0.4666666666666667
+        },
+        {
+          "samples": 17,
+          "atLeast1": 0.5882352941176471
+        }
+      ],
+      "avgHits": 0.88,
+      "atLeast1": 0.6
+    },
+    {
+      "trigger": 28,
+      "samples": 46,
+      "hits": 32,
+      "ge1": 24,
+      "blocks": [
+        {
+          "samples": 15,
+          "atLeast1": 0.26666666666666666
+        },
+        {
+          "samples": 8,
+          "atLeast1": 0.625
+        },
+        {
+          "samples": 23,
+          "atLeast1": 0.6521739130434783
+        }
+      ],
+      "avgHits": 0.6956521739130435,
+      "atLeast1": 0.5217391304347826
+    },
+    {
+      "trigger": 31,
+      "samples": 42,
+      "hits": 32,
+      "ge1": 28,
+      "blocks": [
+        {
+          "samples": 17,
+          "atLeast1": 0.7058823529411765
+        },
+        {
+          "samples": 12,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 13,
+          "atLeast1": 0.6153846153846154
+        }
+      ],
+      "avgHits": 0.7619047619047619,
+      "atLeast1": 0.6666666666666666
+    },
+    {
+      "trigger": 29,
+      "samples": 35,
+      "hits": 23,
+      "ge1": 15,
+      "blocks": [
+        {
+          "samples": 15,
+          "atLeast1": 0.3333333333333333
+        },
+        {
+          "samples": 9,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 11,
+          "atLeast1": 0.36363636363636365
+        }
+      ],
+      "avgHits": 0.6571428571428571,
+      "atLeast1": 0.42857142857142855
+    },
+    {
+      "trigger": 10,
+      "samples": 33,
+      "hits": 24,
+      "ge1": 19,
+      "blocks": [
+        {
+          "samples": 12,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 13,
+          "atLeast1": 0.6923076923076923
+        },
+        {
+          "samples": 8,
+          "atLeast1": 0.5
+        }
+      ],
+      "avgHits": 0.7272727272727273,
+      "atLeast1": 0.5757575757575758
+    },
+    {
+      "trigger": 9,
+      "samples": 31,
+      "hits": 23,
+      "ge1": 18,
+      "blocks": [
+        {
+          "samples": 10,
+          "atLeast1": 0.6
+        },
+        {
+          "samples": 10,
+          "atLeast1": 0.7
+        },
+        {
+          "samples": 11,
+          "atLeast1": 0.45454545454545453
+        }
+      ],
+      "avgHits": 0.7419354838709677,
+      "atLeast1": 0.5806451612903226
+    },
+    {
+      "trigger": 30,
+      "samples": 29,
+      "hits": 24,
+      "ge1": 19,
+      "blocks": [
+        {
+          "samples": 7,
+          "atLeast1": 0.5714285714285714
+        },
+        {
+          "samples": 12,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 10,
+          "atLeast1": 0.7
+        }
+      ],
+      "avgHits": 0.8275862068965517,
+      "atLeast1": 0.6551724137931034
+    },
+    {
+      "trigger": 8,
+      "samples": 28,
+      "hits": 19,
+      "ge1": 13,
+      "blocks": [
+        {
+          "samples": 9,
+          "atLeast1": 0.3333333333333333
+        },
+        {
+          "samples": 7,
+          "atLeast1": 0.5714285714285714
+        },
+        {
+          "samples": 12,
+          "atLeast1": 0.5
+        }
+      ],
+      "avgHits": 0.6785714285714286,
+      "atLeast1": 0.4642857142857143
+    },
+    {
+      "trigger": 7,
+      "samples": 26,
+      "hits": 21,
+      "ge1": 17,
+      "blocks": [
+        {
+          "samples": 9,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 6,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 11,
+          "atLeast1": 0.6363636363636364
+        }
+      ],
+      "avgHits": 0.8076923076923077,
+      "atLeast1": 0.6538461538461539
+    },
+    {
+      "trigger": 32,
+      "samples": 25,
+      "hits": 18,
+      "ge1": 15,
+      "blocks": [
+        {
+          "samples": 7,
+          "atLeast1": 0.5714285714285714
+        },
+        {
+          "samples": 10,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 8,
+          "atLeast1": 0.75
+        }
+      ],
+      "avgHits": 0.72,
+      "atLeast1": 0.6
+    },
+    {
+      "trigger": 33,
+      "samples": 25,
+      "hits": 21,
+      "ge1": 14,
+      "blocks": [
+        {
+          "samples": 6,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 14,
+          "atLeast1": 0.5714285714285714
+        },
+        {
+          "samples": 5,
+          "atLeast1": 0.4
+        }
+      ],
+      "avgHits": 0.84,
+      "atLeast1": 0.56
+    },
+    {
+      "trigger": 5,
+      "samples": 13,
+      "hits": 6,
+      "ge1": 6,
+      "blocks": [
+        {
+          "samples": 3,
+          "atLeast1": 0
+        },
+        {
+          "samples": 6,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 4,
+          "atLeast1": 0.75
+        }
+      ],
+      "avgHits": 0.46153846153846156,
+      "atLeast1": 0.46153846153846156
+    },
+    {
+      "trigger": 6,
+      "samples": 12,
+      "hits": 6,
+      "ge1": 5,
+      "blocks": [
+        {
+          "samples": 4,
+          "atLeast1": 0.25
+        },
+        {
+          "samples": 5,
+          "atLeast1": 0.6
+        },
+        {
+          "samples": 3,
+          "atLeast1": 0.3333333333333333
+        }
+      ],
+      "avgHits": 0.5,
+      "atLeast1": 0.4166666666666667
+    },
+    {
+      "trigger": 35,
+      "samples": 12,
+      "hits": 8,
+      "ge1": 7,
+      "blocks": [
+        {
+          "samples": 6,
+          "atLeast1": 0.6666666666666666
+        },
+        {
+          "samples": 5,
+          "atLeast1": 0.4
+        },
+        {
+          "samples": 1,
+          "atLeast1": 1
+        }
+      ],
+      "avgHits": 0.6666666666666666,
+      "atLeast1": 0.5833333333333334
+    },
+    {
+      "trigger": 34,
+      "samples": 11,
+      "hits": 9,
+      "ge1": 8,
+      "blocks": [
+        {
+          "samples": 5,
+          "atLeast1": 0.6
+        },
+        {
+          "samples": 5,
+          "atLeast1": 0.8
+        },
+        {
+          "samples": 1,
+          "atLeast1": 1
+        }
+      ],
+      "avgHits": 0.8181818181818182,
+      "atLeast1": 0.7272727272727273
+    },
+    {
+      "trigger": 36,
+      "samples": 6,
+      "hits": 4,
+      "ge1": 3,
+      "blocks": [
+        {
+          "samples": 1,
+          "atLeast1": 0
+        },
+        {
+          "samples": 4,
+          "atLeast1": 0.5
+        },
+        {
+          "samples": 1,
+          "atLeast1": 1
+        }
+      ],
+      "avgHits": 0.6666666666666666,
+      "atLeast1": 0.5
+    },
+    {
+      "trigger": 4,
+      "samples": 5,
+      "hits": 4,
+      "ge1": 4,
+      "blocks": [
+        {
+          "samples": 1,
+          "atLeast1": 1
+        },
+        {
+          "samples": 2,
+          "atLeast1": 1
+        },
+        {
+          "samples": 2,
+          "atLeast1": 0.5
+        }
+      ],
+      "avgHits": 0.8,
+      "atLeast1": 0.8
+    },
+    {
+      "trigger": 37,
+      "samples": 2,
+      "hits": 3,
+      "ge1": 2,
+      "blocks": [
+        {
+          "samples": 0,
+          "atLeast1": null
+        },
+        {
+          "samples": 1,
+          "atLeast1": 1
+        },
+        {
+          "samples": 1,
+          "atLeast1": 1
+        }
+      ],
+      "avgHits": 1.5,
+      "atLeast1": 1
+    },
+    {
+      "trigger": 3,
+      "samples": 1,
+      "hits": 0,
+      "ge1": 0,
+      "blocks": [
+        {
+          "samples": 0,
+          "atLeast1": null
+        },
+        {
+          "samples": 0,
+          "atLeast1": null
+        },
+        {
+          "samples": 1,
+          "atLeast1": 0
+        }
+      ],
+      "avgHits": 0,
+      "atLeast1": 0
+    }
+  ]
+}
