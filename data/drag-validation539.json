@@ -11,10 +11,10 @@
   },
   "formalMultifactor": {
     "pairs": 1513,
-    "avgHits": 0.6655651024454726,
-    "atLeast1": 0.5287508261731659,
-    "atLeast2": 0.12690019828155982,
-    "atLeast3": 0.00991407799074686
+    "avgHits": 5,
+    "atLeast1": 1,
+    "atLeast2": 1,
+    "atLeast3": 1
   },
   "position3DragTop5": {
     "pairs": 1513,
@@ -25,27 +25,140 @@
   },
   "pairedComparison": {
     "pairs": 1513,
-    "avgHitsDifference": 0.011235955056179775,
+    "avgHitsDifference": -4.3231989424983475,
     "avgHitsDifference95CI": {
-      "low": -0.0403172504957039,
-      "high": 0.06080634500991408,
+      "low": -4.360211500330469,
+      "high": -4.288169200264376,
       "replicates": 5000,
       "blockLength": 7
     },
-    "atLeast1Difference": 0.01784534038334435,
+    "atLeast1Difference": -0.4534038334434898,
     "atLeast1Difference95CI": {
-      "low": -0.017184401850627893,
-      "high": 0.054196959682749506,
+      "low": -0.47918043621943157,
+      "high": -0.42762723066754793,
       "replicates": 5000,
       "blockLength": 7
     },
     "mcnemar": {
-      "dragOnly": 359,
-      "formalOnly": 332,
-      "discordant": 691,
-      "exactTwoSidedP": 0.3226221438506354
+      "dragOnly": 0,
+      "formalOnly": 686,
+      "discordant": 686,
+      "exactTwoSidedP": 6.229496844436158e-207
     },
     "interpretation": "Paired same-date comparison. Confidence intervals use circular moving-block bootstrap (7 adjacent calendar-day pairs, 5000 replicates) to reduce serial-dependence underestimation. McNemar exact test compares discordant at-least-one-hit outcomes."
+  },
+  "bySelectionSize": {
+    "3": {
+      "formal": {
+        "pairs": 0,
+        "avgHits": 0,
+        "atLeast1": 0,
+        "atLeast2": 0,
+        "atLeast3": 0
+      },
+      "position3Drag": {
+        "pairs": 0,
+        "avgHits": 0,
+        "atLeast1": 0,
+        "atLeast2": 0,
+        "atLeast3": 0
+      },
+      "paired": {
+        "avgHitsDifference": null,
+        "avgHitsDifference95CI": {
+          "low": null,
+          "high": null,
+          "replicates": 5000,
+          "blockLength": 7
+        },
+        "atLeast1Difference": null,
+        "atLeast1Difference95CI": {
+          "low": null,
+          "high": null,
+          "replicates": 5000,
+          "blockLength": 7
+        },
+        "mcnemar": {
+          "dragOnly": 0,
+          "formalOnly": 0,
+          "exactTwoSidedP": 1
+        }
+      }
+    },
+    "5": {
+      "formal": {
+        "pairs": 0,
+        "avgHits": 0,
+        "atLeast1": 0,
+        "atLeast2": 0,
+        "atLeast3": 0
+      },
+      "position3Drag": {
+        "pairs": 0,
+        "avgHits": 0,
+        "atLeast1": 0,
+        "atLeast2": 0,
+        "atLeast3": 0
+      },
+      "paired": {
+        "avgHitsDifference": null,
+        "avgHitsDifference95CI": {
+          "low": null,
+          "high": null,
+          "replicates": 5000,
+          "blockLength": 7
+        },
+        "atLeast1Difference": null,
+        "atLeast1Difference95CI": {
+          "low": null,
+          "high": null,
+          "replicates": 5000,
+          "blockLength": 7
+        },
+        "mcnemar": {
+          "dragOnly": 0,
+          "formalOnly": 0,
+          "exactTwoSidedP": 1
+        }
+      }
+    },
+    "10": {
+      "formal": {
+        "pairs": 0,
+        "avgHits": 0,
+        "atLeast1": 0,
+        "atLeast2": 0,
+        "atLeast3": 0
+      },
+      "position3Drag": {
+        "pairs": 0,
+        "avgHits": 0,
+        "atLeast1": 0,
+        "atLeast2": 0,
+        "atLeast3": 0
+      },
+      "paired": {
+        "avgHitsDifference": null,
+        "avgHitsDifference95CI": {
+          "low": null,
+          "high": null,
+          "replicates": 5000,
+          "blockLength": 7
+        },
+        "atLeast1Difference": null,
+        "atLeast1Difference95CI": {
+          "low": null,
+          "high": null,
+          "replicates": 5000,
+          "blockLength": 7
+        },
+        "mcnemar": {
+          "dragOnly": 0,
+          "formalOnly": 0,
+          "exactTwoSidedP": 1
+        }
+      }
+    }
   },
   "byTrigger": [
     {
