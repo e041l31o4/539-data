@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 const DATA = "data/daily539.json";
 const OUT = "data/predictions539.json";
-const MODEL_VERSION = "twohit-priority-v1.3-position-drag-archived";
+const MODEL_VERSION = "twohit-priority-v1.3.1-position-drag-archived";
 const baseRate = 5 / 39;
 
 function gaps(draws) {
