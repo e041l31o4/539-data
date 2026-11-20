@@ -292,8 +292,10 @@ function main() {
     pendingLatest.modelVersion = MODEL_VERSION;
     pendingLatest.top5 = ranking.slice(0, 5).map(x => x.n);
     pendingLatest.backup5 = ranking.slice(5, 10).map(x => x.n);
+    pendingLatest.modelFactors = { baseRankWeight: 0.95, positionDragRankWeight: 0.05, positions: [1, 2, 3, 4, 5], includesAnyPositionTrigger: true, nextDrawHorizons: [1, 2, 3, 4, 5], exactCalendarDPlus1: true };
     pendingLatest.ranking = ranking.map((x, i) => ({
-      rank: i + 1, number: x.n, score: x.score,
+      rank: i + 1, number: x.n, score: x.score, baseScore: x.baseScore,
+      dragScore: x.dragScore, dragRank: x.dragRank,
       linkScore: x.linkScore, trend: x.trend, omission: x.omission
     }));
     pendingLatest.experimentalModels = {
