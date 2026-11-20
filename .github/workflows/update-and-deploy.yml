@@ -42,11 +42,13 @@ jobs:
         run: node scripts/combo-objective-lab.mjs
       - name: Rebuild number drag-link analysis and holdout validation
         run: node scripts/backtest-drag-links.mjs
+      - name: Compare position-3 drag against formal model on matched D+1 dates
+        run: node scripts/backtest-drag-vs-formal.mjs
       - name: Commit updated dataset and prediction archive
         run: |
           git config user.name "539-data-bot"
           git config user.email "539-data-bot@users.noreply.github.com"
-          git add data/daily539.json data/predictions539.json data/model-backtest539.json data/combo-objective-lab539.json data/drag-links539.json
+          git add data/daily539.json data/predictions539.json data/model-backtest539.json data/combo-objective-lab539.json data/drag-links539.json data/drag-validation539.json
           if ! git diff --cached --quiet; then
             git commit -m "data: refresh official 539 results"
             git pull --rebase origin main
