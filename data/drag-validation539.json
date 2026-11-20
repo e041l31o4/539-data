@@ -23,6 +23,30 @@
     "atLeast2": 0.12029081295439524,
     "atLeast3": 0.00991407799074686
   },
+  "pairedComparison": {
+    "pairs": 1513,
+    "avgHitsDifference": 0.011235955056179775,
+    "avgHitsDifference95CI": {
+      "low": -0.0403172504957039,
+      "high": 0.06080634500991408,
+      "replicates": 5000,
+      "blockLength": 7
+    },
+    "atLeast1Difference": 0.01784534038334435,
+    "atLeast1Difference95CI": {
+      "low": -0.017184401850627893,
+      "high": 0.054196959682749506,
+      "replicates": 5000,
+      "blockLength": 7
+    },
+    "mcnemar": {
+      "dragOnly": 359,
+      "formalOnly": 332,
+      "discordant": 691,
+      "exactTwoSidedP": 0.3226221438506354
+    },
+    "interpretation": "Paired same-date comparison. Confidence intervals use circular moving-block bootstrap (7 adjacent calendar-day pairs, 5000 replicates) to reduce serial-dependence underestimation. McNemar exact test compares discordant at-least-one-hit outcomes."
+  },
   "byTrigger": [
     {
       "trigger": 17,
