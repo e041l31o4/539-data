@@ -155,8 +155,8 @@ function binomialUpperTail(k,n,p){
 }
 const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,structure:10};function ranking(a){const m=models(a),sum=Object.values(weights).reduce((x,y)=>x+y,0);return Array.from({length:39},(_,i)=>{let n=i+1,s=Object.keys(weights).reduce((v,k)=>v+weights[k]/sum*m[k][n],0);return{n,score:s}}).sort((x,y)=>y.score-x.score||x.n-y.n)}function recommendations(a){if(a.length<100)return null;let r=ranking(a);return{main:r.slice(0,5).map(x=>x.n).sort((x,y)=>x-y),alt:r.slice(5,10).map(x=>x.n).sort((x,y)=>x-y),rank:r}}function renderOverview(){const last=draws.at(-1),first=draws[0];$("#totalDraws").textContent=fmt(draws.length);$("#latestPeriod").textContent=last?.period||"—";$("#latestDate").textContent=last?.date||"尚無紀錄";$("#dateRange").textContent=first&&last?first.date+" — "+last.date:"尚未建立";$("#updatedAt").textContent=window.datasetUpdated?new Date(window.datasetUpdated).toLocaleString("zh-TW"):"尚未同步";$("#dataStatus").textContent=draws.length?"資料可用":"等待資料";if(last){const f=freq(draws.slice(-30));let hot=Array.from({length:39},(_,i)=>i+1).sort((a,b)=>f[b]-f[a]||a-b).slice(0,3);$("#hotNumber").textContent=hot.map(n=>String(n).padStart(2,"0")).join(" · ")}}function renderRecommend(){
  if(draws.length<150){$("#mainPicks").innerHTML='<span class="empty">資料不足，至少需要 150 期才能進行方法驗證。</span>';return}
- const best="二星優先趨勢融合 v1.2";
- // 正式版唯一推薦來源：二星優先趨勢融合 v1.2（移除未證實的歷史關聯因子）。相同歷史資料必定得到相同排序。
+ const best="正式融合模型 v1.1";
+ // 正式版唯一推薦來源：多因子融合＋位置拖牌排序。拖牌以小權重參與綜合排名，並持續以前瞻結算驗證。相同歷史資料必定得到相同排序。
  const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
  // 拖牌分析已融入正式綜合排名：五個排序位置、當期不分位置觸發、下一期至第5期與精確D+1。
  const dragRanking=positionDragRanking(draws);
@@ -208,7 +208,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  $("#sampleCount").textContent=fmt(draws.length)+" 期歷史資料";
  const pill=document.querySelector(".recommend-card .pill");if(pill)pill.textContent="正式推薦 TOP 5";
  let feedback=$("#adaptiveFeedback");if(!feedback){feedback=document.createElement("div");feedback.id="adaptiveFeedback";feedback.className="notice";$("#recommend").appendChild(feedback)}
- feedback.innerHTML="<b>正式模型規格｜版本 1.0</b><span>唯一推薦來源：多因子連動融合＋位置拖牌訊號。原模型排序占 95%，拖牌綜合排序占 5%；拖牌同時納入官方排序第1～5位、當期五碼不分位置觸發、下一期至第5期，以及精確日曆 D+1。所有統計只使用最新一期之前的歷史資料。相同資料必定產生相同排序；分數是排序值，不是中獎機率。</span>";
+ feedback.innerHTML="<b>正式模型規格｜版本 1.1</b><span>唯一推薦來源：多因子連動融合＋位置拖牌訊號。原模型排序占 95%，拖牌綜合排序占 5%；拖牌同時納入官方排序第1～5位、當期五碼不分位置觸發、下一期至第5期，以及精確日曆 D+1。所有統計只使用最新一期之前的歷史資料。相同資料必定產生相同排序；分數是排序值，不是中獎機率。</span>";
  const tf=tailFreq(draws.slice(-100)),sizes=[3,4,4,4,4,4,4,4,4,4];let tr=tf.map((v,i)=>({tail:i,score:v/sizes[i]})).sort((a,b)=>b.score-a.score).slice(0,3);
  $("#tailRanks").innerHTML=tr.map(x=>'<div class="tail-item"><b>'+x.tail+" 尾</b><small>"+x.score.toFixed(1)+" 次/號</small></div>").join("")
 }function renderSequence(){/* 已簡化：詳細條件關聯不再佔用首頁版面 */}
