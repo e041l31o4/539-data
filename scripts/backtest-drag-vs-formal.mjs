@@ -29,7 +29,8 @@ for(let i=split;i<draws.length-1;i++){
  const dt=new Date(draws[i].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const j=dateIndex.get(dt.toISOString().slice(0,10));
  if(j!==undefined&&j===i+1){
   const actual=new Set(draws[j].numbers),formalRanked=formalRank(j,state),fp=formalRanked.slice(0,5),fh=fp.filter(n=>actual.has(n)).length;record(formal,fh);
-  const trig=draws[i].numbers[2],rank=Array.from({length:39},(_,k)=>k+1).map(n=>({n,rate:p3Opp[trig]?p3Counts[trig][n]/p3Opp[trig]:0,h:p3Counts[trig][n]})).sort((a,b)=>b.rate-a.rate||b.h-a.h||a.n-b.n),pp=rank.slice(0,5).map(x=>x.n),ph=pp.filter(n=>actual.has(n)).length;record(p3,ph);paired.push({date:draws[j].date,formalHits:fh,dragHits:ph,formalGe1:fh>0,dragGe1:ph>0});\n  for(const k of [3,5,10]){const f=formalRanked.slice(0,k).filter(n=>actual.has(n)).length,d=rank.slice(0,k).filter(x=>actual.has(x.n)).length,z=sizeResults[k];record(z.formal,f);record(z.drag,d);z.pairs.push({formalHits:f,dragHits:d,formalGe1:f>0,dragGe1:d>0});}
+  const trig=draws[i].numbers[2],rank=Array.from({length:39},(_,k)=>k+1).map(n=>({n,rate:p3Opp[trig]?p3Counts[trig][n]/p3Opp[trig]:0,h:p3Counts[trig][n]})).sort((a,b)=>b.rate-a.rate||b.h-a.h||a.n-b.n),pp=rank.slice(0,5).map(x=>x.n),ph=pp.filter(n=>actual.has(n)).length;record(p3,ph);paired.push({date:draws[j].date,formalHits:fh,dragHits:ph,formalGe1:fh>0,dragGe1:ph>0});
+  for(const k of [3,5,10]){const f=formalRanked.slice(0,k).filter(n=>actual.has(n)).length,d=rank.slice(0,k).filter(x=>actual.has(x.n)).length,z=sizeResults[k];record(z.formal,f);record(z.drag,d);z.pairs.push({formalHits:f,dragHits:d,formalGe1:f>0,dragGe1:d>0});}
   const s=byTrigger[trig],bi=Math.min(2,Math.floor((i-split)/blockSize));s.samples++;s.hits+=ph;if(ph>0)s.ge1++;s.blocks[bi].n++;if(ph>0)s.blocks[bi].ge1++;
   record(random,draws[j].numbers.filter(n=>n<=5).length);addP3(draws[i],draws[j]);
  }
