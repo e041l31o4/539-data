@@ -1,6 +1,239 @@
 {
   "version": "position3-forward-v1",
-  "updatedAt": null,
-  "dataThrough": null,
-  "predictions": []
+  "updatedAt": "2026-11-20T03:17:41.442Z",
+  "dataThrough": "2026-11-19",
+  "predictions": [
+    {
+      "id": "115000280-position3-forward-v1",
+      "createdAt": "2026-11-20T03:17:41.441Z",
+      "sourcePeriod": "115000280",
+      "sourceDate": "2026-11-19",
+      "sourceNumbers": [
+        2,
+        10,
+        23,
+        24,
+        37
+      ],
+      "triggerPosition": 3,
+      "triggerNumber": 23,
+      "trainingPairs": 304,
+      "trainingThrough": "2026-11-18",
+      "formalTop5": [
+        30,
+        2,
+        32,
+        28,
+        8
+      ],
+      "dragTop5": [
+        1,
+        12,
+        32,
+        17,
+        33
+      ],
+      "dragRanking": [
+        {
+          "number": 1,
+          "hits": 52,
+          "rate": 0.17105263157894737
+        },
+        {
+          "number": 12,
+          "hits": 49,
+          "rate": 0.1611842105263158
+        },
+        {
+          "number": 32,
+          "hits": 49,
+          "rate": 0.1611842105263158
+        },
+        {
+          "number": 17,
+          "hits": 48,
+          "rate": 0.15789473684210525
+        },
+        {
+          "number": 33,
+          "hits": 47,
+          "rate": 0.15460526315789475
+        },
+        {
+          "number": 16,
+          "hits": 46,
+          "rate": 0.1513157894736842
+        },
+        {
+          "number": 22,
+          "hits": 44,
+          "rate": 0.14473684210526316
+        },
+        {
+          "number": 37,
+          "hits": 44,
+          "rate": 0.14473684210526316
+        },
+        {
+          "number": 10,
+          "hits": 43,
+          "rate": 0.14144736842105263
+        },
+        {
+          "number": 11,
+          "hits": 43,
+          "rate": 0.14144736842105263
+        },
+        {
+          "number": 19,
+          "hits": 42,
+          "rate": 0.13815789473684212
+        },
+        {
+          "number": 23,
+          "hits": 42,
+          "rate": 0.13815789473684212
+        },
+        {
+          "number": 35,
+          "hits": 42,
+          "rate": 0.13815789473684212
+        },
+        {
+          "number": 38,
+          "hits": 42,
+          "rate": 0.13815789473684212
+        },
+        {
+          "number": 28,
+          "hits": 41,
+          "rate": 0.13486842105263158
+        },
+        {
+          "number": 29,
+          "hits": 41,
+          "rate": 0.13486842105263158
+        },
+        {
+          "number": 39,
+          "hits": 41,
+          "rate": 0.13486842105263158
+        },
+        {
+          "number": 2,
+          "hits": 40,
+          "rate": 0.13157894736842105
+        },
+        {
+          "number": 18,
+          "hits": 40,
+          "rate": 0.13157894736842105
+        },
+        {
+          "number": 21,
+          "hits": 39,
+          "rate": 0.12828947368421054
+        },
+        {
+          "number": 27,
+          "hits": 39,
+          "rate": 0.12828947368421054
+        },
+        {
+          "number": 36,
+          "hits": 39,
+          "rate": 0.12828947368421054
+        },
+        {
+          "number": 3,
+          "hits": 38,
+          "rate": 0.125
+        },
+        {
+          "number": 4,
+          "hits": 38,
+          "rate": 0.125
+        },
+        {
+          "number": 6,
+          "hits": 38,
+          "rate": 0.125
+        },
+        {
+          "number": 14,
+          "hits": 38,
+          "rate": 0.125
+        },
+        {
+          "number": 5,
+          "hits": 35,
+          "rate": 0.11513157894736842
+        },
+        {
+          "number": 7,
+          "hits": 35,
+          "rate": 0.11513157894736842
+        },
+        {
+          "number": 15,
+          "hits": 35,
+          "rate": 0.11513157894736842
+        },
+        {
+          "number": 25,
+          "hits": 35,
+          "rate": 0.11513157894736842
+        },
+        {
+          "number": 9,
+          "hits": 34,
+          "rate": 0.1118421052631579
+        },
+        {
+          "number": 24,
+          "hits": 34,
+          "rate": 0.1118421052631579
+        },
+        {
+          "number": 26,
+          "hits": 34,
+          "rate": 0.1118421052631579
+        },
+        {
+          "number": 13,
+          "hits": 32,
+          "rate": 0.10526315789473684
+        },
+        {
+          "number": 20,
+          "hits": 31,
+          "rate": 0.10197368421052631
+        },
+        {
+          "number": 34,
+          "hits": 29,
+          "rate": 0.09539473684210527
+        },
+        {
+          "number": 31,
+          "hits": 28,
+          "rate": 0.09210526315789473
+        },
+        {
+          "number": 8,
+          "hits": 27,
+          "rate": 0.08881578947368421
+        },
+        {
+          "number": 30,
+          "hits": 26,
+          "rate": 0.08552631578947369
+        }
+      ],
+      "calendarNextDay": {
+        "status": "pending",
+        "targetDate": "2026-11-20"
+      }
+    }
+  ]
 }
