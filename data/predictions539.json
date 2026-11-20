@@ -1,6 +1,6 @@
 {
-  "modelVersion": "twohit-priority-v1.3-position-drag-archived",
-  "updatedAt": "2026-11-20T03:39:47.017Z",
+  "modelVersion": "twohit-priority-v1.3.1-position-drag-archived",
+  "updatedAt": "2026-11-20T03:46:12.392Z",
   "predictions": [
     {
       "id": "115000274-multifactor-v1.1-archived",
@@ -2301,8 +2301,8 @@
       }
     },
     {
-      "id": "115000280-twohit-priority-v1.3-position-drag-archived",
-      "modelVersion": "twohit-priority-v1.3-position-drag-archived",
+      "id": "115000280-twohit-priority-v1.3.1-position-drag-archived",
+      "modelVersion": "twohit-priority-v1.3.1-position-drag-archived",
       "createdAt": "2026-11-19T14:42:31.412Z",
       "target": "next-draw",
       "sourcePeriod": "115000280",
@@ -2687,6 +2687,24 @@
         {
           "modelVersion": "twohit-priority-v1.2-archived",
           "revisedAt": "2026-11-20T03:39:47.017Z",
+          "top5": [
+            30,
+            2,
+            32,
+            28,
+            8
+          ],
+          "backup5": [
+            35,
+            34,
+            38,
+            14,
+            17
+          ]
+        },
+        {
+          "modelVersion": "twohit-priority-v1.3-position-drag-archived",
+          "revisedAt": "2026-11-20T03:46:12.392Z",
           "top5": [
             30,
             2,
