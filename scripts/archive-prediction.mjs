@@ -329,12 +329,13 @@ function main() {
       sourceDate: latest.date,
       top5: ranking.slice(0, 5).map(x => x.n),
       backup5: ranking.slice(5, 10).map(x => x.n),
+      modelFactors: { baseRankWeight: 0.95, positionDragRankWeight: 0.05, positions: [1, 2, 3, 4, 5], includesAnyPositionTrigger: true, nextDrawHorizons: [1, 2, 3, 4, 5], exactCalendarDPlus1: true },
       experimentalModels: {
         twoStar: { version: "ablate-link-v1", objective: "優先檢驗中二星以上比例", top5: experimental.twoStar },
         tripleChallenge: { version: "turnover-0.5sd-v1", objective: "降低連續重複、觀察三星以上比例", top5: experimental.tripleChallenge },
         adaptive: { version: "adaptive-rank-ensemble-v1", objective: "依最近100期策略實績動態調整權重，獨立追蹤未來命中", ...adaptive }
       },
-      ranking: ranking.map((x, i) => ({ rank: i + 1, number: x.n, score: x.score, linkScore: x.linkScore, trend: x.trend, omission: x.omission }))
+      ranking: ranking.map((x, i) => ({ rank: i + 1, number: x.n, score: x.score, baseScore: x.baseScore, dragScore: x.dragScore, dragRank: x.dragRank, linkScore: x.linkScore, trend: x.trend, omission: x.omission }))
     });
     changed = true;
   }
