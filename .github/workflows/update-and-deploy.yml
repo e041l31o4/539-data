@@ -51,7 +51,7 @@ jobs:
           git add data/daily539.json data/predictions539.json data/model-backtest539.json data/combo-objective-lab539.json data/drag-links539.json data/drag-validation539.json
           if ! git diff --cached --quiet; then
             git commit -m "data: refresh official 539 results"
-            git pull --rebase origin main
+            git pull --rebase -X theirs origin main
             git push origin HEAD:main
           fi
       - name: Upload site
