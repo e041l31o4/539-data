@@ -268,7 +268,8 @@ function main() {
     pendingLatest.modelVersion !== MODEL_VERSION ||
     !pendingLatest.experimentalModels?.adaptive ||
     !pendingLatest.experimentalModels?.twoStar ||
-    !pendingLatest.experimentalModels?.tripleChallenge
+    !pendingLatest.experimentalModels?.tripleChallenge ||
+    !pendingLatest.modelFactors?.positionDragRankWeight
   )) {
     const ranking = multiFactorRanking(draws);
     const previousTop5 = archive.predictions
