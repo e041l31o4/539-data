@@ -128,28 +128,9 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
  const best="二星優先趨勢融合 v1.2";
  // 正式版唯一推薦來源：二星優先趨勢融合 v1.2（移除未證實的歷史關聯因子）。相同歷史資料必定得到相同排序。
  const currentRanking=multiFactorRanking(draws),mainRows=currentRanking.slice(0,5),altRows=currentRanking.slice(5,10),main=mainRows.map(x=>x.n),alt=altRows.map(x=>x.n);
- // 拖牌關聯先列為獨立實驗因子：依最新一期排序位置，合併各觸發號碼的下一期歷史拖牌率；尚未通過樣本外驗證前不改正式TOP5權重。
- const triggerNumbers=draws.at(-1).numbers;
- const dragCandidates=Array.from({length:39},(_,i)=>i+1);
- const dragStats=dragCandidates.map(n=>{
-  let weighted=0,total=0,sources=0;
-  if(dragLinkData)triggerNumbers.forEach((trigger,i)=>{
-   const row=dragLinkData.records.find(x=>x.position===i+1&&x.trigger===trigger&&x.lag===1);
-   const hit=row?.top.find(x=>x.number===n);
-   if(hit&&row.opportunities){weighted+=hit.rate*row.opportunities;total+=row.opportunities;sources++}
-  });
-  return {n,rate:total?weighted/total:0,samples:total,sources};
- }).sort((a,b)=>b.rate-a.rate||b.samples-a.samples||a.n-b.n);
- const dragRank=new Map(dragStats.map((x,i)=>[x.n,{...x,rank:i+1}]));
- const nextDayStats=dragCandidates.map(n=>{
-  let weighted=0,total=0,sources=0;
-  if(dragLinkData)triggerNumbers.forEach((trigger,i)=>{
-   const row=dragLinkData.nextDayRecords?.find(x=>x.position===i+1&&x.trigger===trigger);
-   const hit=row?.top.find(x=>x.number===n);
-   if(hit&&row.opportunities){weighted+=hit.rate*row.opportunities;total+=row.opportunities;sources++}
-  });
-  return {n,rate:total?weighted/total:0,samples:total,sources};
- }).sort((a,b)=>b.rate-a.rate||b.samples-a.samples||a.n-b.n);
+ // 拖牌分析已融入正式綜合排名：五個排序位置、當期不分位置觸發、下一期至第5期與精確D+1。
+ const dragRanking=positionDragRanking(draws);
+ const dragRank=new Map(dragRanking.map(x=>[x.n,{...x}]));
  $("#mainPicks").innerHTML=mainRows.map((x,i)=>'<button type="button" class="pick-ball-button" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><span class="ball">'+String(x.n).padStart(2,"0")+'</span></button>').join("");$("#altPicks").innerHTML=altRows.map((x,i)=>'<span class="backup-pick"><small>#'+(i+6)+'</small><span class="ball">'+String(x.n).padStart(2,"0")+'</span></span>').join("");
  const last=draws.at(-1),f30=freq(draws.slice(-30)),f100=freq(draws.slice(-100)),g=gaps(draws);
  const universe=Array.from({length:39},(_,i)=>i+1);
@@ -179,8 +160,8 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
    '<div class="number-detail-block"><b>不同期距的重複觀察</b><p>'+lagSummary+'</p></div><div class="number-detail-block"><b>連動樣本明細</b><p>單號、雙號、三碼組合均以歷史條件出現次數計算，並依樣本數平滑收縮。此號碼連動訊號共有 '+factor.parts.length+' 筆條件紀錄。</p></div><div class="number-detail-block"><b>近期期數表現</b><p>近30期：'+f30[n]+' 次｜近100期：'+f100[n]+' 次｜目前遺漏：'+g[n]+' 期｜全歷史：'+freq(draws)[n]+' 次</p></div><small class="muted">分數是模型排序工具，不是下一期開出的真實機率。公平獨立開獎下，單一號碼理論出現率為5/39；歷史連動不代表因果或未來保證。</small>';
  };
  let reasonBox=$("#pickReasons");if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
- reasonBox.innerHTML='<div class="panel-head"><b>最新一期位置拖牌觀察 TOP 10</b><span class="muted">實驗因子｜未納入正式TOP5權重</span></div><div class="number-rank-grid">'+dragStats.slice(0,10).map((x,i)=>'<div class="number-rank"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,'0')+'</b><small>'+(x.rate*100).toFixed(2)+'%</small></div>').join('')+'</div><p class="number-rank-note">依最新一期五個排序位置的觸發號碼，合併歷史下一期拖牌率；每一個號碼最多只納入前10關聯清單，未列入者不代表命中率為零。此項先作分析參考，不直接改變正式推薦排序。</p><div class="panel-head"><b>1～39 號碼完整推薦排名</b><span class="muted">點選任一號碼查看完整分析</span></div><div class="number-rank-grid">'+allRanks.map((x,i)=>'<button type="button" class="number-rank '+(main.includes(x.n)?"is-top":"")+'" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+x.score.toFixed(3)+'</small></button>').join("")+'</div><div class="number-detail-modal" id="numberDetailModal" hidden><div class="number-detail-card"><button type="button" class="detail-close" aria-label="關閉">×</button><div id="numberDetailContent"></div></div></div><p class="number-rank-note">前五名為目前模型綜合排序；其他34碼仍可點選查看分數、連動樣本、期距表現及落後原因。分數不等於開獎機率。</p>';
- reasonBox.insertAdjacentHTML("afterbegin",'<div class="panel-head"><b>最新一期位置「隔天」拖牌 TOP 10</b><span class="muted">次一日曆日｜獨立統計</span></div><div class="number-rank-grid">'+nextDayStats.slice(0,10).map((x,i)=>'<div class="number-rank"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+(x.rate*100).toFixed(2)+'%</small></div>').join('')+'</div><p class="number-rank-note">依最新一期五個排序位置的觸發號碼，統計下一個日曆日有開獎時的拖牌率；無次日開獎的日期不納入樣本。</p>');
+ reasonBox.innerHTML='<div class="panel-head"><b>正式推薦 TOP5｜已整合拖牌分析</b><span class="muted">拖牌訊號占綜合排名 5%</span></div><div class="number-rank-grid">'+mainRows.map((x,i)=>'<div class="number-rank is-top"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,'0')+'</b><small>拖牌第 '+dragRank.get(x.n).rank+' 名</small></div>').join('')+'</div><div class="panel-head"><b>1～39 號碼完整推薦排名</b><span class="muted">點選任一號碼查看完整分析</span></div><div class="number-rank-grid">'+allRanks.map((x,i)=>'<button type="button" class="number-rank '+(main.includes(x.n)?"is-top":"")+'" data-number="'+x.n+'"><span class="rank-no">#'+(i+1)+'</span><b>'+String(x.n).padStart(2,"0")+'</b><small>'+x.score.toFixed(3)+'</small></button>').join("")+'</div><div class="number-detail-modal" id="numberDetailModal" hidden><div class="number-detail-card"><button type="button" class="detail-close" aria-label="關閉">×</button><div id="numberDetailContent"></div></div></div><p class="number-rank-note">前五名為目前模型綜合排序；其他34碼仍可點選查看分數、連動樣本、期距表現及落後原因。分數不等於開獎機率。</p>';
+
  // 將分析函式掛到 window，讓全頁事件委派能穩定呼叫，不受區塊重繪影響。
  window.show539NumberDetail=(number)=>{
   const modal=document.querySelector("#numberDetailModal"),content=document.querySelector("#numberDetailContent");
@@ -193,11 +174,11 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   }
  };
 
- $("#recommendBasis").textContent="正式固定模型 v1.0｜固定參數";
+ $("#recommendBasis").textContent="正式融合模型 v1.1｜固定參數";
  $("#sampleCount").textContent=fmt(draws.length)+" 期歷史資料";
  const pill=document.querySelector(".recommend-card .pill");if(pill)pill.textContent="正式推薦 TOP 5";
  let feedback=$("#adaptiveFeedback");if(!feedback){feedback=document.createElement("div");feedback.id="adaptiveFeedback";feedback.className="notice";$("#recommend").appendChild(feedback)}
- feedback.innerHTML="<b>正式模型規格｜版本 1.0</b><span>唯一推薦來源：多因子連動融合。固定權重：歷史條件連動 52%、近30／90／365期頻率趨勢 30%、目前遺漏調整 8%、平滑頻率偏離 10%。同分時依距離 20 的差值、再依號碼小到大排序。相同歷史資料與參數必定產生相同結果；僅在官方開獎資料更新後改算。分數是排序值，不是中獎機率。</span>";
+ feedback.innerHTML="<b>正式模型規格｜版本 1.0</b><span>唯一推薦來源：多因子連動融合＋位置拖牌訊號。原模型排序占 95%，拖牌綜合排序占 5%；拖牌同時納入官方排序第1～5位、當期五碼不分位置觸發、下一期至第5期，以及精確日曆 D+1。所有統計只使用最新一期之前的歷史資料。相同資料必定產生相同排序；分數是排序值，不是中獎機率。</span>";
  const tf=tailFreq(draws.slice(-100)),sizes=[3,4,4,4,4,4,4,4,4,4];let tr=tf.map((v,i)=>({tail:i,score:v/sizes[i]})).sort((a,b)=>b.score-a.score).slice(0,3);
  $("#tailRanks").innerHTML=tr.map(x=>'<div class="tail-item"><b>'+x.tail+" 尾</b><small>"+x.score.toFixed(1)+" 次/號</small></div>").join("")
 }function renderSequence(){/* 已簡化：詳細條件關聯不再佔用首頁版面 */}
@@ -263,4 +244,4 @@ document.addEventListener("click",e=>{
  const btn=target.closest("#recommend [data-number]");
  if(btn){const number=Number(btn.dataset.number);if(Number.isInteger(number)&&number>=1&&number<=39&&typeof window.show539NumberDetail==="function")window.show539NumberDetail(number)}
 });
-$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",()=>{$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算所選區間…</td></tr>';setTimeout(renderBacktest,30)});$("#loadBacktestBtn").addEventListener("click",()=>{$("#loadBacktestBtn").disabled=true;$("#loadBacktestBtn").textContent="計算中…";$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算驗證紀錄，請稍候…</td></tr>';setTimeout(()=>{renderBacktest();$("#loadBacktestBtn").disabled=false;$("#loadBacktestBtn").textContent="重新載入驗證紀錄"},30)});$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",()=>{renderRecommend();$("#recommendBasis").textContent="正式固定模型 v1.0｜結果可重現";});$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
+$("#periodSelect").addEventListener("change",renderStats);$("#backtestSelect").addEventListener("change",()=>{$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算所選區間…</td></tr>';setTimeout(renderBacktest,30)});$("#loadBacktestBtn").addEventListener("click",()=>{$("#loadBacktestBtn").disabled=true;$("#loadBacktestBtn").textContent="計算中…";$("#backtestRows").innerHTML='<tr><td colspan="4">正在計算驗證紀錄，請稍候…</td></tr>';setTimeout(()=>{renderBacktest();$("#loadBacktestBtn").disabled=false;$("#loadBacktestBtn").textContent="重新載入驗證紀錄"},30)});$("#searchInput").addEventListener("input",()=>{page=0;renderHistory()});$("#prevPage").addEventListener("click",()=>{page--;renderHistory()});$("#nextPage").addEventListener("click",()=>{page++;renderHistory()});$("#refreshBtn").addEventListener("click",()=>{renderRecommend();$("#recommendBasis").textContent="正式融合模型 v1.1｜結果可重現";});$("#exportBtn").addEventListener("click",()=>{const lines=["期別,日期,號碼",...draws.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.period.localeCompare(a.period)).map(d=>[d.period,d.date,'"'+d.numbers.join(" ")+'"'].join(","))];const blob=new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="539-history.csv";a.click();URL.revokeObjectURL(url)});load();
