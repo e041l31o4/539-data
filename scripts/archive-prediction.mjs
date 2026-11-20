@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 const DATA = "data/daily539.json";
 const OUT = "data/predictions539.json";
-const MODEL_VERSION = "twohit-priority-v1.2-archived";
+const MODEL_VERSION = "twohit-priority-v1.3-position-drag-archived";
 const baseRate = 5 / 39;
 
 function gaps(draws) {
@@ -40,6 +40,53 @@ function advancedRanking(draws) {
     out.push({ n, frequencyZ: z, score: z * .82 + Math.max(-2, Math.min(2, cz)) * .18 });
   }
   return out.sort((a, b) => b.score - a.score || Math.abs(a.n - 20) - Math.abs(b.n - 20) || a.n - b.n);
+}
+
+
+function positionDragRanking(draws) {
+  const len = draws.length, latest = draws.at(-1), base = 5 / 39;
+  const candidates = Array.from({ length: 39 }, (_, i) => i + 1);
+  if (len < 40 || !latest) return candidates.map((n, i) => ({ n, score: 0, rank: i + 1 }));
+  const horizonWeights = [.34, .26, .18, .13, .09], scores = Array(40).fill(0);
+  const add = (position, trigger, lag, weight, calendar = false) => {
+    let opportunities = 0;
+    const hits = Array(40).fill(0);
+    const byDate = calendar ? new Map(draws.map((d, i) => [d.date, i])) : null;
+    for (let i = 0; i < len - 1; i++) {
+      let targetIndex = i + lag;
+      if (calendar) {
+        const dt = new Date(draws[i].date + "T00:00:00Z");
+        dt.setUTCDate(dt.getUTCDate() + 1);
+        targetIndex = byDate.get(dt.toISOString().slice(0, 10));
+      }
+      if (targetIndex === undefined || targetIndex >= len - 1) continue;
+      const source = draws[i];
+      const match = position === 0 ? source.numbers.includes(trigger) : source.numbers[position - 1] === trigger;
+      if (!match) continue;
+      opportunities++;
+      for (const n of draws[targetIndex].numbers) hits[n]++;
+    }
+    const alpha = 25;
+    for (let n = 1; n <= 39; n++) {
+      const posterior = (hits[n] + alpha * base) / (opportunities + alpha);
+      const se = Math.sqrt(base * (1 - base) / (opportunities + alpha));
+      const z = se ? (posterior - base) / se : 0;
+      scores[n] += weight * Math.max(-2, Math.min(2, z));
+    }
+  };
+  // All five official ascending-sorted positions and horizons 1-5.
+  for (let p = 1; p <= 5; p++) {
+    for (let lag = 1; lag <= 5; lag++) add(p, latest.numbers[p - 1], lag, .75 / 5 * horizonWeights[lag - 1]);
+  }
+  // Current draw's five numbers as position-independent triggers.
+  for (const trigger of latest.numbers) {
+    for (let lag = 1; lag <= 5; lag++) add(0, trigger, lag, .10 / 5 * horizonWeights[lag - 1]);
+  }
+  // Exact calendar D+1 pairs, only when the following date has an official draw.
+  for (let p = 1; p <= 5; p++) add(p, latest.numbers[p - 1], 1, .15 / 5, true);
+  return candidates.map(n => ({ n, score: scores[n] }))
+    .sort((a, b) => b.score - a.score || Math.abs(a.n - 20) - Math.abs(b.n - 20) || a.n - b.n)
+    .map((x, i) => ({ ...x, rank: i + 1 }));
 }
 
 function multiFactorRanking(draws) {
@@ -87,14 +134,18 @@ function multiFactorRanking(draws) {
   });
   const maxGap = Math.max(1, ...gap.slice(1)), advanced = advancedRanking(draws);
   const adv = new Map(advanced.map(x => [x.n, x.frequencyZ]));
-  return candidates.map((n, i) => {
+  const baseRanking = candidates.map((n, i) => {
     const trend = .40 * z30[i] + .30 * z90[i] + .30 * z365[i];
     const omission = Math.min(2, gap[n] / maxGap);
-    // Walk-forward sweep: removing the historical-link factor gave the best
-    // >=2-hit rate among tested factor ablations (13.10% over 3,000 draws).
-    // This is an experimental selection rule, not proof of a predictive edge.
-    const score = .30 * trend + .08 * omission + .10 * adv.get(n);
-    return { n, score: Number(score.toFixed(8)), linkScore: Number(linkScores[n].toFixed(8)), trend: Number(trend.toFixed(8)), omission: Number(omission.toFixed(8)) };
+    const baseScore = .30 * trend + .08 * omission + .10 * (adv.get(n) || 0);
+    return { n, baseScore, trend, omission, linkScore: linkScores[n] };
+  }).sort((a, b) => b.baseScore - a.baseScore || Math.abs(a.n - 20) - Math.abs(b.n - 20) || a.n - b.n);
+  const drag = positionDragRanking(draws);
+  const baseRank = new Map(baseRanking.map((x, i) => [x.n, (39 - i) / 38]));
+  const dragMap = new Map(drag.map(x => [x.n, x]));
+  return candidates.map(n => {
+    const d = dragMap.get(n);
+    return { ...baseRanking.find(x => x.n === n), score: .95 * baseRank.get(n) + .05 * ((39 - d.rank) / 38), dragScore: d.score, dragRank: d.rank };
   }).sort((a, b) => b.score - a.score || Math.abs(a.n - 20) - Math.abs(b.n - 20) || a.n - b.n);
 }
 
