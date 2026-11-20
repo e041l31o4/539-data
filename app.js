@@ -31,6 +31,32 @@ function advancedRanking(a){
  return scores.sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
 }
 function advancedPick(a){return advancedRanking(a).slice(0,5).map(x=>x.n)}
+
+function positionDragRanking(draws) {
+ const len=draws.length,latest=draws.at(-1),base=5/39,candidates=Array.from({length:39},(_,i)=>i+1);
+ if(len<40||!latest)return candidates.map((n,i)=>({n,score:0,rank:i+1}));
+ const horizonWeights=[.34,.26,.18,.13,.09],scores=Array(40).fill(0);
+ const add=(position,trigger,lag,weight,calendar=false)=>{
+  let opportunities=0;const hits=Array(40).fill(0),byDate=calendar?new Map(draws.map((d,i)=>[d.date,i])):null;
+  for(let i=0;i<len-1;i++){
+   let targetIndex=i+lag;
+   if(calendar){const dt=new Date(draws[i].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);targetIndex=byDate.get(dt.toISOString().slice(0,10));}
+   if(targetIndex===undefined||targetIndex>=len-1)continue;
+   const source=draws[i],match=position===0?source.numbers.includes(trigger):source.numbers[position-1]===trigger;
+   if(!match)continue;
+   opportunities++;for(const n of draws[targetIndex].numbers)hits[n]++;
+  }
+  const alpha=25;
+  for(let n=1;n<=39;n++){
+   const posterior=(hits[n]+alpha*base)/(opportunities+alpha),se=Math.sqrt(base*(1-base)/(opportunities+alpha));
+   const z=se?(posterior-base)/se:0;scores[n]+=weight*Math.max(-2,Math.min(2,z));
+  }
+ };
+ for(let p=1;p<=5;p++)for(let lag=1;lag<=5;lag++)add(p,latest.numbers[p-1],lag,.75/5*horizonWeights[lag-1]);
+ for(const trigger of latest.numbers)for(let lag=1;lag<=5;lag++)add(0,trigger,lag,.10/5*horizonWeights[lag-1]);
+ for(let p=1;p<=5;p++)add(p,latest.numbers[p-1],1,.15/5,true);
+ return candidates.map(n=>({n,score:scores[n]})).sort((a,b)=>b.score-a.score||Math.abs(a.n-20)-Math.abs(b.n-20)||a.n-b.n).map((x,i)=>({...x,rank:i+1}));
+}
 function multiFactorRanking(a){
  const base=5/39, candidates=Array.from({length:39},(_,i)=>i+1),last=a.length;
  if(last<30)return candidates.map(n=>({n,score:0}));
@@ -61,11 +87,15 @@ function multiFactorRanking(a){
   });
  });
  const gMax=Math.max(1,...gap.slice(1)),advanced=advancedRanking(a);
- return candidates.map((n,i)=>{
-  const trend=.40*z30[i]+.30*z90[i]+.30*z365[i];
-  const omission=Math.min(2,gap[n]/Math.max(1,gMax));
-  const score=.30*trend+.08*omission+.10*advanced.find(x=>x.n===n).frequencyZ;
-  return {n,score,linkScore:linkScores[n],trend,omission,parts:linkParts[n]};
+ const baseRanking=candidates.map((n,i)=>{
+  const trend=.40*z30[i]+.30*z90[i]+.30*z365[i],omission=Math.min(2,gap[n]/Math.max(1,gMax));
+  const baseScore=.30*trend+.08*omission+.10*advanced.find(x=>x.n===n).frequencyZ;
+  return {n,baseScore,trend,omission,parts:linkParts[n],linkScore:linkScores[n]};
+ }).sort((x,y)=>y.baseScore-x.baseScore||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
+ const drag=positionDragRanking(a),baseRank=new Map(baseRanking.map((x,i)=>[x.n,(39-i)/38])),dragMap=new Map(drag.map(x=>[x.n,x]));
+ return candidates.map(n=>{
+  const d=dragMap.get(n);
+  return {...baseRanking.find(x=>x.n===n),score:.95*baseRank.get(n)+.05*((39-d.rank)/38),dragScore:d.score,dragRank:d.rank};
  }).sort((x,y)=>y.score-x.score||Math.abs(x.n-20)-Math.abs(y.n-20)||x.n-y.n);
 }
 function multiFactorPick(a){return multiFactorRanking(a).slice(0,5).map(x=>x.n)}
@@ -156,7 +186,7 @@ const weights={neighbor:25,transition:15,hot:15,total:10,gap:10,cold:5,tail:10,s
   if(!d||!factor||!adv)throw new Error("號碼分析資料尚未完整建立");
   const lagSummary=[1,2,3,5].map(lag=>{const sample=draws.slice(0,-lag),hits=sample.reduce((acc,draw,i)=>acc+(draw.numbers.includes(n)&&draws[i+lag]?.numbers.includes(n)?1:0),0),opportunities=sample.filter(v=>v.numbers.includes(n)).length;return "隔"+lag+"期重複 "+hits+"/"+opportunities}).join("｜");
   return '<div class="number-detail-head"><span class="detail-ball">'+String(n).padStart(2,"0")+'</span><div><b>號碼 '+String(n).padStart(2,"0")+' 分析</b><small>綜合排名第 '+d.rank+'／39｜融合分數 '+d.score.toFixed(4)+'（非機率）</small></div></div>'+
-   '<div class="number-detail-grid"><div><small>拖牌關聯排序</small><b>'+(drag?('#'+drag.rank):'—')+'</b><span>'+(drag?(drag.rate*100).toFixed(2)+'% 歷史條件率｜'+drag.sources+'/5 個位置觸發':'目前樣本不足或非候選')+'</span></div><div><small>連動綜合分數</small><b>'+factor.linkScore.toFixed(4)+'</b><span>單號／雙號／三碼條件連動</span></div><div><small>長短期趨勢</small><b>'+factor.trend.toFixed(4)+'</b><span>近30、90、365期平滑頻率</span></div><div><small>遺漏調整</small><b>'+factor.omission.toFixed(4)+'</b><span>目前未開 '+g[n]+' 期</span></div><div><small>多視窗頻率 Z</small><b>'+adv.frequencyZ.toFixed(3)+'</b><span>相對隨機基準的偏離</span></div><div><small>鄰號條件命中</small><b>'+adv.hits+'／'+adv.opportunities+'</b><span>平滑條件比例 '+(adv.conditional*100).toFixed(2)+'%</span></div><div><small>前一期鄰號關聯</small><b>'+near+' 個</b><span>與前期五碼相差 ±1</span></div></div>'+
+   '<div class="number-detail-grid"><div><small>位置拖牌綜合排名</small><b>'+(drag?('#'+drag.rank):'—')+'</b><span>'+(drag?'拖牌訊號分數 '+drag.score.toFixed(3)+'｜已納入正式排序':'目前樣本不足')+'</span></div><div><small>連動綜合分數</small><b>'+factor.linkScore.toFixed(4)+'</b><span>單號／雙號／三碼條件連動</span></div><div><small>長短期趨勢</small><b>'+factor.trend.toFixed(4)+'</b><span>近30、90、365期平滑頻率</span></div><div><small>遺漏調整</small><b>'+factor.omission.toFixed(4)+'</b><span>目前未開 '+g[n]+' 期</span></div><div><small>多視窗頻率 Z</small><b>'+adv.frequencyZ.toFixed(3)+'</b><span>相對隨機基準的偏離</span></div><div><small>鄰號條件命中</small><b>'+adv.hits+'／'+adv.opportunities+'</b><span>平滑條件比例 '+(adv.conditional*100).toFixed(2)+'%</span></div><div><small>前一期鄰號關聯</small><b>'+near+' 個</b><span>與前期五碼相差 ±1</span></div></div>'+
    '<div class="number-detail-block"><b>不同期距的重複觀察</b><p>'+lagSummary+'</p></div><div class="number-detail-block"><b>連動樣本明細</b><p>單號、雙號、三碼組合均以歷史條件出現次數計算，並依樣本數平滑收縮。此號碼連動訊號共有 '+factor.parts.length+' 筆條件紀錄。</p></div><div class="number-detail-block"><b>近期期數表現</b><p>近30期：'+f30[n]+' 次｜近100期：'+f100[n]+' 次｜目前遺漏：'+g[n]+' 期｜全歷史：'+freq(draws)[n]+' 次</p></div><small class="muted">分數是模型排序工具，不是下一期開出的真實機率。公平獨立開獎下，單一號碼理論出現率為5/39；歷史連動不代表因果或未來保證。</small>';
  };
  let reasonBox=$("#pickReasons");if(!reasonBox){reasonBox=document.createElement("div");reasonBox.id="pickReasons";reasonBox.className="panel";$("#recommend").appendChild(reasonBox)}
