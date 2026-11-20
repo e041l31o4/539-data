@@ -63,6 +63,38 @@ for(let i=split;i<draws.length;i++){
  addDayPair(draw,next);
 }
 const nextDayValidation={method:"Expanding walk-forward on exact calendar-day pairs only. A pair is included only when a draw exists on D+1; all training pairs precede each prediction date.",trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,testPairs:dayTestPairs,randomExpectedHits:25/39,randomAtLeastOne:randomAtLeastOne,rows:[{name:"Combined position trigger TOP5",avgHitsPerPair:dayTestPairs?dayHits/dayTestPairs:0,atLeastOneRate:dayTestPairs?dayAtLeast/dayTestPairs:0,atLeastTwoRate:dayTestPairs?dayAtLeast2/dayTestPairs:0},...dayByPosition.map((x,i)=>({name:"Position "+(i+1)+" TOP5",position:i+1,avgHitsPerPair:x.n?x.hits/x.n:0,atLeastOneRate:x.n?x.atLeast/x.n:0,testPairs:x.n}))]};
-const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",validation,nextDayValidation,nextDayRecords,records};
+// Position-3 trigger-number breakdown for exact next-calendar-day pairs.
+// This is a separate expanding walk-forward audit; each prediction uses only earlier D -> D+1 pairs.
+const p3Counts=Array.from({length:40},()=>Array(40).fill(0));
+const p3Opp=Array(40).fill(0);
+const p3Stats=Array.from({length:40},(_,i)=>({trigger:i+1,samples:0,top3Hits:0,top5Hits:0,top10Hits:0,top3AtLeast1:0,top5AtLeast1:0,top10AtLeast1:0,blocks:Array.from({length:3},()=>({samples:0,top5AtLeast1:0,top5Hits:0}))}));
+function addP3Pair(draw,next){const trigger=draw.numbers[2];p3Opp[trigger]++;for(const n of next.numbers)p3Counts[trigger][n]++;}
+function nextCalendarPairAt(i){const dt=new Date(draws[i].date+"T00:00:00Z");dt.setUTCDate(dt.getUTCDate()+1);const date=dt.toISOString().slice(0,10),next=drawByDate.get(date),nextIndex=dayIndex.get(date);return next&&nextIndex!==undefined?{next,nextIndex}:null;}
+for(let i=0;i<split;i++){const pair=nextCalendarPairAt(i);if(pair&&pair.nextIndex<split)addP3Pair(draws[i],pair.next);}
+let p3Total={samples:0,top3Hits:0,top5Hits:0,top10Hits:0,top3AtLeast1:0,top5AtLeast1:0,top10AtLeast1:0};
+const p3BlockSize=Math.ceil((draws.length-split)/3);
+for(let i=split;i<draws.length;i++){
+ const pair=nextCalendarPairAt(i);if(!pair)continue;
+ const trigger=draws[i].numbers[2],actual=new Set(pair.next.numbers);
+ const ranked=Array.from({length:39},(_,j)=>j+1).map(number=>({number,rate:p3Opp[trigger]?p3Counts[trigger][number]/p3Opp[trigger]:0,hits:p3Counts[trigger][number]})).sort((a,b)=>b.rate-a.rate||b.hits-a.hits||a.number-b.number);
+ const h3=ranked.slice(0,3).filter(x=>actual.has(x.number)).length;
+ const h5=ranked.slice(0,5).filter(x=>actual.has(x.number)).length;
+ const h10=ranked.slice(0,10).filter(x=>actual.has(x.number)).length;
+ const s=p3Stats[trigger],block=Math.min(2,Math.floor((i-split)/p3BlockSize)),b=s.blocks[block];
+ s.samples++;s.top3Hits+=h3;s.top5Hits+=h5;s.top10Hits+=h10;s.top3AtLeast1+=h3>0?1:0;s.top5AtLeast1+=h5>0?1:0;s.top10AtLeast1+=h10>0?1:0;
+ b.samples++;b.top5Hits+=h5;b.top5AtLeast1+=h5>0?1:0;
+ p3Total.samples++;p3Total.top3Hits+=h3;p3Total.top5Hits+=h5;p3Total.top10Hits+=h10;p3Total.top3AtLeast1+=h3>0?1:0;p3Total.top5AtLeast1+=h5>0?1:0;p3Total.top10AtLeast1+=h10>0?1:0;
+ addP3Pair(draws[i],pair.next);
+}
+const p3Choose=(n,k)=>{let v=1;for(let j=1;j<=k;j++)v=v*(n-j+1)/j;return v;};
+const position3TriggerValidation={
+ method:"Exact D -> D+1 calendar-day pairs; expanding walk-forward; each trigger-number ranking is based only on earlier pairs. TOP3/TOP5/TOP10 are evaluated separately. Trigger means the number in official ascending-sorted position 3, not physical draw order.",
+ trainThrough:draws[split-1]?.date,testFrom:draws[split]?.date,testThrough:draws.at(-1)?.date,testPairs:p3Total.samples,
+ randomBaseline:{top3AtLeast1:1-p3Choose(34,3)/p3Choose(39,3),top5AtLeast1:randomAtLeastOne,top10AtLeast1:1-p3Choose(34,10)/p3Choose(39,10),avgHitsTop3:15/39,avgHitsTop5:25/39,avgHitsTop10:50/39},
+ overall:{top3AvgHits:p3Total.samples?p3Total.top3Hits/p3Total.samples:0,top5AvgHits:p3Total.samples?p3Total.top5Hits/p3Total.samples:0,top10AvgHits:p3Total.samples?p3Total.top10Hits/p3Total.samples:0,top3AtLeast1:p3Total.samples?p3Total.top3AtLeast1/p3Total.samples:0,top5AtLeast1:p3Total.samples?p3Total.top5AtLeast1/p3Total.samples:0,top10AtLeast1:p3Total.samples?p3Total.top10AtLeast1/p3Total.samples:0},
+ byTrigger:p3Stats.filter(x=>x.samples>0).map(x=>({...x,top3AvgHits:x.top3Hits/x.samples,top5AvgHits:x.top5Hits/x.samples,top10AvgHits:x.top10Hits/x.samples,top3AtLeast1:x.top3AtLeast1/x.samples,top5AtLeast1:x.top5AtLeast1/x.samples,top10AtLeast1:x.top10AtLeast1/x.samples,blocks:x.blocks.map(b=>({...b,top5AtLeast1:b.samples?b.top5AtLeast1/b.samples:null,top5AvgHits:b.samples?b.top5Hits/b.samples:null}))})).sort((a,b)=>b.samples-a.samples||a.trigger-b.trigger)
+};
+
+const report={source:source.source,generatedAt:new Date().toISOString(),updatedAt:source.updatedAt,historyCount:draws.length,from:draws[0].date,through:draws.at(-1).date,baselineRate,positionDefinition:"官方資料 numbers 陣列為升冪排序；position 1-5 指排序位置，不代表實際搖出先後順序。",lagDefinition:"lag 1 指下一個開獎期，不保證是下一個日曆日；lag 2-5 依序為後續第 2-5 個開獎期。",validation,nextDayValidation,position3TriggerValidation,nextDayRecords,records};
 fs.writeFileSync(OUT,JSON.stringify(report));
 console.log(JSON.stringify({nextDraw:validation,nextCalendarDay:nextDayValidation}));
