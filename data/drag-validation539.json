@@ -1,8 +1,8 @@
 {
   "version": "dplus1-formal-vs-position3-v1",
-  "dataThrough": "2026-11-20",
-  "trainThrough": "2021-02-17",
-  "testFrom": "2021-02-18",
+  "dataThrough": "2026-11-21",
+  "trainThrough": "2021-02-18",
+  "testFrom": "2021-02-19",
   "testPairs": 1513,
   "method": "Exact D -> D+1 calendar-day pairs only. Expanding walk-forward. Formal multifactor weights match production: link 0, trend .30, omission .08, advanced .10. Position-3 drag uses only earlier D->D+1 pairs. Random reference is hypergeometric.",
   "randomBaseline": {
@@ -11,39 +11,39 @@
   },
   "formalMultifactor": {
     "pairs": 1513,
-    "avgHits": 0.6649041639127561,
-    "atLeast1": 0.5280898876404494,
-    "atLeast2": 0.12690019828155982,
+    "avgHits": 0.666226040978189,
+    "atLeast1": 0.5287508261731659,
+    "atLeast2": 0.12756113681427628,
     "atLeast3": 0.00991407799074686
   },
   "position3DragTop5": {
     "pairs": 1513,
-    "avgHits": 0.6754791804362195,
-    "atLeast1": 0.5446133509583608,
-    "atLeast2": 0.1209517514871117,
-    "atLeast3": 0.00991407799074686
+    "avgHits": 0.6734963648380701,
+    "atLeast1": 0.5439524124256444,
+    "atLeast2": 0.12029081295439524,
+    "atLeast3": 0.009253139458030404
   },
   "pairedComparison": {
     "pairs": 1513,
-    "avgHitsDifference": 0.010575016523463317,
+    "avgHitsDifference": 0.007270323859881031,
     "avgHitsDifference95CI": {
-      "low": -0.04230006609385327,
-      "high": 0.061467283542630535,
+      "low": -0.0449438202247191,
+      "high": 0.056840713813615336,
       "replicates": 5000,
       "blockLength": 7
     },
-    "atLeast1Difference": 0.016523463317911435,
+    "atLeast1Difference": 0.01520158625247852,
     "atLeast1Difference95CI": {
-      "low": -0.018506278916060808,
-      "high": 0.05287508261731659,
+      "low": -0.01982815598149372,
+      "high": 0.051553205551883675,
       "replicates": 5000,
       "blockLength": 7
     },
     "mcnemar": {
-      "dragOnly": 357,
-      "formalOnly": 332,
+      "dragOnly": 356,
+      "formalOnly": 333,
       "discordant": 689,
-      "exactTwoSidedP": 0.36055459497762177
+      "exactTwoSidedP": 0.4019729252457288
     },
     "interpretation": "Paired same-date comparison. Confidence intervals use circular moving-block bootstrap (7 adjacent calendar-day pairs, 5000 replicates) to reduce serial-dependence underestimation. McNemar exact test compares discordant at-least-one-hit outcomes."
   },
@@ -51,111 +51,111 @@
     "3": {
       "formal": {
         "pairs": 1513,
-        "avgHits": 0.39590218109715797,
-        "atLeast1": 0.35095836087243887,
+        "avgHits": 0.3965631196298744,
+        "atLeast1": 0.3516192994051553,
         "atLeast2": 0.044282881692002646,
         "atLeast3": 0.0006609385327164573
       },
       "position3Drag": {
         "pairs": 1513,
-        "avgHits": 0.37937871777924653,
-        "atLeast1": 0.34302709847984136,
+        "avgHits": 0.37871777924653005,
+        "atLeast1": 0.34236615994712494,
         "atLeast2": 0.036351619299405155,
         "atLeast3": 0
       },
       "paired": {
-        "avgHitsDifference": -0.016523463317911435,
+        "avgHitsDifference": -0.01784534038334435,
         "avgHitsDifference95CI": {
-          "low": -0.056840713813615336,
-          "high": 0.024454725710508923,
+          "low": -0.05816259087904825,
+          "high": 0.023793787177792465,
           "replicates": 5000,
           "blockLength": 7
         },
-        "atLeast1Difference": -0.007931262392597489,
+        "atLeast1Difference": -0.009253139458030404,
         "atLeast1Difference95CI": {
-          "low": -0.04230006609385327,
-          "high": 0.027098479841374753,
+          "low": -0.043621943159286185,
+          "high": 0.026437541308658295,
           "replicates": 5000,
           "blockLength": 7
         },
         "mcnemar": {
-          "dragOnly": 316,
-          "formalOnly": 328,
-          "exactTwoSidedP": 0.6647132720454365
+          "dragOnly": 317,
+          "formalOnly": 331,
+          "exactTwoSidedP": 0.6096034863286995
         }
       }
     },
     "5": {
       "formal": {
         "pairs": 1513,
-        "avgHits": 0.6649041639127561,
-        "atLeast1": 0.5280898876404494,
-        "atLeast2": 0.12690019828155982,
+        "avgHits": 0.666226040978189,
+        "atLeast1": 0.5287508261731659,
+        "atLeast2": 0.12756113681427628,
         "atLeast3": 0.00991407799074686
       },
       "position3Drag": {
         "pairs": 1513,
-        "avgHits": 0.6754791804362195,
-        "atLeast1": 0.5446133509583608,
-        "atLeast2": 0.1209517514871117,
-        "atLeast3": 0.00991407799074686
+        "avgHits": 0.6734963648380701,
+        "atLeast1": 0.5439524124256444,
+        "atLeast2": 0.12029081295439524,
+        "atLeast3": 0.009253139458030404
       },
       "paired": {
-        "avgHitsDifference": 0.010575016523463317,
+        "avgHitsDifference": 0.007270323859881031,
         "avgHitsDifference95CI": {
-          "low": -0.041639127561136816,
-          "high": 0.06212822207534699,
+          "low": -0.043621943159286185,
+          "high": 0.06080634500991408,
           "replicates": 5000,
           "blockLength": 7
         },
-        "atLeast1Difference": 0.016523463317911435,
+        "atLeast1Difference": 0.01520158625247852,
         "atLeast1Difference95CI": {
-          "low": -0.018506278916060808,
-          "high": 0.051553205551883675,
+          "low": -0.01982815598149372,
+          "high": 0.05023132848645076,
           "replicates": 5000,
           "blockLength": 7
         },
         "mcnemar": {
-          "dragOnly": 357,
-          "formalOnly": 332,
-          "exactTwoSidedP": 0.36055459497762177
+          "dragOnly": 356,
+          "formalOnly": 333,
+          "exactTwoSidedP": 0.4019729252457288
         }
       }
     },
     "10": {
       "formal": {
         "pairs": 1513,
-        "avgHits": 1.2729676140118968,
+        "avgHits": 1.2736285525446134,
         "atLeast1": 0.7918043621943159,
-        "atLeast2": 0.38995373430270985,
+        "atLeast2": 0.3906146728354263,
         "atLeast3": 0.08592200925313946
       },
       "position3Drag": {
         "pairs": 1513,
-        "avgHits": 1.3046926635822869,
-        "atLeast1": 0.8109715796430932,
-        "atLeast2": 0.3939193654990086,
-        "atLeast3": 0.08922670191672175
+        "avgHits": 1.3027098479841375,
+        "atLeast1": 0.8103106411103768,
+        "atLeast2": 0.39325842696629215,
+        "atLeast3": 0.08856576338400529
       },
       "paired": {
-        "avgHitsDifference": 0.031725049570389956,
+        "avgHitsDifference": 0.029081295439524125,
         "avgHitsDifference95CI": {
-          "low": -0.033707865168539325,
-          "high": 0.09517514871116986,
+          "low": -0.036351619299405155,
+          "high": 0.09253139458030403,
           "replicates": 5000,
           "blockLength": 7
         },
-        "atLeast1Difference": 0.019167217448777262,
+        "atLeast1Difference": 0.018506278916060808,
         "atLeast1Difference95CI": {
-          "low": -0.011235955056179775,
-          "high": 0.0495703899537343,
+          "low": -0.011896893588896233,
+          "high": 0.048909451421017845,
           "replicates": 5000,
           "blockLength": 7
         },
         "mcnemar": {
           "dragOnly": 253,
-          "formalOnly": 224,
-          "exactTwoSidedP": 0.1997810235304551
+          "formalOnly": 225,
+          "exactTwoSidedP": 0.2168067303771284
         }
       }
     }
@@ -250,28 +250,6 @@
       "atLeast1": 0.4864864864864865
     },
     {
-      "trigger": 19,
-      "samples": 71,
-      "hits": 50,
-      "ge1": 37,
-      "blocks": [
-        {
-          "samples": 24,
-          "atLeast1": 0.5416666666666666
-        },
-        {
-          "samples": 22,
-          "atLeast1": 0.5909090909090909
-        },
-        {
-          "samples": 25,
-          "atLeast1": 0.44
-        }
-      ],
-      "avgHits": 0.704225352112676,
-      "atLeast1": 0.5211267605633803
-    },
-    {
       "trigger": 21,
       "samples": 71,
       "hits": 45,
@@ -292,6 +270,28 @@
       ],
       "avgHits": 0.6338028169014085,
       "atLeast1": 0.5352112676056338
+    },
+    {
+      "trigger": 19,
+      "samples": 70,
+      "hits": 47,
+      "ge1": 36,
+      "blocks": [
+        {
+          "samples": 23,
+          "atLeast1": 0.5217391304347826
+        },
+        {
+          "samples": 22,
+          "atLeast1": 0.5909090909090909
+        },
+        {
+          "samples": 25,
+          "atLeast1": 0.44
+        }
+      ],
+      "avgHits": 0.6714285714285714,
+      "atLeast1": 0.5142857142857142
     },
     {
       "trigger": 15,
@@ -432,12 +432,12 @@
       "ge1": 35,
       "blocks": [
         {
-          "samples": 20,
-          "atLeast1": 0.65
+          "samples": 21,
+          "atLeast1": 0.6190476190476191
         },
         {
-          "samples": 23,
-          "atLeast1": 0.5652173913043478
+          "samples": 22,
+          "atLeast1": 0.5909090909090909
         },
         {
           "samples": 18,
@@ -458,12 +458,12 @@
           "atLeast1": 0.7333333333333333
         },
         {
-          "samples": 18,
-          "atLeast1": 0.6111111111111112
+          "samples": 19,
+          "atLeast1": 0.631578947368421
         },
         {
-          "samples": 27,
-          "atLeast1": 0.7037037037037037
+          "samples": 26,
+          "atLeast1": 0.6923076923076923
         }
       ],
       "avgHits": 0.8833333333333333,
@@ -691,7 +691,7 @@
     },
     {
       "trigger": 7,
-      "samples": 26,
+      "samples": 27,
       "hits": 21,
       "ge1": 17,
       "blocks": [
@@ -704,12 +704,12 @@
           "atLeast1": 0.6666666666666666
         },
         {
-          "samples": 11,
-          "atLeast1": 0.6363636363636364
+          "samples": 12,
+          "atLeast1": 0.5833333333333334
         }
       ],
-      "avgHits": 0.8076923076923077,
-      "atLeast1": 0.6538461538461539
+      "avgHits": 0.7777777777777778,
+      "atLeast1": 0.6296296296296297
     },
     {
       "trigger": 32,
