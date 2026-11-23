@@ -1,10 +1,10 @@
 {
   "version": "combo-objective-pair-lab-v1",
-  "dataThrough": "2026-11-21",
-  "historyCount": 6026,
+  "dataThrough": "2026-11-23",
+  "historyCount": 6027,
   "testPeriodCount": 3000,
-  "testFrom": "2017-05-01",
-  "testTo": "2026-11-21",
+  "testFrom": "2017-05-02",
+  "testTo": "2026-11-23",
   "method": "每期只用此前365期資料；先以近期頻率選12碼候選池，再窮舉其中792種五碼組合。配對共現分數以超幾何基準近似的二項期望、標準誤及收縮計算；lambda固定，不以測試結果挑參數。",
   "randomBaseline": {
     "atLeast2Pct": 11.397342976290345,
@@ -59,11 +59,11 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.654,
-          "atLeast2Pct": 12.7,
+          "averageHits": 0.656,
+          "atLeast2Pct": 12.8,
           "atLeast2Wilson95Pct": [
-            10.78,
-            14.91
+            10.87,
+            15.01
           ],
           "atLeast3Pct": 0.8,
           "atLeast3Wilson95Pct": [
@@ -71,9 +71,9 @@
             1.57
           ],
           "distribution": [
-            482,
+            481,
             391,
-            119,
+            120,
             7,
             1,
             0
@@ -81,11 +81,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.679,
-          "atLeast2Pct": 12.4,
+          "averageHits": 0.677,
+          "atLeast2Pct": 12.3,
           "atLeast2Wilson95Pct": [
-            10.5,
-            14.59
+            10.41,
+            14.48
           ],
           "atLeast3Pct": 1.4,
           "atLeast3Wilson95Pct": [
@@ -93,9 +93,9 @@
             2.34
           ],
           "distribution": [
-            460,
+            461,
             416,
-            110,
+            109,
             13,
             1,
             0
@@ -151,7 +151,7 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.632,
+          "averageHits": 0.633,
           "atLeast2Pct": 11.4,
           "atLeast2Wilson95Pct": [
             9.58,
@@ -163,8 +163,8 @@
             1.44
           ],
           "distribution": [
-            490,
-            396,
+            489,
+            397,
             107,
             6,
             1,
@@ -173,7 +173,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
+          "averageHits": 0.66,
           "atLeast2Pct": 11.6,
           "atLeast2Wilson95Pct": [
             9.76,
@@ -185,8 +185,8 @@
             1.57
           ],
           "distribution": [
-            463,
-            421,
+            464,
+            420,
             108,
             8,
             0,
@@ -243,7 +243,7 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.632,
+          "averageHits": 0.633,
           "atLeast2Pct": 11.4,
           "atLeast2Wilson95Pct": [
             9.58,
@@ -255,8 +255,8 @@
             1.44
           ],
           "distribution": [
-            490,
-            396,
+            489,
+            397,
             107,
             6,
             1,
@@ -265,7 +265,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
+          "averageHits": 0.66,
           "atLeast2Pct": 11.6,
           "atLeast2Wilson95Pct": [
             9.76,
@@ -277,8 +277,8 @@
             1.57
           ],
           "distribution": [
-            463,
-            421,
+            464,
+            420,
             108,
             8,
             0,
@@ -335,7 +335,7 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.626,
+          "averageHits": 0.627,
           "atLeast2Pct": 11.2,
           "atLeast2Wilson95Pct": [
             9.39,
@@ -347,8 +347,8 @@
             1.44
           ],
           "distribution": [
-            494,
-            394,
+            493,
+            395,
             105,
             6,
             1,
@@ -357,7 +357,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
+          "averageHits": 0.66,
           "atLeast2Pct": 11.6,
           "atLeast2Wilson95Pct": [
             9.76,
@@ -369,8 +369,8 @@
             1.57
           ],
           "distribution": [
-            463,
-            421,
+            464,
+            420,
             108,
             8,
             0,
@@ -427,7 +427,7 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.632,
+          "averageHits": 0.633,
           "atLeast2Pct": 11.4,
           "atLeast2Wilson95Pct": [
             9.58,
@@ -439,8 +439,8 @@
             1.44
           ],
           "distribution": [
-            490,
-            396,
+            489,
+            397,
             107,
             6,
             1,
@@ -449,7 +449,7 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
+          "averageHits": 0.66,
           "atLeast2Pct": 11.6,
           "atLeast2Wilson95Pct": [
             9.76,
@@ -461,8 +461,8 @@
             1.57
           ],
           "distribution": [
-            463,
-            421,
+            464,
+            420,
             108,
             8,
             0,
