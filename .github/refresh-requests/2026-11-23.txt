@@ -1,0 +1,1 @@
+Temporary trigger to run the existing official Taiwan Lottery 539 refresh workflow on 2026-11-23. Remove after the run completes.
