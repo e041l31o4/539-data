@@ -1,10 +1,10 @@
 {
   "version": "combo-objective-pair-lab-v1",
-  "dataThrough": "2026-11-25",
-  "historyCount": 6029,
+  "dataThrough": "2026-11-26",
+  "historyCount": 6030,
   "testPeriodCount": 3000,
-  "testFrom": "2017-05-04",
-  "testTo": "2026-11-25",
+  "testFrom": "2017-05-05",
+  "testTo": "2026-11-26",
   "method": "每期只用此前365期資料；先以近期頻率選12碼候選池，再窮舉其中792種五碼組合。配對共現分數以超幾何基準近似的二項期望、標準誤及收縮計算；lambda固定，不以測試結果挑參數。",
   "randomBaseline": {
     "atLeast2Pct": 11.397342976290345,
@@ -12,11 +12,11 @@
   },
   "individualTop5": {
     "periods": 3000,
-    "averageHits": 0.6697,
-    "atLeast2Pct": 12.43,
+    "averageHits": 0.669,
+    "atLeast2Pct": 12.4,
     "atLeast2Wilson95Pct": [
-      11.3,
-      13.66
+      11.27,
+      13.63
     ],
     "atLeast3Pct": 1.17,
     "atLeast3Wilson95Pct": [
@@ -24,9 +24,9 @@
       1.62
     ],
     "distribution": [
-      1401,
+      1402,
       1226,
-      338,
+      337,
       33,
       2,
       0
@@ -36,11 +36,11 @@
     "0": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6697,
-        "atLeast2Pct": 12.43,
+        "averageHits": 0.669,
+        "atLeast2Pct": 12.4,
         "atLeast2Wilson95Pct": [
-          11.3,
-          13.66
+          11.27,
+          13.63
         ],
         "atLeast3Pct": 1.17,
         "atLeast3Wilson95Pct": [
@@ -48,9 +48,9 @@
           1.62
         ],
         "distribution": [
-          1401,
+          1402,
           1226,
-          338,
+          337,
           33,
           2,
           0
@@ -59,11 +59,11 @@
       "segments": [
         {
           "periods": 1000,
-          "averageHits": 0.654,
-          "atLeast2Pct": 12.8,
+          "averageHits": 0.652,
+          "atLeast2Pct": 12.7,
           "atLeast2Wilson95Pct": [
-            10.87,
-            15.01
+            10.78,
+            14.91
           ],
           "atLeast3Pct": 0.8,
           "atLeast3Wilson95Pct": [
@@ -71,9 +71,9 @@
             1.57
           ],
           "distribution": [
-            483,
+            484,
             389,
-            120,
+            119,
             7,
             1,
             0
