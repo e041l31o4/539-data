@@ -1,10 +1,10 @@
 {
   "version": "combo-objective-pair-lab-v1",
-  "dataThrough": "2026-11-26",
-  "historyCount": 6030,
+  "dataThrough": "2026-11-27",
+  "historyCount": 6031,
   "testPeriodCount": 3000,
-  "testFrom": "2017-05-05",
-  "testTo": "2026-11-26",
+  "testFrom": "2017-05-06",
+  "testTo": "2026-11-27",
   "method": "每期只用此前365期資料；先以近期頻率選12碼候選池，再窮舉其中792種五碼組合。配對共現分數以超幾何基準近似的二項期望、標準誤及收縮計算；lambda固定，不以測試結果挑參數。",
   "randomBaseline": {
     "atLeast2Pct": 11.397342976290345,
@@ -128,7 +128,7 @@
     "1": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6533,
+        "averageHits": 0.653,
         "atLeast2Pct": 12.2,
         "atLeast2Wilson95Pct": [
           11.08,
@@ -140,8 +140,8 @@
           1.46
         ],
         "distribution": [
-          1438,
-          1196,
+          1439,
+          1195,
           335,
           30,
           1,
@@ -173,11 +173,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
-          "atLeast2Pct": 11.6,
+          "averageHits": 0.662,
+          "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
-            9.76,
-            13.73
+            9.85,
+            13.84
           ],
           "atLeast3Pct": 0.8,
           "atLeast3Wilson95Pct": [
@@ -186,8 +186,8 @@
           ],
           "distribution": [
             463,
-            421,
-            108,
+            420,
+            109,
             8,
             0,
             0
@@ -195,11 +195,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.668,
-          "atLeast2Pct": 13.7,
+          "averageHits": 0.666,
+          "atLeast2Pct": 13.6,
           "atLeast2Wilson95Pct": [
-            11.71,
-            15.97
+            11.61,
+            15.86
           ],
           "atLeast3Pct": 1.6,
           "atLeast3Wilson95Pct": [
@@ -207,9 +207,9 @@
             2.58
           ],
           "distribution": [
-            485,
+            486,
             378,
-            121,
+            120,
             16,
             0,
             0
@@ -220,7 +220,7 @@
     "2": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6533,
+        "averageHits": 0.653,
         "atLeast2Pct": 12.2,
         "atLeast2Wilson95Pct": [
           11.08,
@@ -232,8 +232,8 @@
           1.46
         ],
         "distribution": [
-          1438,
-          1196,
+          1439,
+          1195,
           335,
           30,
           1,
@@ -265,11 +265,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
-          "atLeast2Pct": 11.6,
+          "averageHits": 0.662,
+          "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
-            9.76,
-            13.73
+            9.85,
+            13.84
           ],
           "atLeast3Pct": 0.8,
           "atLeast3Wilson95Pct": [
@@ -278,8 +278,8 @@
           ],
           "distribution": [
             463,
-            421,
-            108,
+            420,
+            109,
             8,
             0,
             0
@@ -287,11 +287,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.668,
-          "atLeast2Pct": 13.7,
+          "averageHits": 0.666,
+          "atLeast2Pct": 13.6,
           "atLeast2Wilson95Pct": [
-            11.71,
-            15.97
+            11.61,
+            15.86
           ],
           "atLeast3Pct": 1.6,
           "atLeast3Wilson95Pct": [
@@ -299,9 +299,9 @@
             2.58
           ],
           "distribution": [
-            485,
+            486,
             378,
-            121,
+            120,
             16,
             0,
             0
@@ -312,7 +312,7 @@
     "0.25": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.651,
+        "averageHits": 0.6507,
         "atLeast2Pct": 12.07,
         "atLeast2Wilson95Pct": [
           10.95,
@@ -324,8 +324,8 @@
           1.46
         ],
         "distribution": [
-          1441,
-          1197,
+          1442,
+          1196,
           331,
           30,
           1,
@@ -357,11 +357,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
-          "atLeast2Pct": 11.6,
+          "averageHits": 0.662,
+          "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
-            9.76,
-            13.73
+            9.85,
+            13.84
           ],
           "atLeast3Pct": 0.8,
           "atLeast3Wilson95Pct": [
@@ -370,8 +370,8 @@
           ],
           "distribution": [
             463,
-            421,
-            108,
+            420,
+            109,
             8,
             0,
             0
@@ -379,11 +379,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.667,
-          "atLeast2Pct": 13.5,
+          "averageHits": 0.665,
+          "atLeast2Pct": 13.4,
           "atLeast2Wilson95Pct": [
-            11.52,
-            15.76
+            11.43,
+            15.65
           ],
           "atLeast3Pct": 1.6,
           "atLeast3Wilson95Pct": [
@@ -391,9 +391,9 @@
             2.58
           ],
           "distribution": [
-            484,
+            485,
             381,
-            119,
+            118,
             16,
             0,
             0
@@ -404,7 +404,7 @@
     "0.5": {
       "overall": {
         "periods": 3000,
-        "averageHits": 0.6533,
+        "averageHits": 0.653,
         "atLeast2Pct": 12.2,
         "atLeast2Wilson95Pct": [
           11.08,
@@ -416,8 +416,8 @@
           1.46
         ],
         "distribution": [
-          1438,
-          1196,
+          1439,
+          1195,
           335,
           30,
           1,
@@ -449,11 +449,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.661,
-          "atLeast2Pct": 11.6,
+          "averageHits": 0.662,
+          "atLeast2Pct": 11.7,
           "atLeast2Wilson95Pct": [
-            9.76,
-            13.73
+            9.85,
+            13.84
           ],
           "atLeast3Pct": 0.8,
           "atLeast3Wilson95Pct": [
@@ -462,8 +462,8 @@
           ],
           "distribution": [
             463,
-            421,
-            108,
+            420,
+            109,
             8,
             0,
             0
@@ -471,11 +471,11 @@
         },
         {
           "periods": 1000,
-          "averageHits": 0.668,
-          "atLeast2Pct": 13.7,
+          "averageHits": 0.666,
+          "atLeast2Pct": 13.6,
           "atLeast2Wilson95Pct": [
-            11.71,
-            15.97
+            11.61,
+            15.86
           ],
           "atLeast3Pct": 1.6,
           "atLeast3Wilson95Pct": [
@@ -483,9 +483,9 @@
             2.58
           ],
           "distribution": [
-            485,
+            486,
             378,
-            121,
+            120,
             16,
             0,
             0
